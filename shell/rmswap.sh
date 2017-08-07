@@ -6,8 +6,7 @@ dir="$( dirname $0 )"
 source "$dir/config.sh"
 
 eval cd "$basedir"
-echo "Current directory: $(pwd)"
-echo
+printf "Current directory: $(pwd)\n"
 
 files=()
 
@@ -17,29 +16,27 @@ do
     filename=$( basename "$path" )
     if [[ "$filename" =~ \.sw[a-z] ]]
     then
-        files+=($path)
+        files+=("$path")
     fi
 done
 
 if [[ ${#files[@]} -eq 0 ]]
 then
-    echo "No swap files found."
+    printf "No swap files found.\n"
     exit 0
 fi
 
-echo "The following files will be removed:"
+printf "The following files will be removed:\n"
 
 for file in "${files[@]}"
 do
-    echo "$file"
+    printf "$file\n"
 done
 
-echo
-echo "Continue? [y/N]"
-
+printf "\nContinue? [y/N]\n"
 read input
 input="${input// }" # trim all whitespace
-echo
+printf "\n"
 
 if [[ -n "$input" ]]
 then
@@ -53,9 +50,9 @@ then
             rm "$file"
         done
 
-        echo "Files successfully removed!"
+        printf "Files successfully removed!\n"
     else
-        echo "Cancelling."
+        printf "Cancelling.\n"
     fi
 
     shopt -u nocasematch
