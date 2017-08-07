@@ -2,8 +2,6 @@
 # Removes all vim swap files in twitch-plays folder and subfolders.
 # To be used after multiple crashes (usually caused by stream.sh changes).
 
-shopt -s nullglob
-shopt -s dotglob
 dir="$( dirname $0 )"
 source "$dir/config.sh"
 
@@ -14,10 +12,10 @@ echo
 files=()
 
 # stores files to be deleted in $files
-for path in $(find) #{.,$botdir,$emudir,$logdir,$shldir}/*.sw{a,m,n,o,p}
+for path in $(find)
 do
     filename=$( basename "$path" )
-    if [[ "$filename" =~ \.sw(a|m|n|o|p) ]]
+    if [[ "$filename" =~ \.sw[a-z] ]]
     then
         files+=($path)
     fi
