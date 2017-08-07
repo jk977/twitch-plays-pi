@@ -1,0 +1,9 @@
+# program files
+roms/
+*.txt
+*.cfg
+*.log
+
+# python files
+*.py[cod]
+__pycache__/
