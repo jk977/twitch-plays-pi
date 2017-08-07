@@ -12,4 +12,4 @@ A 3-piece set of scripts to host a Twitch Plays style bot on a Raspberry Pi 3 Mo
 
 ## Usage
 
-Intended for private use. To run it yourself, assign PASS in twitch-bot/cfg.py to the Twitch oauth and bot owner, respectively. Assign the name of the channel from which chat commands are taken to CHAN. Store the Twitch stream key in shell/streamkey.cfg. To start the bot, run bot.sh, stream.sh, and nes.sh (found in the shell directory).
+Intended for private use. To run it yourself, assign PASS in twitch-bot/cfg.py to the Twitch oauth and bot owner, respectively. Assign the name of the channel from which chat commands are taken to CHAN. Store the Twitch stream key in shell/streamkey.cfg, and update $basedir in config.sh to match the project's base directory. To start the bot, run bot.sh, stream.sh, and nes.sh (found in the shell directory).

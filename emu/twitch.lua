@@ -83,7 +83,7 @@ end
 
 
 -- checks if there's an input from twitch and returns the input, if any
--- inputs.txt contents in format "[1-9]\w+" (letters matching a button)
+-- inputs.txt contents in format "[1-9]%w+" (letters matching a button)
 function poll_input()
     local contents = nil;
     local file = io.open('./inputs.txt', 'r');
