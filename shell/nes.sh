@@ -1,5 +1,5 @@
 #!/bin/bash
-#starts nes emulator with lua input script loaded
+# Starts nes emulator with lua input script loaded.
 
 dir="$( dirname $0 )"
 source "$dir/config.sh"

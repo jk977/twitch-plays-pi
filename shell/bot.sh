@@ -1,5 +1,5 @@
 #!/bin/bash
-#starts twitch bot to read chat inputs
+# Starts twitch bot to read chat inputs.
 
 dir="$( dirname $0 )"
 source "$dir/config.sh"

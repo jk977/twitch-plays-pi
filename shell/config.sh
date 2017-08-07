@@ -1,5 +1,5 @@
 #!/bin/bash
-#contains project directories
+# Contains project directories.
 
 basedir=$( realpath ~/Desktop/twitch-plays )
 botdir="$basedir/twitch-bot"
