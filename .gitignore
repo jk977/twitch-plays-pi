@@ -1,9 +1,9 @@
-# program files
+# program configuration files
 roms/
 *.txt
 *.cfg
 *.log
 
-# python files
-*.py[cod]
+# python compiled files
 __pycache__/
+*.py[cod]

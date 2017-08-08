@@ -40,6 +40,8 @@ def read_button_input(message, user):
         # converts 'a' and 'b' inputs to uppercase due to FCEUX input format
         if button and button == 'a' or button == 'b':
             button = button.upper()
+        elif button:
+            button = button.lower()
 
         button = button if button and button in config.button_opts else None
         mult = mult if mult else 1 # sets to 1 if mult is None
