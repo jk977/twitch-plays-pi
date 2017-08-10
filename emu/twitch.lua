@@ -1,7 +1,10 @@
 -- twitch.lua
 -- ==========
 -- Script that provides an interface to the emulator via file in same directory
--- TODO fix input reading in lag frames
+-- TODO fix input reading in certain games (namely Final Fantasy 1 battles)
+---- Possibly caused by emulator issues with ALSA? This error occurs in the battles:
+------ Loading SDL sound with alsa driver...
+------ ALSA lib pcm.c:7843:(snd_pcm_recover) underrun occurred
 
 local press_duration = 20; -- default number of frames to hold for a button press
 local button_opts = {'A', 'B', 'start', 'select', 'up', 'down', 'left', 'right'};
@@ -15,38 +18,11 @@ function advance_frames(count)
 end
 
 
-function lag_wait()
-    print('Waiting...');
-    count = 0;
-
-    while emu.lagged() do
-        count = count + 1;
-        emu.frameadvance();
-        print('Frames waited: ' .. tostring(count));
-        print('Lag frames: ' .. tostring(emu.lagcount()));
-    end
-
-    if count > 0 then
-        print('Done waiting.');
-    end
-end
-
-
-function print_current_inputs(player)
-    local inputs = joypad.get(player);
-    
-    for button, state in pairs(inputs) do
-        print(button .. ': ' .. tostring(state));
-    end
-end
-
-
 -- removes all button presses
 function clear_buttons(player)
     local clear = {};
     for _, value in pairs(button_opts) do
         clear[value] = false;
-        print(value);
     end
 
     joypad.set(player, clear);
@@ -57,17 +33,9 @@ end
 function press_button(player, button, count)
     print('Button to press: ' .. button);
     for i = 1, count do
-        lag_wait();
-        print('---');
-        print_current_inputs(player);
-        print('---');
         joypad.set(player, {[button]=true});
-        print_current_inputs(player);
-        print('---');
         advance_frames(press_duration);
         joypad.set(player, {[button]=false});
-        print_current_inputs(player);
-        print('---');
     end
 end
 
@@ -100,7 +68,7 @@ end
 
 -- verifies that the input button is valid
 function validate_input(input)
-    button = input:sub(2, #input)
+    button = input:sub(2, #input);
 
     for _, value in pairs(button_opts) do
         if button == value then

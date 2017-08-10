@@ -7,3 +7,5 @@ emudir="$basedir/emu"
 logdir="$basedir/logs"
 romdir="$basedir/roms/ff.nes"
 shldir="$basedir/shell"
+
+stream="rtmp://live.twitch.tv/app/$( cat "$shldir/streamkey.cfg" )"
