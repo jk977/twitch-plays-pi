@@ -7,23 +7,24 @@ source "$dir/config.sh"
 
 echo "Parsing log file..."
 
-befores=( $( cat "$logdir/stream.log" | grep -Po '(?<=previous: )\d+' ) )
-afters=( $( cat "$logdir/stream.log" | grep -Po '(?<=current: )\d+' ) )
+old_times=( $( cat "$logdir/stream.log" | grep -Po '(?<=previous: )\d+' ) )
+new_times=( $( cat "$logdir/stream.log" | grep -Po '(?<=current: )\d+' ) )
+length="${#old_times[@]}"
 total=0
 
 echo "Parsing complete! Beginning calculations (this may take a while)..."
 
-if (( ${#befores[@]} != ${#afters[@]} ))
+if (( ${#old_times[@]} != ${#new_times[@]} ))
 then
     echo "An error occurred in parsing file."
     exit 1
 fi
 
-for (( i=0; i<${#befores[@]}; i++ ))
+for (( i=0; i<${#old_times[@]}; i++ ))
 do
     warning="Warning: null value found in array. Assigning to 0."
-    before="${befores[$i]}"
-    after="${afters[$i]}"
+    before="${old_times[$i]}"
+    after="${new_times[$i]}"
 
     if [[ -z "$before" ]]
     then
@@ -41,4 +42,4 @@ do
     (( total += difference ))
 done
 
-echo "Average difference: $((( $total / ${#befores[@]} ))) ms"
+echo "Average difference: $((( total / length ))) ms"
