@@ -1,9 +1,9 @@
 #!/bin/bash
 # Reads stream log file and prints offset between corrected and original timestamps (debugging purposes)
-# TODO implement threading to speed up calculations
+# TODO implement background processes to speed up calculations
 
 dir="$( dirname $0 )"
-source "$dir/config.sh"
+source "$dir/../config.sh"
 
 echo "Parsing log file..."
 

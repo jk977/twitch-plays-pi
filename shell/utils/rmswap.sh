@@ -3,7 +3,7 @@
 # To be used after multiple crashes (usually caused by stream.sh changes).
 
 dir="$( dirname $0 )"
-source "$dir/config.sh"
+source "$dir/../config.sh"
 
 eval cd "$basedir"
 printf "Current directory: $(pwd)\n"

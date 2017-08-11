@@ -2,7 +2,7 @@
 # Starts nes emulator with lua input script loaded.
 
 dir="$( dirname $0 )"
-source "$dir/config.sh"
+source "$dir/../config.sh"
 
 fceux "$romdir" \
     --opengl 0
