@@ -7,3 +7,6 @@ roms/
 # python compiled files
 __pycache__/
 *.py[cod]
+
+# vim backup files
+*.sw[a-z]

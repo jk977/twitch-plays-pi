@@ -5,8 +5,8 @@ dir="$( dirname $0 )"
 source "$dir/../config.sh"
 
 fceux "$romdir" \
-    --opengl 0
-    --loadlua "$emudir/twitch.lua" \
+    --opengl 0 \
+    --loadlua "$emudir/main.lua" \
     --xscale 1 \
     --yscale 1 \
     2>&1 | tee "$logdir/nes.log"
