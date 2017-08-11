@@ -9,3 +9,19 @@ romdir="$basedir/roms/ff.nes"
 shldir="$basedir/shell"
 
 stream="rtmp://live.twitch.tv/app/$( cat "$basedir/streamkey.cfg" )"
+
+if [[ ! -e "$basedir" ]]
+then
+    echo "Error: Could not find project root."
+    exit 1
+fi
+
+if [[ ! -e "$logdir" ]]
+then
+    mkdir "$basedir/logs"
+fi
+
+if [[ ! -e "$basedir/roms" ]]
+then
+    mkdir "$basedir/roms"
+fi
