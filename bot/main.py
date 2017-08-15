@@ -16,7 +16,7 @@ from time import sleep, time
 def send_emulator_input(emu_cmd):
     for i in range(10):
         try:
-            with open('../emu/inputs.txt', 'w+') as file:
+            with open('../inputs.txt', 'w+') as file:
                 print('Writing to file: ' + str(time()))
                 file.write(emu_cmd)
                 print('Closing file: ' + str(time()))

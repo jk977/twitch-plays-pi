@@ -4,6 +4,7 @@
 
 local utils = {};
 local button_opts = {'A', 'B', 'start', 'select', 'up', 'down', 'left', 'right'};
+local file_dir = '../inputs.txt';
 
 
 -- removes trailing whitespace
@@ -20,7 +21,7 @@ end
 -- inputs.txt contents in format "[1-9]%w+" (letters matching a button)
 function utils.poll_input()
     local contents = nil;
-    local file = io.open('./inputs.txt', 'r');
+    local file = io.open(file_dir, 'r');
 
     if file ~= nil then
         io.input(file);
@@ -49,7 +50,7 @@ end
 -- erases input file contents
 function utils.reset_input_file()
     for i = 0, 10 do
-        local file = io.open('./inputs.txt', 'w');
+        local file = io.open(file_dir, 'w');
         print('Opening file for writing: ' .. os.time());
 
         if file then

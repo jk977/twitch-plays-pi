@@ -2,7 +2,7 @@
 # Contains project directories.
 
 basedir=$( realpath ~/Desktop/twitch-plays )
-botdir="$basedir/twitch-bot"
+botdir="$basedir/bot"
 emudir="$basedir/emu"
 logdir="$basedir/logs"
 romdir="$basedir/roms/ff.nes"
