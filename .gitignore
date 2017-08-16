@@ -1,9 +1,10 @@
 # project files
 roms/
-*.txt
 *.cfg
 *.log
 *.log.*
+*.txt
+*.mp3
 
 # fceux files
 *.nes

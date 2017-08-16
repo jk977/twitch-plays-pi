@@ -1,12 +1,24 @@
 #!/bin/bash
 # Contains project directories.
 
+mkdirs_if_absent () {
+    for dir in $@
+    do
+        if [[ ! -e "$dir" ]]
+        then
+            echo "Making directory $dir"
+            mkdir "$dir"
+        fi
+    done
+}
+
 basedir=$( realpath ~/Desktop/twitch-plays )
 botdir="$basedir/bot"
 emudir="$basedir/emu"
 logdir="$basedir/logs"
 romdir="$basedir/roms/ff.nes"
 shldir="$basedir/shell"
+audiodir="$basedir/audio"
 
 stream="rtmp://live.twitch.tv/app/$( cat "$basedir/streamkey.cfg" )"
 
@@ -16,12 +28,4 @@ then
     exit 1
 fi
 
-if [[ ! -e "$logdir" ]]
-then
-    mkdir "$basedir/logs"
-fi
-
-if [[ ! -e "$basedir/roms" ]]
-then
-    mkdir "$basedir/roms"
-fi
+mkdirs_if_absent "$logdir" "$basedir/roms" "$audiodir"
