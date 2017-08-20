@@ -29,7 +29,7 @@ function utils.poll_input()
         io.close();
     end
 
-    return contents;
+    return utils.trim_string(contents);
 end
 
 

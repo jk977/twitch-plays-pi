@@ -8,7 +8,6 @@ local emutils = {};
 -- advances emulation by <count> frames
 local function advance_frames(count)
     for i = 1, count do
-        emu.message(tostring(emu.lagged()));
         emu.frameadvance();
     end
 end
@@ -18,7 +17,7 @@ end
 function emutils.press_button(player, button, count)
     for i = 1, count do
         -- loops until emu isn't lagged and button is registered  
-        while emu.lagged() or not joypad.get(1)[button] do
+        while emu.lagged() or not joypad.get(player)[button] do
             joypad.set(player, {[button]=true});
             emu.frameadvance();
         end

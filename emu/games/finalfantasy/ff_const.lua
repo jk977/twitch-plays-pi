@@ -1,9 +1,11 @@
 -- ff_const.lua
 -- ============
--- List of constants mapped to RAM addresses.
+-- List of addresses and offsets pointing to various places in Final Fantasy 1's
+-- memory.
 
 local ff_const = {};
 
+-- addresses of button press flags
 ff_const.BUTTONS = {
     SELECT=0x0022,
     START=0x0023,
@@ -12,9 +14,15 @@ ff_const.BUTTONS = {
 };
 
 -- party member addresses
-ff_const.PARTY_MEMBERS = { 0x6100, 0x6140, 0x6180, 0x61C0 };
+ff_const.PARTY_MEMBERS = {
+    0x6100, 0x6140,
+    0x6180, 0x61C0
+};
 
 -- party member info offsets
+-- NAME contains the offset for each character in the name
+-- all values with a 2-length table are for low and high bytes for one hex value, in that order
+-- e.g., first member's current HP is at 0x6100 + {0x0A,0x0B} = 0x610A, 0x610B
 ff_const.MEMBER_INFO = {
     NAME={0x02,0x03,0x04,0x05},
     LEVEL=0x26,
@@ -38,11 +46,11 @@ ff_const.MEMBER_INFO = {
 };
 
 -- party member magic info
--- the size for each member is 0x2F, with a 0x10-byte buffer between each
+-- the size for each member is 0x2F bytes, with a 0x10-byte buffer between each
+-- e.g., second party member magic info goes from 0x6340 to 0x636F
 ff_const.MEMBER_MAGIC = { 0x6300, 0x6340, 0x6380, 0x63C0 };
 
 -- offsets for member spells
--- e.g., first member's second L1 spell is 0x6300 + 0x01 = 0x6301
 ff_const.SPELLS = {
     L1={0x00,0x01,0x02}, L2={0x04,0x05,0x06},
     L3={0x08,0x09,0x0A}, L4={0x0C,0x0D,0x0E},
