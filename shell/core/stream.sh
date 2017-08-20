@@ -7,7 +7,7 @@ source "$dir/../config.sh"
 
 audio_opts="-f mp3 -i $audiodir/all.mp3"
 song_len=3191
-video_opts="-f x11grab -r 30 -s 256x240 -i :0.0+0,36 -c:v libx264 -preset medium -pix_fmt yuv420p -s 256x240 -threads 4 -b 30k -f flv"
+video_opts="-f x11grab -r 30 -s 256x240 -i :0.0+0,36 -c:v libx264 -preset slow -pix_fmt yuv420p -s 256x240 -threads 4 -b 30k -f flv"
 
 #uncomment for better video quality
 #video_opts="-f x11grab -r 30 -s 256x240 -i :0.0+0,36 -c:v libx264 -preset slow -pix_fmt yuv420p -s 256x240 -threads 4 -b 30k -f flv"

@@ -9,4 +9,5 @@ fceux "$romdir" \
     --loadlua "$emudir/main.lua" \
     --xscale 1 \
     --yscale 1 \
+    --sound 0 \
     2>&1 | tee "$logdir/nes.log"

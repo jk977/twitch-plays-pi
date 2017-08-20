@@ -11,9 +11,6 @@
 utils = require('utils');
 emutils = require('emutils');
 
-press_duration = 20; -- default number of frames to hold for a button press
-
-
 -- wipes any pre-existing input info
 utils.reset_input_file();
 
