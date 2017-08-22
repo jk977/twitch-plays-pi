@@ -52,7 +52,7 @@ then
 
         printf "Files successfully removed!\n"
     else
-        printf "Cancelling.\n"
+        printf "Canceling.\n"
     fi
 
     shopt -u nocasematch

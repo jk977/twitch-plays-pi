@@ -18,7 +18,7 @@ emudir="$basedir/emu"
 logdir="$basedir/logs"
 romdir="$basedir/roms/ff.nes"
 shldir="$basedir/shell"
-audiodir="$basedir/audio"
+audiodir="/media/usb1/audio"
 
 stream="rtmp://live.twitch.tv/app/$( cat "$basedir/streamkey.cfg" )"
 

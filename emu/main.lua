@@ -18,9 +18,9 @@ while true do
 
     if input ~= nil and utils.validate_input(input) then
         print('Pressing "' .. input .. '"');
+
         local count = input:sub(1, 1);
         local button = input:sub(2, #input);
-
         emutils.press_button(1, button, count);
         utils.reset_input_file();
     else
