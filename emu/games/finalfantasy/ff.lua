@@ -38,7 +38,24 @@ function ff.do_crit()
 end
 
 
--- currently doesn't allow name-changing
+-- cures all party members, including dead ones
+function ff.cure_all()
+    for i = 1, 4 do
+        p_member = consts.PARTY_MEMBERS[i];
+        p_max_hp = consts.MEMBER_INFO['MAX_HP'];
+        p_hp = consts.MEMBER_INFO['HP'];
+
+        hp_byte1 = memory.readbyte(p_member + p_max_hp[1]);
+        hp_byte2 = memory.readbyte(p_member + p_max_hp[2]);
+
+        memory.writebyte(p_member + consts.MEMBER_INFO['STATUS'], 0);
+        memory.writebyte(p_member + p_hp[1], hp_byte1);
+        memory.writebyte(p_member + p_hp[2], hp_byte2);
+    end
+end
+
+
+-- currently doesn't allow name-changing or status manipulation
 function ff.change_member_stat(member, stat, value)
     member = tonumber(member);
     stat = tostring(stat):lower();

@@ -21,9 +21,10 @@ ff_const.PARTY_MEMBERS = {
 
 -- party member info offsets
 -- NAME contains the offset for each character in the name
--- all values with a 2-length table are for low and high bytes for one hex value, in that order
+-- all values with a 2-length table are for low and high bytes for one hex value (little endian)
 -- e.g., first member's current HP is at 0x6100 + {0x0A,0x0B} = 0x610A, 0x610B
 ff_const.MEMBER_INFO = {
+    STATUS=0x01,
     NAME={0x02,0x03,0x04,0x05},
     LEVEL=0x26,
     HP={0x0A,0x0B},
