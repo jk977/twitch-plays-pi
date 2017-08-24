@@ -2,7 +2,7 @@
 -- ======
 -- Contains scripts specific to Final Fantasy 1.
 
-local consts = require('ff_const');
+local consts = require('games.finalfantasy.ff_const');
 local ff = {};
 
 
@@ -102,7 +102,7 @@ function ff.do_crit(require_gil)
         return;
     end
 
-    if not require_gil or spend_gil(50) then
+    if not require_gil or spend_gil(100) then
         memory.writebyte(consts.CRIT, 0x1);
     else
         emu.message('Not enough gil!');
@@ -112,7 +112,7 @@ end
 
 -- cures all party members, including dead ones
 function ff.cure_all(require_gil)
-    if not require_gil or spend_gil(50) then
+    if not require_gil or spend_gil(100) then
         for i = 1, 4 do
             p_member = consts.PARTY_MEMBERS[i];
             p_hp = consts.MEMBER_INFO['HP'];
@@ -140,7 +140,7 @@ function ff.kill_all_enemies(require_gil)
         return;
     end
 
-    if not require_gil or spend_gil(50) then
+    if not require_gil or spend_gil(100) then
         local p_hp = consts.ENEMY_INFO['HP'];
         local p_hp_lo = p_hp[1];
         local p_hp_hi = p_hp[2];

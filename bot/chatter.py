@@ -1,6 +1,7 @@
 class Chatter(object):
-    def __init__(self, button='', roles=[]):
+    def __init__(self, button='', cheat='', roles=[]):
         self._button = button
+        self._cheat = cheat
         self._roles = roles
 
     @property
@@ -13,6 +14,17 @@ class Chatter(object):
 
     def clear_button(self):
         self._button = ''
+
+    @property
+    def cheat(self):
+        return self._cheat
+
+    @cheat.setter
+    def cheat(self, cheat):
+        self._cheat = cheat
+
+    def clear_cheat(self):
+        self._cheat = ''
 
     @property
     def role(self):

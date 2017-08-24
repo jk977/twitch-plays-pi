@@ -3,6 +3,7 @@
 -- Module with emulator utility functions
 
 local emutils = {};
+local ff = require('games.finalfantasy.ff');
 
 
 -- advances emulation by <count> frames
@@ -30,6 +31,15 @@ function emutils.press_button(player, button, count)
         while emu.lagged() and i < tonumber(count) do
             emu.frameadvance();
         end
+    end
+end
+
+
+function emutils.do_cheat(cheat)
+    if cheat == 'heal' then
+        ff.cure_all(true);
+    elseif cheat == 'killall' then
+        ff.kill_all_enemies(true);
     end
 end
 

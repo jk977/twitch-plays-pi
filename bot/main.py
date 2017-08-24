@@ -11,6 +11,7 @@ import config
 import utils
 
 from time import sleep, time
+from utils import send_msg
 
 
 def send_emulator_input(emu_cmd):
@@ -24,6 +25,45 @@ def send_emulator_input(emu_cmd):
                 break
         except:
             sleep(1)
+
+
+def send_cheat(cheat):
+    for i in range(10):
+        try:
+            with open('../cheats.txt', 'w+') as file:
+                print('Writing to cheat file: ' + str(time()))
+                file.write(cheat)
+                print('Closing cheat file: ' + str(time()))
+                print('>>>Sent ' + cheat + ' to emulator.')
+                break
+        except:
+            sleep(1)
+
+
+def read_cheat_input(cheat, user):
+    if user not in config.chatters:
+        utils.add_chatter(user)
+
+    if config.chatters[user].cheat:
+        old_cheat = config.chatters[user].cheat
+        config.cheat_inputs[old_cheat] -= 1
+
+    if cheat and cheat in config.cheat_opts:
+        if cheat not in config.cheat_inputs:
+            config.cheat_inputs[cheat] = 0
+
+        config.chatters[user].cheat = cheat
+        config.cheat_inputs[cheat] += 1
+
+    for cht in config.cheat_inputs:
+        print(cht, ': ', str(config.cheat_inputs[cht]))
+
+        # sends input to emulator in parallel if count exceeds threshold
+        if config.cheat_inputs[cht] >= config.vote_threshold:
+            t = threading.Thread(target=send_cheat, args=(cht,))
+            t.start()
+            utils.clear_cheat_inputs()
+            break
 
 
 def read_button_input(message, user):
@@ -73,11 +113,24 @@ def read_button_input(message, user):
         print(btn, ': ', str(config.button_inputs[btn]))
 
         # sends input to emulator in parallel if count exceeds threshold
-        if config.button_inputs[btn] >= config.button_threshold:
+        if config.button_inputs[btn] >= config.vote_threshold:
             t = threading.Thread(target=send_emulator_input, args=(btn,))
             t.start()
             utils.clear_button_inputs()
             break
+
+
+def general_help(sock, user):
+    whisper = '/w ' + user + ' '
+    send_msg(sock, whisper + 'To send an input, post a message containing A, B, start, select, up, down, left, or right, optionally followed by a number in the channel chat (e.g., "a" or "start9")')
+    send_msg(sock, whisper + 'To send a cheat, send "!cheat" followed by a valid cheat option. Type !help cheats for more details.')
+
+
+def cheat_help(sock, user):
+    whisper = '/w ' + user + ' '
+    send_msg(sock, whisper + 'NOTE: All cheats cost 100g.')
+    send_msg(sock, whisper + 'heal: Heals and revives all party members.')
+    send_msg(sock, whisper + 'killall: Reduces all enemies\' HP to 1.')
 
 
 if __name__ == '__main__':
@@ -93,12 +146,23 @@ if __name__ == '__main__':
     while True:
         response = sock.recv(1024).decode('utf-8')
 
-        if response == 'PING :tmi.twitch.tv\r\n':
+        if response.startswith('PING :tmi.twitch.tv'):
             sock.send(bytes(response.replace('PING', 'PONG'), 'utf-8'))
 
         else:
-            username = re.search(r'(\w+)', response).group(0)
+            username = re.search(r'(\w+)', response).group(0).strip()
             msg = CHAT_MSG.sub('', response).strip()
+            parts = re.split('\\s+', msg) # array of words in message
             print(response)
 
-            read_button_input(msg, username)
+            if re.search('^!help(?:$|\\s)', msg, re.IGNORECASE):
+                if len(parts) > 1 and parts[1] == 'cheats':
+                    cheat_help(sock, username)
+                else:
+                    general_help(sock, username)
+
+            elif msg.startswith('!cheat '):
+                cheat = parts[1].lower()
+                read_cheat_input(cheat, username)
+            else:
+                read_button_input(msg, username)

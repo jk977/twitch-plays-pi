@@ -4,7 +4,8 @@
 
 local utils = {};
 local button_opts = {'A', 'B', 'start', 'select', 'up', 'down', 'left', 'right'};
-local file_dir = '../inputs.txt';
+local input_dir = '../inputs.txt';
+local cheat_dir = '../cheats.txt';
 
 
 -- removes trailing whitespace
@@ -21,7 +22,21 @@ end
 -- inputs.txt contents in format "[1-9]%w+" (letters matching a button)
 function utils.poll_input()
     local contents = nil;
-    local file = io.open(file_dir, 'r');
+    local file = io.open(input_dir, 'r');
+
+    if file ~= nil then
+        io.input(file);
+        contents = io.read('*a');
+        io.close();
+    end
+
+    return utils.trim_string(contents);
+end
+
+
+function utils.poll_cheat()
+    local contents = nil;
+    local file = io.open(cheat_dir, 'r');
 
     if file ~= nil then
         io.input(file);
@@ -50,7 +65,7 @@ end
 -- erases input file contents
 function utils.reset_input_file()
     for i = 0, 10 do
-        local file = io.open(file_dir, 'w');
+        local file = io.open(input_dir, 'w');
         print('Opening file for writing: ' .. os.time());
 
         if file then
@@ -60,6 +75,25 @@ function utils.reset_input_file()
             break;
         else
             print('File open failed. Sleeping for 1 second.');
+            os.execute('sleep 1');
+        end
+    end
+end
+
+
+-- erases cheat file contents
+function utils.reset_cheat_file()
+    for i = 0, 10 do
+        local file = io.open(cheat_dir, 'w');
+        print('Opening cheat file for writing: ' .. os.time());
+
+        if file then
+            io.input(file);
+            io.close();
+            print('Closing cheat file for writing: ' .. os.time());
+            break;
+        else
+            print('Cheat file open failed. Sleeping for 1 second.');
             os.execute('sleep 1');
         end
     end
