@@ -46,6 +46,7 @@ ff_const.MEMBER_INFO = {
     EVADE=0x23
 };
 
+
 -- party member magic info
 -- the size for each member is 0x2F bytes, with a 0x10-byte buffer between each
 -- e.g., second party member magic info goes from 0x6340 to 0x636F
@@ -75,7 +76,24 @@ ff_const.CURRENT_MP = {
     L7=0x2E, L8=0x2F,
 };
 
--- battle-related addresses
+-- addresses for enemies in battle
+ff_const.ENEMIES = {
+    0x6BD3, 0x6BE7,
+    0x6BFB, 0x6C0F,
+    0x6C23, 0x6C37,
+    0x6C4B, 0x6C5F,
+    0x6C73
+};
+
+-- offsets for enemy info
+-- for DEAD, 0x01 is true
+ff_const.ENEMY_INFO = {
+    HP={0x02,0x03},
+    DEAD=0x06
+};
+
+-- misc addresses
+ff_const.GIL = { 0x601C, 0x601D }; -- low and high bytes for gil amount
 ff_const.HIT_COUNT = 0x686A; -- number of hits in one attack
 ff_const.CRIT = 0x686B; -- assign to 0x1 for critical hit
 

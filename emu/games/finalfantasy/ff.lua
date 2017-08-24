@@ -32,31 +32,8 @@ local function correct_stat_value(stat, value)
 end
 
 
-function ff.do_crit()
-    memory.writebyte(consts.CRIT, 0x1);
-    return true;
-end
-
-
--- cures all party members, including dead ones
-function ff.cure_all()
-    for i = 1, 4 do
-        p_member = consts.PARTY_MEMBERS[i];
-        p_max_hp = consts.MEMBER_INFO['MAX_HP'];
-        p_hp = consts.MEMBER_INFO['HP'];
-
-        hp_byte1 = memory.readbyte(p_member + p_max_hp[1]);
-        hp_byte2 = memory.readbyte(p_member + p_max_hp[2]);
-
-        memory.writebyte(p_member + consts.MEMBER_INFO['STATUS'], 0);
-        memory.writebyte(p_member + p_hp[1], hp_byte1);
-        memory.writebyte(p_member + p_hp[2], hp_byte2);
-    end
-end
-
-
--- currently doesn't allow name-changing or status manipulation
-function ff.change_member_stat(member, stat, value)
+-- for future use; currently doesn't allow name-changing or status manipulation
+local function change_member_stat(member, stat, value)
     member = tonumber(member);
     stat = tostring(stat):lower();
     value = correct_stat_value(stat, value);
@@ -83,6 +60,102 @@ function ff.change_member_stat(member, stat, value)
     end
 
     return true;
+end
+
+
+-- returns true if player is fighting enemies
+local function in_battle()
+    return memory.readbyte(0x0081) == 0x68;
+end
+
+
+-- used for chat cheats
+local function spend_gil(amt)
+    local p_gil_hi = consts.GIL[2];
+    local p_gil_lo = consts.GIL[1];
+    local gil_hi = string.format('%02x', memory.readbyte(p_gil_hi));
+    local gil_lo = string.format('%02x', memory.readbyte(p_gil_lo));
+
+    local current = tonumber(gil_hi .. gil_lo, 16);
+
+    if current >= amt then
+        local balance = current - amt;
+        local balance16 = string.format('%04x', balance);
+
+        local balance_hi = tonumber(balance16:sub(1,2), 16);
+        local balance_lo = tonumber(balance16:sub(3,4), 16);
+
+        emu.message(tostring(amt) .. 'g spent!');
+        memory.writebyte(p_gil_hi, balance_hi);
+        memory.writebyte(p_gil_lo, balance_lo);
+        return true;
+    else
+        return false;
+    end
+end
+
+
+-- makes next hit a critical hit
+function ff.do_crit(require_gil)
+    if not in_battle() then
+        emu.message('Not in battle!');
+        return;
+    end
+
+    if not require_gil or spend_gil(50) then
+        memory.writebyte(consts.CRIT, 0x1);
+    else
+        emu.message('Not enough gil!');
+    end
+end
+
+
+-- cures all party members, including dead ones
+function ff.cure_all(require_gil)
+    if not require_gil or spend_gil(50) then
+        for i = 1, 4 do
+            p_member = consts.PARTY_MEMBERS[i];
+            p_hp = consts.MEMBER_INFO['HP'];
+            p_max_hp = consts.MEMBER_INFO['MAX_HP'];
+
+            hp_lo = memory.readbyte(p_member + p_max_hp[1]);
+            hp_hi = memory.readbyte(p_member + p_max_hp[2]);
+
+            memory.writebyte(p_member + consts.MEMBER_INFO['STATUS'], 0);
+            memory.writebyte(p_member + p_hp[1], hp_lo);
+            memory.writebyte(p_member + p_hp[2], hp_hi);
+        end
+    else
+        emu.message('Not enough gil!');
+    end
+end
+
+
+-- kills all enemies if in a battle
+-- TODO find out how to make enemies die immediately after setting dead flag
+--      currently functionally identical to reducing to 1 hp
+function ff.kill_all_enemies(require_gil)
+    if not in_battle() then
+        emu.message('Not in battle!');
+        return;
+    end
+
+    if not require_gil or spend_gil(50) then
+        local p_hp = consts.ENEMY_INFO['HP'];
+        local p_hp_lo = p_hp[1];
+        local p_hp_hi = p_hp[2];
+
+        local p_dead = consts.ENEMY_INFO['DEAD'];
+
+        for i = 1, 9 do
+            local p_enemy = consts.ENEMIES[i];
+            memory.writebyte(p_enemy + p_hp_lo, 0x00);
+            memory.writebyte(p_enemy + p_hp_hi, 0x00);
+            memory.writebyte(p_enemy + p_dead, 0x01);
+        end
+    else
+        emu.message('Not enough gil!');
+    end
 end
 
 
