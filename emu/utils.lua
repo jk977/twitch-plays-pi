@@ -14,14 +14,13 @@ function utils.trim_string(input)
         return nil;
     end
 
-    return input:gsub('^%s*(.-)%s*$', '%1');
+    return tostring(input):gsub('^%s*(.-)%s*$', '%1');
 end
 
 
 -- checks if there's an input from twitch and returns the input, if any
 -- inputs.txt contents in format "[1-9]%w+" (letters matching a button)
 function utils.poll_input()
-    local contents = nil;
     local file = io.open(input_dir, 'r');
 
     if file ~= nil then
@@ -34,8 +33,9 @@ function utils.poll_input()
 end
 
 
+-- same as poll_input for cheat file
+-- TODO refactor with less redundancy
 function utils.poll_cheat()
-    local contents = nil;
     local file = io.open(cheat_dir, 'r');
 
     if file ~= nil then
@@ -64,17 +64,15 @@ end
 
 -- erases input file contents
 function utils.reset_input_file()
-    for i = 0, 10 do
+    for i = 1, 10 do
         local file = io.open(input_dir, 'w');
-        print('Opening file for writing: ' .. os.time());
 
         if file then
             io.input(file);
             io.close();
-            print('Closing file for writing: ' .. os.time());
             break;
         else
-            print('File open failed. Sleeping for 1 second.');
+            print('Failed to overwrite input file. Sleeping for 1 second.');
             os.execute('sleep 1');
         end
     end
@@ -82,18 +80,17 @@ end
 
 
 -- erases cheat file contents
+-- TODO refactor with less redundancy
 function utils.reset_cheat_file()
-    for i = 0, 10 do
+    for i = 1, 10 do
         local file = io.open(cheat_dir, 'w');
-        print('Opening cheat file for writing: ' .. os.time());
 
         if file then
             io.input(file);
             io.close();
-            print('Closing cheat file for writing: ' .. os.time());
             break;
         else
-            print('Cheat file open failed. Sleeping for 1 second.');
+            print('Failed to overwrite cheat file. Sleeping for 1 second.');
             os.execute('sleep 1');
         end
     end

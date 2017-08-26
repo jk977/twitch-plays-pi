@@ -114,16 +114,27 @@ end
 function ff.cure_all(require_gil)
     if not require_gil or spend_gil(100) then
         for i = 1, 4 do
-            p_member = consts.PARTY_MEMBERS[i];
-            p_hp = consts.MEMBER_INFO['HP'];
-            p_max_hp = consts.MEMBER_INFO['MAX_HP'];
+            -- HP-related stats
+            local p_member = consts.PARTY_MEMBERS[i];
+            local p_hp = consts.MEMBER_INFO['HP'];
+            local p_max_hp = consts.MEMBER_INFO['MAX_HP'];
 
-            hp_lo = memory.readbyte(p_member + p_max_hp[1]);
-            hp_hi = memory.readbyte(p_member + p_max_hp[2]);
+            local hp_lo = memory.readbyte(p_member + p_max_hp[1]);
+            local hp_hi = memory.readbyte(p_member + p_max_hp[2]);
 
             memory.writebyte(p_member + consts.MEMBER_INFO['STATUS'], 0);
             memory.writebyte(p_member + p_hp[1], hp_lo);
             memory.writebyte(p_member + p_hp[2], hp_hi);
+
+            -- MP-related stats
+            local p_magic = consts.MEMBER_MAGIC[i];
+            local p_mp = consts.CURRENT_MP;
+            local p_mp_max = consts.MP_MAX;
+
+            for lv = 1, 8 do
+                local max = memory.readbyte(p_magic + p_mp_max[lv]);
+                memory.writebyte(p_magic + p_mp[lv], max);
+            end
         end
     else
         emu.message('Not enough gil!');
