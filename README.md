@@ -32,3 +32,7 @@ Intended for private use. To run it yourself, make the following changes:
             * Update ffmpeg audio and video settings as needed
         
 To start, execute run.sh by itself or shell/bot.sh, shell/nes.sh, and shell/stream.sh concurrently. For performance reasons, the resulting emulator window is not fullscreen, and should be positioned in the spot captured by ffmpeg (default is 36px from the top of the screen)
+
+Once running, Twitch users can type an input in the following format (case-insensitive, space optional): {button} {presscount}
+
+{button} corresponds to any of "A", "B", "start", "select", "up", "down", "left", or "right", and {presscount} is a number between 1 and 9.
