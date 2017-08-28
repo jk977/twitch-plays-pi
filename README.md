@@ -1,11 +1,12 @@
 # Twitch Plays Bot
 
-A 3-piece set of scripts to host a Twitch Plays style bot on a Raspberry Pi 3 Model B. Note that this is intended for private use, and may not work on different systems.
+A 3-piece set of scripts to host a Twitch Plays style bot on a Raspberry Pi 3 Model B. Note that this is intended for private use, and may not work on different systems without tweaking code.
 
 ## Requirements
 
-* Python 3.4.2
-* Lua 5.2.3
+* Python 3
+* Lua 5.1+
+* FFMPEG with libx264 and libmp3lame enabled
 * FCEUX 2.2.3 compiled with:
     * SDL 1.2.15
     * GTK 3.14.5
@@ -28,6 +29,6 @@ Intended for private use. To run it yourself, make the following changes:
         * Update paths if necessary
     * core/
         * stream.sh
-            * Update $audio_opts and $song_len
+            * Update ffmpeg audio and video settings as needed
         
-To start, execute run.sh by itself or shell/bot.sh, shell/nes.sh, and shell/stream.sh concurrently. For performance reasons, the resulting emulator window is not fullscreen, and should be positioned in the top-left corner of the screen.
+To start, execute run.sh by itself or shell/bot.sh, shell/nes.sh, and shell/stream.sh concurrently. For performance reasons, the resulting emulator window is not fullscreen, and should be positioned in the spot captured by ffmpeg (default is 36px from the top of the screen)
