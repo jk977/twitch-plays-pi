@@ -120,19 +120,6 @@ def read_button_input(message, user):
             break
 
 
-def general_help(sock, user):
-    whisper = '/w ' + user + ' '
-    send_msg(sock, whisper + 'To send an input, post a message containing A, B, start, select, up, down, left, or right, optionally followed by a number in the channel chat (e.g., "a" or "start9")')
-    send_msg(sock, whisper + 'To send a cheat, send "!cheat" followed by a valid cheat option. Type !help cheats for more details.')
-
-
-def cheat_help(sock, user):
-    whisper = '/w ' + user + ' '
-    send_msg(sock, whisper + 'NOTE: All cheats cost 100g.')
-    send_msg(sock, whisper + 'heal: Heals and revives all party members.')
-    send_msg(sock, whisper + 'killall: Reduces all enemies\' HP to 1.')
-
-
 if __name__ == '__main__':
     CHAT_MSG = re.compile(r'^:\w+!\w+@\w+\.tmi\.twitch\.tv PRIVMSG #\w+ :')
 
@@ -155,13 +142,9 @@ if __name__ == '__main__':
             parts = re.split('\\s+', msg) # array of words in message
             print(response)
 
-            if re.search('^!help(?:$|\\s)', msg, re.IGNORECASE):
-                if len(parts) > 1 and parts[1] == 'cheats':
-                    cheat_help(sock, username)
-                else:
-                    general_help(sock, username)
-
-            elif msg.startswith('!cheat '):
+            if msg.startswith('!help'):
+                send_msg(sock, 'https://pastebin.com/VFMGMjpb')
+            elif msg.startswith('!game '):
                 cheat = parts[1].lower()
                 read_cheat_input(cheat, username)
             else:

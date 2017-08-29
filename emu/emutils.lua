@@ -40,6 +40,8 @@ function emutils.do_cheat(cheat)
         ff.cure_all(true);
     elseif cheat == 'killall' then
         ff.kill_all_enemies(true);
+    elseif cheat == 'showgil' then
+        ff.print_gil();
     end
 end
 

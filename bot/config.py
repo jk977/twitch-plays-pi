@@ -14,7 +14,7 @@ with open('info/oauth.cfg', 'r') as file:
 
 chatters = {}
 button_opts = ['A', 'B', 'start', 'select', 'up', 'down', 'left', 'right']
-cheat_opts = ['heal', 'killall']
+cheat_opts = ['heal', 'killall', 'showgil']
 button_inputs = {}
 cheat_inputs = {}
 vote_threshold = 1 # threshold for sending input to emulator

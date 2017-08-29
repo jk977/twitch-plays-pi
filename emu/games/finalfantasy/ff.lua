@@ -6,6 +6,22 @@ local consts = require('games.finalfantasy.ff_const');
 local ff = {};
 
 
+-- returns value (an int) as a big-endian table of bytes
+local function split_to_bytes(value, byte_count)
+    str_len = 2*byte_count;
+    hex_full = string.format('%0' .. tostring(str_len) .. 'x', value);
+    hex_bytes = {};
+
+    -- iterate over bytes in hex_full
+    for i = 1, str_len, 2 do
+        byte = tonumber(hex_full:sub(i, i+1), 16);
+        table.insert(hex_bytes, byte);
+    end
+
+    return hex_bytes;
+end
+
+
 local function correct_stat_value(stat, value)
     value = tonumber(value);
     stat = stat:lower();
@@ -69,6 +85,8 @@ local function in_battle()
 end
 
 
+
+
 -- used for chat cheats
 local function spend_gil(amt)
     local p_gil_hi = consts.GIL[2];
@@ -92,6 +110,17 @@ local function spend_gil(amt)
     else
         return false;
     end
+end
+
+
+-- prints gil amount on emulator screen
+function ff.print_gil()
+    p_gil = consts.GIL;
+    gil_lo = string.format('%02x', memory.readbyte(p_gil[1]));
+    gil_hi = string.format('%02x', memory.readbyte(p_gil[2]));
+
+    gil = tostring(tonumber(gil_hi .. gil_lo, 16));
+    emu.message('Current gil: ' .. gil);
 end
 
 
