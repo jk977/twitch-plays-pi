@@ -1,5 +1,6 @@
 # utils.py
 
+import re
 import config
 from chatter import Chatter
 from time import sleep
@@ -27,20 +28,35 @@ def timeout(sock, user, seconds=600):
 # Bot-specific functions
 # ======================
 
-def clear_button_inputs():
-    for user in config.chatters:
-        config.chatters[user].clear_button()
+def format_button_input(message):
+    """Formats input to be sent to lua script"""
+    # support for inputs prefixed by ! since a lot of people seem to try it
+    if message.startswith('!'):
+        message = message[1:]
 
-    for button in config.button_inputs:
-        config.button_inputs[button] = 0
+    has_leading_num = bool(re.search('^[1-9]', message))
+    has_trailing_num = bool(re.search('[1-9]$', message))
 
+    if has_leading_num:
+        mult = message[0]
+        button = message[1:]
+    elif has_trailing_num:
+        mult = message[-1]
+        button = message[:-1]
+    else:
+        mult = '1'
+        button = message
 
-def clear_cheat_inputs():
-    for user in config.chatters:
-        config.chatters[user].clear_cheat()
+    button = button.strip().lower()
 
-    for cheat in config.cheat_inputs:
-        config.cheat_inputs[cheat] = 0
+    # capitalizes 'a' and 'b' due to FCEUX input format
+    if button == 'a' or button == 'b':
+        button = button.upper()
+
+    if button not in config.button_opts or not re.match('[1-9]', mult):
+        return
+
+    return mult + button
 
 
 def add_chatter(user):

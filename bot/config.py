@@ -1,6 +1,8 @@
 # config.py
 # contains bot configuration
 
+from choices import Choices
+
 HOST = 'irc.twitch.tv'
 PORT = 6667
 NICK = 'shira_bot'
@@ -12,9 +14,10 @@ with open('info/host.cfg', 'r') as file:
 with open('info/oauth.cfg', 'r') as file:
     PASS = 'oauth:' + file.read().strip()
 
-chatters = {}
 button_opts = ['A', 'B', 'start', 'select', 'up', 'down', 'left', 'right']
 cheat_opts = ['heal', 'killall', 'showgil']
-button_inputs = {}
-cheat_inputs = {}
+
+chatters = {}
+button_inputs = Choices(choice_format=r'^[1-9][a-zA-Z]+$', threshold=1)
+cheat_inputs = Choices(choice_format=r'^[a-zA-Z]+$', threshold=1)
 vote_threshold = 1 # threshold for sending input to emulator
