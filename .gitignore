@@ -1,14 +1,8 @@
 # project files
 roms/
+logs/
 *.cfg
-*.log
-*.log.*
 *.txt
-*.mp3
-
-# fceux files
-*.nes
-*.sav
 
 # python compiled files
 __pycache__/
