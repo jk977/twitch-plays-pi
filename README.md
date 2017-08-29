@@ -6,7 +6,7 @@ A 3-piece set of scripts to host a Twitch Plays style bot on a Raspberry Pi 3 Mo
 
 * Python 3
 * Lua 5.1+
-* FFMPEG with libx264 and libmp3lame enabled
+* ffmpeg with libx264 and libmp3lame enabled
 * FCEUX 2.2.3 compiled with:
     * SDL 1.2.15
     * GTK 3.14.5
