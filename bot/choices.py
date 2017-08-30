@@ -1,3 +1,6 @@
+# TODO redo voting system (again)?
+# Seems flipped - instead of calling choice.vote(user) to vote,
+# user.vote(choice) should be called
 import re
 from choice import Choice
 
@@ -40,7 +43,6 @@ class Choices():
             self.unvote(user, choice.name)
 
     def vote(self, user, choice_name):
-        """Returns true if vote caused choice to exceed vote threshold"""
         if not self._format.match(choice_name):
             return
 

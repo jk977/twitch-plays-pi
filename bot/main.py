@@ -77,7 +77,11 @@ if __name__ == '__main__':
             print(response)
 
             if msg.startswith('!help'):
-                send_msg(sock, 'https://pastebin.com/ew7szvD3')
+                # TODO see if optimizing is necessary to prevent repeated opens
+                with open('info/help.cfg', 'r') as file:
+                    help_msg = file.read().strip();
+
+                send_msg(sock, help_msg)
             elif msg.startswith('!game '):
                 cheat = parts[1].lower()
                 read_cheat_input(cheat, username)

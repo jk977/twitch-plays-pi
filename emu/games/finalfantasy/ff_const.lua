@@ -24,6 +24,7 @@ ff_const.PARTY_MEMBERS = {
 -- all values with a 2-length table are for low and high bytes for one hex value (little endian)
 -- e.g., first member's current HP is at 0x6100 + {0x0A,0x0B} = 0x610A, 0x610B
 ff_const.MEMBER_INFO = {
+    ID=0x00,
     STATUS=0x01,
     NAME={0x02,0x03,0x04,0x05},
     LEVEL=0x26,
@@ -31,8 +32,6 @@ ff_const.MEMBER_INFO = {
     MAX_HP={0x0C,0x0D},
     XP={0x07,0x08},
     XP_NEXT={0x16,0x17},
-    ID=0x00,
-    STATUS=0x01,
     STR=0x10,
     AGL=0x11,
     INT=0x12,
