@@ -77,7 +77,7 @@ if __name__ == '__main__':
             print(response)
 
             if msg.startswith('!help'):
-                send_msg(sock, 'https://pastebin.com/VFMGMjpb')
+                send_msg(sock, 'https://pastebin.com/ew7szvD3')
             elif msg.startswith('!game '):
                 cheat = parts[1].lower()
                 read_cheat_input(cheat, username)
