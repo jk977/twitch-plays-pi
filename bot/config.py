@@ -6,7 +6,7 @@ from choices import Choices
 HOST = 'irc.twitch.tv'
 PORT = 6667
 NICK = 'shira_bot'
-RATE = 3/2
+RATE = 2
 
 with open('info/host.cfg', 'r') as file:
     CHAN = file.read().strip() # bot owner; strip in case of unintended whitespace
@@ -20,4 +20,3 @@ cheat_opts = ['heal', 'killall', 'showgil']
 chatters = {}
 button_inputs = Choices(choice_format=r'^[1-9][a-zA-Z]+$', threshold=1)
 cheat_inputs = Choices(choice_format=r'^[a-zA-Z]+$', threshold=1)
-vote_threshold = 1 # threshold for sending input to emulator

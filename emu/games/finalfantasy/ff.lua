@@ -85,10 +85,8 @@ local function in_battle()
 end
 
 
-
-
 -- used for chat cheats
-local function spend_gil(amt)
+function ff.spend_gil(amt)
     local p_gil_hi = consts.GIL[2];
     local p_gil_lo = consts.GIL[1];
     local gil_hi = string.format('%02x', memory.readbyte(p_gil_hi));
@@ -131,7 +129,7 @@ function ff.do_crit(require_gil)
         return;
     end
 
-    if not require_gil or spend_gil(100) then
+    if not require_gil or ff.spend_gil(100) then
         memory.writebyte(consts.CRIT, 0x1);
     else
         emu.message('Not enough gil!');
@@ -141,7 +139,7 @@ end
 
 -- cures all party members, including dead ones
 function ff.cure_all(require_gil)
-    if not require_gil or spend_gil(100) then
+    if not require_gil or ff.spend_gil(100) then
         for i = 1, 4 do
             -- HP-related stats
             local p_member = consts.PARTY_MEMBERS[i];
@@ -157,7 +155,7 @@ function ff.cure_all(require_gil)
 
             -- MP-related stats
             local p_magic = consts.MEMBER_MAGIC[i];
-            local p_mp = consts.CURRENT_MP;
+            local p_mp = consts.MP_CURRENT;
             local p_mp_max = consts.MP_MAX;
 
             for lv = 1, 8 do
@@ -180,7 +178,7 @@ function ff.kill_all_enemies(require_gil)
         return;
     end
 
-    if not require_gil or spend_gil(100) then
+    if not require_gil or ff.spend_gil(100) then
         local p_hp = consts.ENEMY_INFO['HP'];
         local p_hp_lo = p_hp[1];
         local p_hp_hi = p_hp[2];

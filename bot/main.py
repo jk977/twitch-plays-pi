@@ -21,6 +21,7 @@ def send_input(filename, contents):
             with open('../' + filename, 'w+') as file:
                 file.write(contents)
                 print('>>>Sent ' + contents + ' to emulator.')
+                break
         except:
             sleep(1)
 
