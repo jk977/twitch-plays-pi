@@ -2,7 +2,6 @@
 
 import re
 import config
-from chatter import Chatter
 from time import sleep
 
 
@@ -57,8 +56,3 @@ def format_button_input(message):
         return
 
     return mult + button
-
-
-def add_chatter(user):
-    chatter = Chatter()
-    config.chatters[user] = chatter

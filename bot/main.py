@@ -10,9 +10,9 @@ import time
 import config
 import utils
 
-from choices import Choices
 from time import sleep, time
 from utils import send_msg
+from user import User
 
 
 def send_input(filename, contents):
@@ -29,30 +29,28 @@ def read_cheat_input(cheat, user):
     if cheat not in config.cheat_opts:
         return
 
-    config.cheat_inputs.vote(user, cheat)
-    vote_count = config.cheat_inputs.vote_count(cheat)
+    vote_count = user.vote(config.vm, cheat)
 
     # if vote brought vote count over threshold
-    if vote_count >= config.cheat_inputs.threshold:
+    if vote_count >= config.vm.threshold:
         t = threading.Thread(target=send_input, args=('cheats.txt', cheat))
         t.start()
-        config.cheat_inputs.clear()
+        config.vm.reset()
 
     
 def read_button_input(message, user):
-    user_vote = utils.format_button_input(message)
+    vote = utils.format_button_input(message)
 
-    if not user_vote:
+    if not vote:
         return
 
-    config.button_inputs.vote(user, user_vote)
-    vote_count = config.button_inputs.vote_count(user_vote)
+    vote_count = user.vote(config.vm, vote)
 
     # if vote brought vote count over threshold
-    if vote_count >= config.button_inputs.threshold:
-        t = threading.Thread(target=send_input, args=('inputs.txt', user_vote))
+    if vote_count >= config.vm.threshold:
+        t = threading.Thread(target=send_input, args=('inputs.txt', vote))
         t.start()
-        config.button_inputs.clear()
+        config.vm.reset()
    
 
 if __name__ == '__main__':
@@ -76,10 +74,22 @@ if __name__ == '__main__':
             parts = re.split('\\s+', msg) # array of words in message
             print(response)
 
+            # adds user to list if not present
+            if username not in config.users:
+                user = User(name=username)
+                config.users[username] = user
+
+            user = config.users[username]
+
             if msg.startswith('!help'):
-                send_msg(sock, 'https://pastebin.com/ew7szvD3')
+                # TODO see if optimizing is necessary to prevent repeated opens
+                with open('info/help.cfg', 'r') as file:
+                    help_msg = file.read().strip();
+                send_msg(sock, help_msg)
+
             elif msg.startswith('!game '):
                 cheat = parts[1].lower()
-                read_cheat_input(cheat, username)
+                read_cheat_input(cheat, user)
+
             else:
-                read_button_input(msg, username)
+                read_button_input(msg, user)
