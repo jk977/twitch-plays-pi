@@ -157,7 +157,7 @@ function ff.cure_all(require_gil)
 
             -- MP-related stats
             local p_magic = consts.MEMBER_MAGIC[i];
-            local p_mp = consts.CURRENT_MP;
+            local p_mp = consts.MP_CURRENT;
             local p_mp_max = consts.MP_MAX;
 
             for lv = 1, 8 do

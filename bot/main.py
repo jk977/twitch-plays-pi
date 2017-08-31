@@ -1,6 +1,7 @@
 # main.py
 # bot code
 
+import os
 import random
 import re
 import socket
@@ -52,7 +53,15 @@ def read_button_input(message, user):
         t = threading.Thread(target=send_input, args=('inputs.txt', vote))
         t.start()
         config.vm.reset()
-   
+
+
+def stream_restarting():
+    try:
+        os.remove('../restartfile')
+        return True
+    except FileNotFoundError:
+        return False
+
 
 if __name__ == '__main__':
     CHAT_MSG = re.compile(r'^:\w+!\w+@\w+\.tmi\.twitch\.tv PRIVMSG #\w+ :')
@@ -69,8 +78,12 @@ if __name__ == '__main__':
 
         if response.startswith('PING :tmi.twitch.tv'):
             sock.send(bytes(response.replace('PING', 'PONG'), 'utf-8'))
+            continue
 
-        else:
+        if stream_restarting():
+            send_msg(sock, 'Stream is restarting and will be back up in a few seconds.')
+
+        if response:
             username = re.search(r'(\w+)', response).group(0).strip()
             msg = CHAT_MSG.sub('', response).strip()
             parts = re.split('\\s+', msg) # array of words in message

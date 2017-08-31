@@ -17,4 +17,5 @@ do
         -c:a copy -ar 44100 -ac 2 \
         -c:v libx264 -preset slow -pix_fmt yuv420p \
         -shortest -f flv "$stream" 2>&1 | tee -a "$logdir/stream.log"
+    touch "$basedir/restartfile"
 done
