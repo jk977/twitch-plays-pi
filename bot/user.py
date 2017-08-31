@@ -4,7 +4,7 @@ class User:
     def __init__(self, name=None, choice=None, roles=None):
         self._name = name
         self._choice = choice
-        self._roles = [] if roles is None else roles[:]
+        self._roles = [] if roles is None else roles
 
     @property
     def choice(self):

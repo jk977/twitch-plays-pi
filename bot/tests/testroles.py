@@ -4,6 +4,7 @@ import itertools
 from user import User
 from tests.utils import *
 
+
 # initializing test variables
 u1 = User(name='Phil')
 u2 = User(name='Bob')

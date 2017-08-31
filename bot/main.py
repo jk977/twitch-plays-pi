@@ -69,6 +69,7 @@ if __name__ == '__main__':
 
         if response.startswith('PING :tmi.twitch.tv'):
             sock.send(bytes(response.replace('PING', 'PONG'), 'utf-8'))
+
         else:
             username = re.search(r'(\w+)', response).group(0).strip()
             msg = CHAT_MSG.sub('', response).strip()
@@ -77,8 +78,7 @@ if __name__ == '__main__':
 
             # adds user to list if not present
             if username not in config.users:
-                user = User(name=username)
-                config.users[username] = user
+                config.users[username] = User(name=username)
 
             user = config.users[username]
 

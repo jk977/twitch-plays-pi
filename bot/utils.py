@@ -23,7 +23,6 @@ def timeout(sock, user, seconds=600):
     if is_op(config.NICK):
         send_msg(sock, '.timeout {}'.format(user, seconds))
 
-
 # Bot-specific functions
 # ======================
 

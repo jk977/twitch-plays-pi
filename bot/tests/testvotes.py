@@ -5,6 +5,7 @@ from user import User
 from votes.votemanager import VoteManager
 from tests.utils import *
 
+
 # initializing test variables
 v = VoteManager(threshold=3)
 u1 = User(name='Phil')

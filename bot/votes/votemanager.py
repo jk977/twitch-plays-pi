@@ -28,18 +28,18 @@ class VoteManager:
 
     def add_vote(self, user, option_name):
         """Returns vote count for option after voting"""
-        # removes old vote
         try:
             user.unvote(self)
         except TypeError:
             pass
 
-        # adds new vote
         try:
+            # adds vote to option if already exists
             option = self.__find_option(option_name)
             option.add_voter(user)
             votes = option.vote_count()
         except ValueError:
+            # adds new option to list
             option = Option(name=option_name, voters=[user])
             self._options.append(option)
             votes = 1
@@ -53,6 +53,7 @@ class VoteManager:
             option.remove_voter(user)
             votes = option.vote_count()
 
+            # removes option from list if no votes
             if votes == 0:
                 self._options = [opt for opt in self._options if opt.name != option.name]
         except ValueError:
@@ -61,6 +62,7 @@ class VoteManager:
         return votes
 
     def reset(self):
+        """Resets vote data."""
         for option in self._options:
             for voter in option.voters:
                 voter.unvote(self)
