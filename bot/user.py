@@ -1,4 +1,3 @@
-import copy
 from votes.option import Option
 
 class User:
