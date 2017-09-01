@@ -2,6 +2,8 @@
 
 import re
 import config
+
+from stoppablethread import StoppableThread
 from time import sleep
 
 
@@ -9,9 +11,10 @@ from time import sleep
 # =============
 
 def send_msg(sock, msg):
-    print(':' + config.NICK + '!' + config.NICK + '@' + config.NICK + '.tmi.twitch.tv PRIVMSG #' + config.CHAN + ' :' + msg + '\r\n')
-    sock.send(bytes('PRIVMSG #' + config.CHAN + ' :' + msg + '\r\n', 'utf-8'))
-    sleep(config.RATE)
+    with config.socket_lock:
+        print(':' + config.NICK + '!' + config.NICK + '@' + config.NICK + '.tmi.twitch.tv PRIVMSG #' + config.CHAN + ' :' + msg + '\r\n')
+        sock.send(bytes('PRIVMSG #' + config.CHAN + ' :' + msg + '\r\n', 'utf-8'))
+        sleep(config.RATE)
 
 
 def ban(sock, user):
@@ -23,15 +26,28 @@ def timeout(sock, user, seconds=600):
     if is_op(config.NICK):
         send_msg(sock, '.timeout {}'.format(user, seconds))
 
+
 # Bot-specific functions
 # ======================
 
+def stop_all_threads():
+    """Stops created threads."""
+    stoppables = [t for t in config.threads if isinstance(t, StoppableThread)]
+    for thread in stoppables:
+        thread.stop()
+
+
+def finalize_thread(thread):
+    """Removes thread from thread list after thread finishes."""
+    with config.thread_list_lock:
+        try:
+            config.threads.remove(thread)
+        except:
+            pass
+
+
 def format_button_input(message):
     """Formats input to be sent to lua script"""
-    # support for inputs prefixed by ! since a lot of people seem to try it
-    if message.startswith('!'):
-        message = message[1:]
-
     has_leading_num = bool(re.search('^[1-9]', message))
     has_trailing_num = bool(re.search('[1-9]$', message))
 

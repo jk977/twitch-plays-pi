@@ -1,19 +1,27 @@
 # main.py
-# bot code
+# TODO separate commands (and chat functions?) into their own module
+#   e.g.,
+#     class Command: __init__(self, socket)
+#	or
+#     class Chat: __init__(self, socket)
+#     class Command: __init__(self, chat) 
 
 import os
 import random
 import re
 import socket
+import sys
 import threading
 import time
 
 import config
 import utils
 
+from roles import Roles
+from stoppablethread import StoppableThread
 from time import sleep, time
-from utils import send_msg
 from user import User
+from utils import send_msg
 
 
 def send_input(filename, contents):
@@ -35,8 +43,10 @@ def read_cheat_input(cheat, user):
 
     # if vote brought vote count over threshold
     if vote_count >= config.vm.threshold:
-        t = threading.Thread(target=send_input, args=('cheats.txt', cheat))
+        t = StoppableThread(after=utils.finalize_thread, target=send_input, args=('cheats.txt', cheat))
+        config.threads.append(t)
         t.start()
+
         config.vm.reset()
 
     
@@ -50,17 +60,20 @@ def read_button_input(message, user):
 
     # if vote brought vote count over threshold
     if vote_count >= config.vm.threshold:
-        t = threading.Thread(target=send_input, args=('inputs.txt', vote))
+        t = StoppableThread(after=utils.finalize_thread, target=send_input, args=('inputs.txt', vote))
+        config.threads.append(t)
         t.start()
+
         config.vm.reset()
 
 
-def stream_restarting():
+def notify_restarts(sock):
+    """Notifies chat when stream is restarting by checking for flag file."""
     try:
         os.remove('../restartfile')
-        return True
+        send_msg(sock, 'Stream is restarting!')
     except FileNotFoundError:
-        return False
+        pass
 
 
 if __name__ == '__main__':
@@ -73,6 +86,12 @@ if __name__ == '__main__':
     sock.send('NICK {}\r\n'.format(config.NICK).encode('utf-8'))
     sock.send('JOIN #{}\r\n'.format(config.CHAN).encode('utf-8'))
 
+    # polls restart file every second and posts stream status if exists
+    thread = StoppableThread(period=1, target=notify_restarts, args=(sock,))
+    thread.start()
+    config.threads.append(thread)
+
+    # main loop
     while True:
         response = sock.recv(1024).decode('utf-8')
 
@@ -80,10 +99,7 @@ if __name__ == '__main__':
             sock.send(bytes(response.replace('PING', 'PONG'), 'utf-8'))
             continue
 
-        if stream_restarting():
-            send_msg(sock, 'Stream is restarting and will be back up in a few seconds.')
-
-        if response:
+        else:
             username = re.search(r'(\w+)', response).group(0).strip()
             msg = CHAT_MSG.sub('', response).strip()
             parts = re.split('\\s+', msg) # array of words in message
@@ -91,19 +107,43 @@ if __name__ == '__main__':
 
             # adds user to list if not present
             if username not in config.users:
-                config.users[username] = User(name=username)
+                roles = [Roles.OWNER] if username == config.CHAN else []
+                config.users[username] = User(name=username, roles=roles)
 
             user = config.users[username]
 
-            if msg.startswith('!help'):
-                # TODO see if optimizing is necessary to prevent repeated opens
-                with open('info/help.cfg', 'r') as file:
-                    help_msg = file.read().strip();
-                send_msg(sock, help_msg)
+            if msg.startswith('!') and Roles.BANNED not in user.roles:
+                cmd = parts[0][1:]
 
-            elif msg.startswith('!game '):
-                cheat = parts[1].lower()
-                read_cheat_input(cheat, user)
+                if cmd == 'help':
+                    with open('info/help.cfg', 'r') as file:
+                        help_msg = file.read().strip();
+                    send_msg(sock, help_msg)
+
+                elif cmd == 'game':
+                    cheat = parts[1].lower()
+                    read_cheat_input(cheat, user)
+
+                # lets button inputs be prefixed with !
+                elif cmd in config.button_opts:
+                    read_button_input(cmd, user)
+
+                # owner-only commands
+                elif Roles.OWNER in user.roles:
+                    # restarts bot
+                    if cmd == 'restart':
+                        utils.stop_all_threads()
+                        sys.exit(0)
+
+                    elif cmd == 'ban' and len(parts) > 1:
+                        target = config.users.get(parts[1], None)
+                        if target and Roles.OWNER not in target.roles:
+                            target.add_role(Roles.BANNED)
+
+                    elif cmd == 'unban':
+                        target = config.users.get(parts[1], None)
+                        if target:
+                            target.remove_role(Roles.BANNED)
 
             else:
                 read_button_input(msg, user)

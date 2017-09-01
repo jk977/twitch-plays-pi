@@ -1,8 +1,14 @@
 # config.py
 # contains bot configuration
 
+import threading
+
 from user import User
 from votes.votemanager import VoteManager
+
+
+# IRC configuration
+# =================
 
 HOST = 'irc.twitch.tv'
 PORT = 6667
@@ -15,8 +21,21 @@ with open('info/host.cfg', 'r') as file:
 with open('info/oauth.cfg', 'r') as file:
     PASS = 'oauth:' + file.read().strip()
 
+
+# Bot configuration
+# =================
+
+# tracks threads
+threads = []
+thread_list_lock = threading.Lock()
+
+# locks socket for sending messages
+socket_lock = threading.Lock() 
+
+# valid emulator inputs
 button_opts = ['A', 'B', 'start', 'select', 'up', 'down', 'left', 'right']
 cheat_opts = ['heal', 'killall', 'showgil']
 
+# used in vote tracking
 users = {}
 vm = VoteManager(threshold=1)
