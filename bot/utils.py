@@ -5,6 +5,7 @@ import config
 
 from stoppablethread import StoppableThread
 from time import sleep
+from user import User
 
 
 # IRC functions
@@ -44,6 +45,10 @@ def finalize_thread(thread):
             config.threads.remove(thread)
         except:
             pass
+
+
+def add_user(name, roles=[]):
+    config.users[name] = User(name=name, roles=roles)
 
 
 def format_button_input(message):
