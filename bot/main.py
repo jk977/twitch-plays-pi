@@ -87,7 +87,7 @@ if __name__ == '__main__':
     sock.send('JOIN #{}\r\n'.format(config.CHAN).encode('utf-8'))
 
     # polls restart file every second and posts stream status if exists
-    thread = StoppableThread(period=1, target=notify_restarts, args=(sock,))
+    thread = StoppableThread(period=1, after=utils.finalize_thread, loop=True, target=notify_restarts, args=(sock,))
     thread.start()
     config.threads.append(thread)
 
