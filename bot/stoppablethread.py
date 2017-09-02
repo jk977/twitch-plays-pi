@@ -1,13 +1,14 @@
+# TODO find a thread-safe alternative to signal to allow target to time out
 import threading
 from time import sleep, time
 
 
 class StoppableThread(threading.Thread):
     """Thread class that loops the target function until stop() is called."""
-    def __init__(self, period=0, loop=False, timeout=-1, after=None, **kwargs):
+    def __init__(self, period=-1, timeout=-1, after=None, **kwargs):
         """Initializes class instance.
 
-        :param period: how often to repeat the target function (seconds)
+        :param period: how often to repeat the target function (seconds). Set to less than 0 to not loop
         :param timeout: if loop is True, time to wait before stopping loop (seconds); doesn't timeout if value <= 0
         :param after: function to call after thread finishes (if it takes an argument, self is passed)
         :param kwargs: keywords args for threading.Thread constructor
@@ -19,7 +20,6 @@ class StoppableThread(threading.Thread):
         self._after = after
         self._stop_event = threading.Event()
         self._period = period
-        self._loop = loop
         self._timeout = timeout
         super().__init__(**kwargs)
 
@@ -36,11 +36,11 @@ class StoppableThread(threading.Thread):
         timeout = self.__timeout()
         while not (self._stop_event.is_set() or next(timeout)):
             self._target(*self._args, **self._kwargs)
-            sleep(self._period)
-
-            if not self._loop:
+            if self._period < 0:
                 break
-            
+            else:
+                sleep(self._period)
+
         if self._after:
             try:
                 self._after(self)

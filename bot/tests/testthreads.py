@@ -15,9 +15,9 @@ def after(thread):
         print(thread.name + ' finished. {} threads still in list.'.format(len(threads)))
 
 
-t1 = StoppableThread(target=test, loop=True, after=after, timeout=1, period=0.5)
-t2 = StoppableThread(target=test, loop=True, after=after, timeout=2, period=0.9)
-t3 = StoppableThread(target=test, loop=True, after=after, timeout=5, period=2)
+t1 = StoppableThread(target=test, after=after, timeout=1, period=0.5)
+t2 = StoppableThread(target=test, after=after, timeout=2, period=0.9)
+t3 = StoppableThread(target=test, after=after, timeout=5, period=2)
 t4 = StoppableThread(target=test, after=after)
 t5 = StoppableThread(target=test, after=after)
 t6 = StoppableThread(target=test, after=after)

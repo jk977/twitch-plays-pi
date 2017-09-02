@@ -1,5 +1,6 @@
 # config.py
 # contains bot configuration
+# TODO allow serialization
 
 import threading
 
@@ -27,10 +28,11 @@ with open('info/oauth.cfg', 'r') as file:
 
 # tracks threads
 threads = []
-thread_list_lock = threading.Lock()
 
-# locks socket for sending messages
+# resource locks
 socket_lock = threading.Lock() 
+thread_list_lock = threading.Lock()
+user_list_lock = threading.Lock() 
 
 # valid emulator inputs
 button_opts = ['A', 'B', 'start', 'select', 'up', 'down', 'left', 'right']

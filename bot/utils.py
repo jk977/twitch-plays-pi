@@ -1,7 +1,9 @@
 # utils.py
 
-import re
 import config
+import json
+import re
+import urllib.request
 
 from stoppablethread import StoppableThread
 from time import sleep
@@ -47,9 +49,17 @@ def finalize_thread(thread):
             pass
 
 
-def add_user(name, roles=[]):
-    config.users[name] = User(name=name, roles=roles)
-
+# TODO finish function
+# uncomment when config.users is thread safe
+#
+# def update_roles():
+#     chat_url = 'tmi.twitch.tv/group/user/{}/chatters'
+#     with urllib.request.urlopen(chat_url.format(config.CHAN)) as url:
+#         content = json.loads(url.read().decode())
+#         chatters = content['chatters']
+#         mods = chatters['moderators']
+#         admins = chatters['admins']
+    
 
 def format_button_input(message):
     """Formats input to be sent to lua script"""

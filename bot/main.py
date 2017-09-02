@@ -6,7 +6,8 @@
 #           or
 #         class Chat: __init__(self, socket)
 #         class Command: __init__(self, chat) 
-#   - integrate roles into User class instead of it being exposed 
+#   - add decorators for thread-safe resource accessors/mutators
+#     instead of repeated with blocks?
 
 import os
 import random
@@ -91,7 +92,7 @@ if __name__ == '__main__':
     send_msg(sock, 'Bot online!')
 
     # polls restart file every second and posts stream status if exists
-    thread = StoppableThread(period=1, after=utils.finalize_thread, loop=True, target=notify_restarts, args=(sock,))
+    thread = StoppableThread(period=1, after=utils.finalize_thread, target=notify_restarts, args=(sock,))
     thread.start()
     config.threads.append(thread)
 
@@ -111,65 +112,66 @@ if __name__ == '__main__':
 
             # adds user to list if not present
             if username not in config.users:
-                roles = [Roles.OWNER] if username == config.CHAN else []
-                config.users[username] = User(name=username, roles=roles)
+                is_owner = username == config.CHAN
+                config.users[username] = User(name=username, owner=is_owner)
 
             user = config.users[username]
 
             if msg.startswith('!'):
                 cmd = parts[0][1:]
 
-                if cmd == 'roles':
-                    user_roles = Roles.get_role_names(user.roles)
-                    message = 'Your roles are: '
-
-                    for i, role in enumerate(user_roles):
-                        message += role
-                        message += ', ' if (i+1 != len(user_roles)) else ''
-
-                    send_msg(sock, message)
-
-                elif cmd == 'help':
+                if cmd == 'help':
                     with open('info/help.cfg', 'r') as file:
                         help_msg = file.read().strip();
                     send_msg(sock, help_msg)
 
-                elif cmd == 'game' and Roles.BANNED not in user.roles:
+                elif cmd == 'game' and not user.is_banned:
                     cheat = parts[1].lower()
                     read_cheat_input(cheat, user)
 
+                elif cmd == 'banlist':
+                    banlist = [u.name for u in config.users.values() if u.is_banned]
+
+                    if len(banlist) == 0:
+                        message = 'No one is currently banned.'
+                    else:
+                        message = 'Banned users: ' + ', '.join(banlist)
+
+                    send_msg(sock, message)
+
                 # owner-only commands
-                elif Roles.OWNER in user.roles:
+                elif user.is_owner:
                     if cmd == 'restart':
-                        send_msg(sock, 'Restarting... Inputs won\'t work until restart is finished.')
+                        send_msg(sock, 'Restarting chat bot... Inputs won\'t work until restart is finished.')
                         sock.shutdown(socket.SHUT_RDWR)
                         sock.close()
                         utils.stop_all_threads()
                         sys.exit(0)
 
                     elif cmd == 'ban' and len(parts) > 1:
-                        target_name = parts[1].lower().replace('@', '')
+                        target_name = parts[1].lower().replace('@', '').strip()
 
                         if not target_name in config.users:
-                            utils.add_user(target_name, roles=[Roles.BANNED])
-
-                        target = config.users[target_name]
+                            target = User(name=target_name)
+                            config.users[target_name] = target
+                        else:
+                            target = config.users[target_name]
                             
-                        if Roles.OWNER not in target.roles:
-                            target.add_role(Roles.BANNED)
-
-                        send_msg(sock, 'Banned {} from playing.'.format(target.name))
+                        try:
+                            target.ban()
+                            send_msg(sock, 'Banned {} from playing.'.format(target.name))
+                        except PermissionError as e:
+                            send_msg(sock, str(e))
 
                     elif cmd == 'unban':
-                        target = config.users.get(parts[1].lower(), None)
+                        target_name = parts[1].lower().replace('@', '').strip()
+                        target = config.users.get(target_name, None)
+
                         if not target:
                             send_msg(sock, 'Couldn\'t find user.')
-                        else:
-                            if Roles.BANNED not in target.roles:
-                                send_msg(sock, 'User wasn\'t banned.')
-                            else:
-                                target.remove_role(Roles.BANNED)
-                                send_msg(sock, 'Unbanned {}.'.format(target.name))
+                        elif target.is_banned:
+                            target.unban()
+                            send_msg(sock, 'Unbanned {}.'.format(target_name))
 
-            elif Roles.BANNED not in user.roles:
+            elif not user.is_banned:
                 read_button_input(msg, user)

@@ -1,10 +1,19 @@
+from roles import Roles
 from votes.option import Option
 
+
 class User:
-    def __init__(self, name=None, choice=None, roles=None):
+    def __init__(self, name=None, choice=None, moderator=False, owner=False):
+        role = Roles.DEFAULT
+
+        if owner:
+            role |= Roles.OWNER
+        elif moderator:
+            role |= Roles.MOD
+
         self._name = name
         self._choice = choice
-        self._roles = [] if roles is None else roles
+        self._role = role
 
     @property
     def choice(self):
@@ -15,20 +24,36 @@ class User:
         return self._name
 
     @property
-    def roles(self):
-        return self._roles
+    def is_banned(self):
+        return bool(self._role & Roles.BANNED)
 
-    def add_role(self, role):
-        if role not in self._roles:
-            self._roles.append(role)
+    @property
+    def is_moderator(self):
+        return bool(self._role & Roles.MOD)
 
-    def remove_role(self, role):
-        self._roles = [r for r in self._roles if r != role]
+    @property
+    def is_owner(self):
+        return bool(self._role & Roles.OWNER)
 
-    def clear_roles(self):
-        self._roles = []
+    def mod(self):
+        self._role |= Roles.MOD
+
+    def unmod(self):
+        self._role &= ~Roles.MOD
+
+    def ban(self):
+        if self.is_owner:
+            raise PermissionError('Can\'t ban the owner!')
+
+        self._role |= Roles.BANNED
+
+    def unban(self):
+        self._role &= ~Roles.BANNED
 
     def vote(self, manager, choice_name):
+        if self.is_banned:
+            raise PermissionError('Banned users can\'t vote.')
+
         vote_count = manager.add_vote(self, choice_name)
         self._choice = choice_name
         return vote_count
