@@ -1,4 +1,4 @@
-from roles import Roles
+from chat.roles import Roles
 from votes.option import Option
 
 

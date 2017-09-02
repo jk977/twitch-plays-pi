@@ -1,5 +1,5 @@
 """Testing new vote functionality."""
-from user import User
+from chat.user import User
 from tests.utils import *
 
 

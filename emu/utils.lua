@@ -3,7 +3,6 @@
 -- Module with general utility functions
 
 local utils = {};
-local button_opts = {'A', 'B', 'start', 'select', 'up', 'down', 'left', 'right'};
 local input_dir = '../inputs.txt';
 local cheat_dir = '../cheats.txt';
 
@@ -45,20 +44,6 @@ function utils.poll_cheat()
     end
 
     return utils.trim_string(contents);
-end
-
-
--- verifies that the input button is valid
-function utils.validate_input(input)
-    button = input:sub(2, #input);
-
-    for _, value in pairs(button_opts) do
-        if button == value then
-            return true;
-        end
-    end
-
-    return false;
 end
 
 

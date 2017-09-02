@@ -7,7 +7,7 @@ import urllib.request
 
 from stoppablethread import StoppableThread
 from time import sleep
-from user import User
+from chat.user import User
 
 
 # IRC functions
@@ -59,6 +59,13 @@ def finalize_thread(thread):
 #         chatters = content['chatters']
 #         mods = chatters['moderators']
 #         admins = chatters['admins']
+
+
+def validate_cheat(message):
+    for cheat in config.cheat_opts:
+        if re.match(cheat, message):
+            return True
+    return False
     
 
 def format_button_input(message):

@@ -3,6 +3,7 @@
 -- Contains scripts specific to Final Fantasy 1.
 
 local consts = require('games.finalfantasy.ff_const');
+local emutils = require('emutils');
 local ff = {};
 
 
@@ -82,6 +83,69 @@ end
 -- returns true if player is fighting enemies
 local function in_battle()
     return memory.readbyte(0x0081) == 0x68;
+end
+
+
+function ff.do_cheat(cheat)
+    
+    if cheat == 'heal' then
+        ff.cure_all(true);
+    elseif cheat == 'killall' then
+        ff.kill_all_enemies(true);
+    elseif cheat == 'showgil' then
+        ff.print_gil();
+    elseif cheat:sub(1,6) == 'attack' then
+        local enemy_count = tonumber(cheat:sub(8,8));
+        ff.attack_macro(enemy_count);
+    end
+end
+
+
+-- spreads party attacks over specified number of enemies
+function ff.attack_macro(enemy_count)
+    if not in_battle() then
+        emu.message('Not in battle!');
+        return;
+    end
+
+    local living_members = 4;
+
+    -- ignore dead members
+    for i = 1, 4 do
+        local p_member = consts.PARTY_MEMBERS[i];
+        local p_status = p_member + consts.MEMBER_INFO['STATUS'];
+        if memory.readbyte(p_status) == 0x1 then
+            living_members = living_members - 1;
+        end
+    end
+
+    -- can't attack more times than party member count
+    if enemy_count > living_members then
+        enemy_count = living_members;
+    end
+
+    -- makes sure target select is chosen for first member
+    emutils.press_button(1, 'B', living_members);
+
+    -- distributes attacks evenly between enemies
+    for i = 1, living_members do
+        local target = i % enemy_count;
+        
+        if i % enemy_count == 0 then
+            target = enemy_count;
+        end
+
+        -- moves cursor to enemy and attacks
+        -- for some reason, there's additional lag beyond
+        -- lag frames in battles, so the advance_frames()
+        -- calls are needed
+        emutils.advance_frames(19);
+        emutils.press_button(1, 'A', 1);
+        emutils.press_button(1, 'down', target-1);
+        emutils.advance_frames(2);
+        emutils.press_button(1, 'A', 1);
+        emutils.advance_frames(19);
+    end
 end
 
 

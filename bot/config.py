@@ -4,7 +4,7 @@
 
 import threading
 
-from user import User
+from chat.user import User
 from votes.votemanager import VoteManager
 
 
@@ -34,10 +34,9 @@ socket_lock = threading.Lock()
 thread_list_lock = threading.Lock()
 user_list_lock = threading.Lock() 
 
-# valid emulator inputs
+# valid emulator inputs (literal for buttons, regex for cheats)
 button_opts = ['A', 'B', 'start', 'select', 'up', 'down', 'left', 'right']
-cheat_opts = ['heal', 'killall', 'showgil']
-
+cheat_opts = ['heal', 'killall', 'showgil', 'attack\\s[1-4]']
 
 # used in vote tracking
 users = {}

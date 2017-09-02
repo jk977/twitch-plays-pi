@@ -3,14 +3,14 @@ from tests.testroles import test_roles
 from tests.testthreads import test_threads
 
 
-def test_all(vote_count, role_count):
+def test_all(vote_count):
     success = True
 
     if not test_votes(vote_count): 
         print('Vote test failed.')
         success = False
 
-    if not test_roles(role_count):
+    if not test_roles():
         print('Role test failed.')
         success = False
 
@@ -22,7 +22,7 @@ def test_all(vote_count, role_count):
 
 
 if __name__ == '__main__':
-    if test_all(50, 50):
+    if test_all(50):
         print('Tests successful!')
     else:
         print('Tests failed.')

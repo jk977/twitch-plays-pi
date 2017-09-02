@@ -20,10 +20,10 @@ import time
 import config
 import utils
 
-from roles import Roles
+from chat.roles import Roles
 from stoppablethread import StoppableThread
 from time import sleep, time
-from user import User
+from chat.user import User
 from utils import send_msg
 
 
@@ -39,7 +39,7 @@ def send_input(filename, contents):
 
 
 def read_cheat_input(cheat, user):
-    if cheat not in config.cheat_opts:
+    if not utils.validate_cheat(cheat):
         return
 
     vote_count = user.vote(config.vm, cheat)
@@ -126,7 +126,7 @@ if __name__ == '__main__':
                     send_msg(sock, help_msg)
 
                 elif cmd == 'game' and not user.is_banned:
-                    cheat = parts[1].lower()
+                    cheat = ' '.join(parts[1:]).lower()
                     read_cheat_input(cheat, user)
 
                 elif cmd == 'banlist':

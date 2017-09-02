@@ -1,7 +1,7 @@
 """Testing new vote functionality."""
 import itertools
 
-from user import User
+from chat.user import User
 from votes.votemanager import VoteManager
 from tests.utils import *
 
