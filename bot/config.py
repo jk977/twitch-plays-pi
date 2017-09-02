@@ -38,9 +38,6 @@ user_list_lock = threading.Lock()
 button_opts = ['A', 'B', 'start', 'select', 'up', 'down', 'left', 'right']
 cheat_opts = ['heal', 'killall', 'showgil']
 
-chatters = {}
-button_inputs = Choices(choice_format=r'^[1-9][a-zA-Z]+$', threshold=1)
-cheat_inputs = Choices(choice_format=r'^[a-zA-Z]+$', threshold=1)
 
 # used in vote tracking
 users = {}
