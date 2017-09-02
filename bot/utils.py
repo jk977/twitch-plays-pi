@@ -1,18 +1,23 @@
 # utils.py
 
-import re
 import config
-from chatter import Chatter
+import json
+import re
+import urllib.request
+
+from stoppablethread import StoppableThread
 from time import sleep
+from user import User
 
 
 # IRC functions
 # =============
 
 def send_msg(sock, msg):
-    print(':' + config.NICK + '!' + config.NICK + '@' + config.NICK + '.tmi.twitch.tv PRIVMSG #' + config.CHAN + ' :' + msg + '\r\n')
-    sock.send(bytes('PRIVMSG #' + config.CHAN + ' :' + msg + '\r\n', 'utf-8'))
-    sleep(config.RATE)
+    with config.socket_lock:
+        print(':' + config.NICK + '!' + config.NICK + '@' + config.NICK + '.tmi.twitch.tv PRIVMSG #' + config.CHAN + ' :' + msg + '\r\n')
+        sock.send(bytes('PRIVMSG #' + config.CHAN + ' :' + msg + '\r\n', 'utf-8'))
+        sleep(config.RATE)
 
 
 def ban(sock, user):
@@ -28,12 +33,36 @@ def timeout(sock, user, seconds=600):
 # Bot-specific functions
 # ======================
 
+def stop_all_threads():
+    """Stops created threads."""
+    stoppables = [t for t in config.threads if isinstance(t, StoppableThread)]
+    for thread in stoppables:
+        thread.stop()
+
+
+def finalize_thread(thread):
+    """Removes thread from thread list after thread finishes."""
+    with config.thread_list_lock:
+        try:
+            config.threads.remove(thread)
+        except:
+            pass
+
+
+# TODO finish function
+# uncomment when config.users is thread safe
+#
+# def update_roles():
+#     chat_url = 'tmi.twitch.tv/group/user/{}/chatters'
+#     with urllib.request.urlopen(chat_url.format(config.CHAN)) as url:
+#         content = json.loads(url.read().decode())
+#         chatters = content['chatters']
+#         mods = chatters['moderators']
+#         admins = chatters['admins']
+    
+
 def format_button_input(message):
     """Formats input to be sent to lua script"""
-    # support for inputs prefixed by ! since a lot of people seem to try it
-    if message.startswith('!'):
-        message = message[1:]
-
     has_leading_num = bool(re.search('^[1-9]', message))
     has_trailing_num = bool(re.search('[1-9]$', message))
 
@@ -57,8 +86,3 @@ def format_button_input(message):
         return
 
     return mult + button
-
-
-def add_chatter(user):
-    chatter = Chatter()
-    config.chatters[user] = chatter
