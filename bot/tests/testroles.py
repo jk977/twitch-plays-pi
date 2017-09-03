@@ -64,7 +64,7 @@ def test_roles():
 
         u5.mod()
         u5.ban()
-        assert(u5.is_banned and u5.is_moderator)
+        assert(u5.is_banned)
 
         print('Banning works correctly.')
         print('=====================')
