@@ -8,7 +8,7 @@
 
 local utils = require('utils');
 local emutils = require('emutils');
-local ff = require('games/finalfantasy/ff');
+local game = require('games/finalfantasy/ff');
 
 -- wipes any pre-existing input info
 utils.reset_input_file();
@@ -29,7 +29,7 @@ while true do
     end
 
     if cheat ~= nil and cheat ~= '' then
-        ff.do_cheat(cheat);
+        game.do_cheat(cheat);
         utils.reset_cheat_file();
     end
 

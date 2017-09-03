@@ -39,7 +39,7 @@ def send_input(filename, contents):
 
 
 def read_cheat_input(cheat, user):
-    if not utils.validate_cheat(cheat):
+    if cheat not in config.cheat_opts:
         return
 
     vote_count = user.vote(config.vm, cheat)
@@ -92,7 +92,7 @@ if __name__ == '__main__':
     send_msg(sock, 'Bot online!')
 
     # polls restart file every second and posts stream status if exists
-    thread = StoppableThread(period=1, after=utils.finalize_thread, target=notify_restarts, args=(sock,))
+    thread = StoppableThread(period=1, after=utils.finalize_thread, target=notify_restarts, args=(sock,), daemon=True)
     thread.start()
     config.threads.append(thread)
 
@@ -126,7 +126,7 @@ if __name__ == '__main__':
                     send_msg(sock, help_msg)
 
                 elif cmd == 'game' and not user.is_banned:
-                    cheat = ' '.join(parts[1:]).lower()
+                    cheat = parts[1].lower()
                     read_cheat_input(cheat, user)
 
                 elif cmd == 'banlist':

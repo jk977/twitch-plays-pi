@@ -61,13 +61,6 @@ def finalize_thread(thread):
 #         admins = chatters['admins']
 
 
-def validate_cheat(message):
-    for cheat in config.cheat_opts:
-        if re.match(cheat, message):
-            return True
-    return False
-    
-
 def format_button_input(message):
     """Formats input to be sent to lua script"""
     has_leading_num = bool(re.search('^[1-9]', message))
