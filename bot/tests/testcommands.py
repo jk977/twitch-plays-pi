@@ -1,7 +1,9 @@
-from chat.command import Command
+from chat.commands import Command
 
 
-def foo(*args):
+def foo(**kwargs):
+    args = kwargs.get('args', None)
+
     if args:
         args = [str(arg) for arg in args]
         print('arguments: {}'.format(', '.join(args)))

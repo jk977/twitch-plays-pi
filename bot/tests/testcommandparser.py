@@ -1,3 +1,4 @@
+# TODO fix test
 import traceback
 
 from chat.commandparser import CommandParser
@@ -23,34 +24,43 @@ u4 = User(name='Mark')
 u5 = User(name='Henry')
 users = [u1,u2,u3,u4,u5]
 
+u5.ban()
+
 sock = 'dummy'
-commands = []
+valid_commands = []
+invalid_commands = []
+
+
+def parse(message, user):
+    print('Parsing {} from {}...'.format(message, user.name))
+    cmd = CommandParser.parse(message, user, sock)
+    print('Command parsed!\n')
+
+    return cmd
 
 
 def test_command_parser():
-    for i, m in enumerate(messages):
-        user = users[i % len(users)]
+    # TODO find out why permission-related commands work in a test environment,
+    # but do in the actual bot
+    try:
+        cmd1 = parse(m1,u1)
+        cmd2 = parse(m2,u2)
+        cmd3 = parse(m3,u3)
+        cmd4 = parse(m8,u4)
 
-        try:
-            cmd = CommandParser.parse(m, user, sock)
-            if cmd:
-                commands.append(cmd)
-        except PermissionError as e:
-            print(e)
-        except Exception as e:
-            print('Parsing commands failed. Info:\n')
-            traceback.print_stack_trace()
-            raise
+        valid_commands = [cmd for cmd in [cmd1, cmd2, cmd3, cmd4] if cmd is not None]
+    except PermissionError as e:
+        print(e)
+    except Exception:
+        print('Parsing commands failed.')
+        return False
 
     try:
-        # 7 of the 8 messages have a valid command name
-        assert(len(commands) == 7)
+        assert(len(valid_commands) == 3)
+        print('Commands parsed as expected\n')
     except AssertionError:
-        print('Commands didn\'t parse as expected.')
-
-    for i, command in enumerate(commands):
-        command.run()
-        print('Command {} passed!'.format(i))
+        print('Expected 3 commands after first batch but got {}.'.format(len(valid_commands)))
+        return False
 
     return True
 

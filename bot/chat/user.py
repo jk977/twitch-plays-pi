@@ -54,7 +54,8 @@ class User:
         self._role = Roles.BANNED
 
     def unban(self):
-        self._role = Roles.DEFAULT
+        if self.is_banned:
+            self._role = Roles.DEFAULT
 
     def vote(self, manager, choice_name):
         if self.is_banned:
