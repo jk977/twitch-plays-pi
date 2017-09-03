@@ -19,8 +19,10 @@ class CommandParser:
                 'restart': commands.restart,
                 'ban': commands.ban,
                 'unban': commands.unban,
-                'roles': commands.get_roles
-                }
+                'roles': commands.get_roles,
+                'mod': commands.mod,
+                'unmod': commands.unmod
+        }
 
         parts = re.split('\\s+', message)
         action = cmds.get(parts[0][1:], None)

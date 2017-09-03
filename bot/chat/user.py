@@ -42,6 +42,7 @@ class User:
         return self._role
 
     def mod(self):
+        self.unban()
         self._role |= Roles.MOD
 
     def unmod(self):

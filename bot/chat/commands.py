@@ -1,3 +1,8 @@
+# TODO merge command functions into command class?
+#   - Likely slower to do that, since command instances would contain data for all commands
+#     Separate into Command and CommandList class, with CommandList containing parse()?
+#       - Name would be misleading
+
 import config
 import re
 import socket
@@ -71,28 +76,50 @@ def game_command(sock, user, args):
 
 @permissions(Roles.MOD, silent=True)
 def ban(sock, user, args):
-    target_name = args[0].lower().replace('@', '').strip()
-    if not target_name in config.users:
-        target = User(name=target_name)
-        config.users[target_name] = target
-    else:
-        target = config.users[target_name]
-        
-    if user.is_owner or not (target.is_owner or target.is_moderator):
-        target.ban()
-        send_msg(sock, 'Banned {} from playing.'.format(target_name))
+    def true_ban(name):
+        """Contains ban logic."""
+        name = name.lower().replace('@', '').strip()
 
+        if not name in config.users:
+            target = User(name=name)
+            config.users[name] = target
+        else:
+            target = config.users[name]
+            
+        if user.role > target.role:
+            target.ban()
+            return True
+        else:
+            return False
+
+
+    banned_users = []
+
+    if user.is_owner:
+        for name in args:
+            if true_ban(name):
+                banned_users.append(name)
+    else:
+        if true_ban(args[0]):
+            banned_users = [args[0]]
+
+    if banned_users:
+        send_msg(sock, 'Banned {}.'.format(', '.join(banned_users)))
+    
 
 @permissions(Roles.MOD, silent=True)
 def unban(sock, user, args):
-    target_name = args[0].lower().replace('@', '').strip()
-    target = config.users.get(target_name, None)
+    unbanned_list = []
+    for name in args:
+        target_name = name.lower().replace('@', '').strip()
+        target = config.users.get(target_name, None)
 
-    if not target:
-        send_msg(sock, 'Couldn\'t find user.')
-    elif target.is_banned:
-        target.unban()
-        send_msg(sock, 'Unbanned {}.'.format(target_name))
+        if target and target.is_banned:
+            target.unban()
+            unbanned_list.append(target_name)
+
+    if unbanned_list:
+        send_msg(sock, 'Unbanned {}.'.format(', '.join(unbanned_list)))
 
 
 @permissions(Roles.OWNER, silent=True)
@@ -102,3 +129,27 @@ def restart(sock, user, args):
     sock.close()
     utils.stop_all_threads()
     sys.exit(0)
+
+
+@permissions(Roles.OWNER, silent=True)
+def mod(sock, user, args):
+    for name in args:
+        target_name = name.lower().replace('@', '').strip()
+
+        if not target_name in config.users:
+            target = User(name=target_name)
+            config.users[target_name] = target
+        else:
+            target = config.users[target_name]
+            
+        target.mod()
+
+
+@permissions(Roles.OWNER, silent=True)
+def unmod(sock, user, args):
+    for name in args:
+        target_name = name.lower().replace('@', '').strip()
+        target = config.users.get(target_name, None)
+
+        if target:
+            target.unmod()
