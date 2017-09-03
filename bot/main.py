@@ -1,73 +1,20 @@
 # main.py
 # TODO
-#   - separate commands (and chat functions?) into their own module
-#       e.g.,
-#         class Command: __init__(self, socket)
-#           or
-#         class Chat: __init__(self, socket)
-#         class Command: __init__(self, chat) 
 #   - add decorators for thread-safe resource accessors/mutators
 #     instead of repeated with blocks?
 
+import config
 import os
-import random
 import re
 import socket
-import sys
-import threading
-import time
-
-import config
 import utils
 
-from chat.roles import Roles
 from stoppablethread import StoppableThread
-from time import sleep, time
-from chat.user import User
+from time import sleep
 from utils import send_msg
 
-
-def send_input(filename, contents):
-    for i in range(10):
-        try:
-            with open('../' + filename, 'w+') as file:
-                file.write(contents)
-                print('>>>Sent ' + contents + ' to emulator.')
-                break
-        except:
-            sleep(1)
-
-
-def read_cheat_input(cheat, user):
-    if cheat not in config.cheat_opts:
-        return
-
-    vote_count = user.vote(config.vm, cheat)
-
-    # if vote brought vote count over threshold
-    if vote_count >= config.vm.threshold:
-        t = StoppableThread(after=utils.finalize_thread, target=send_input, args=('cheats.txt', cheat))
-        config.threads.append(t)
-        t.start()
-
-        config.vm.reset()
-
-    
-def read_button_input(message, user):
-    vote = utils.format_button_input(message)
-
-    if not vote:
-        return
-
-    vote_count = user.vote(config.vm, vote)
-
-    # if vote brought vote count over threshold
-    if vote_count >= config.vm.threshold:
-        t = StoppableThread(after=utils.finalize_thread, target=send_input, args=('inputs.txt', vote))
-        config.threads.append(t)
-        t.start()
-
-        config.vm.reset()
+from chat.user import User
+from chat.commandparser import CommandParser
 
 
 def notify_restarts(sock):
@@ -116,62 +63,14 @@ if __name__ == '__main__':
                 config.users[username] = User(name=username, owner=is_owner)
 
             user = config.users[username]
+            cmd = CommandParser.parse(msg, user, sock)
 
-            if msg.startswith('!'):
-                cmd = parts[0][1:]
+            try:
+                cmd.run()
+            except PermissionError as e:
+                send_msg(sock, str(e))
+            except AttributeError:
+                pass
 
-                if cmd == 'help':
-                    with open('info/help.cfg', 'r') as file:
-                        help_msg = file.read().strip();
-                    send_msg(sock, help_msg)
-
-                elif cmd == 'game' and not user.is_banned:
-                    cheat = parts[1].lower()
-                    read_cheat_input(cheat, user)
-
-                elif cmd == 'banlist':
-                    banlist = [u.name for u in config.users.values() if u.is_banned]
-
-                    if len(banlist) == 0:
-                        message = 'No one is currently banned.'
-                    else:
-                        message = 'Banned users: ' + ', '.join(banlist)
-
-                    send_msg(sock, message)
-
-                # owner-only commands
-                elif user.is_owner:
-                    if cmd == 'restart':
-                        send_msg(sock, 'Restarting chat bot... Inputs won\'t work until restart is finished.')
-                        sock.shutdown(socket.SHUT_RDWR)
-                        sock.close()
-                        utils.stop_all_threads()
-                        sys.exit(0)
-
-                    elif cmd == 'ban' and len(parts) > 1:
-                        target_name = parts[1].lower().replace('@', '').strip()
-
-                        if not target_name in config.users:
-                            target = User(name=target_name)
-                            config.users[target_name] = target
-                        else:
-                            target = config.users[target_name]
-                            
-                        try:
-                            target.ban()
-                            send_msg(sock, 'Banned {} from playing.'.format(target.name))
-                        except PermissionError as e:
-                            send_msg(sock, str(e))
-
-                    elif cmd == 'unban':
-                        target_name = parts[1].lower().replace('@', '').strip()
-                        target = config.users.get(target_name, None)
-
-                        if not target:
-                            send_msg(sock, 'Couldn\'t find user.')
-                        elif target.is_banned:
-                            target.unban()
-                            send_msg(sock, 'Unbanned {}.'.format(target_name))
-
-            elif not user.is_banned:
-                read_button_input(msg, user)
+            if not user.is_banned:
+                utils.read_button_input(msg, user)

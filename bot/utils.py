@@ -86,3 +86,44 @@ def format_button_input(message):
         return
 
     return mult + button
+
+
+def read_button_input(message, user):
+    vote = format_button_input(message)
+
+    if not vote:
+        return
+
+    vote_count = user.vote(config.vm, vote)
+
+    # if vote brought vote count over threshold
+    if vote_count >= config.vm.threshold:
+        t = StoppableThread(after=finalize_thread, target=send_input, args=('inputs.txt', vote))
+        config.threads.append(t)
+        t.start()
+
+        config.vm.reset()
+
+def read_cheat_input(cheat, user):
+    if cheat not in config.cheat_opts:
+        return
+
+    vote_count = user.vote(config.vm, cheat)
+
+    # if vote brought vote count over threshold
+    if vote_count >= config.vm.threshold:
+        t = StoppableThread(after=finalize_thread, target=send_input, args=('cheats.txt', cheat))
+        config.threads.append(t)
+        t.start()
+
+        config.vm.reset()
+        
+def send_input(filename, contents):
+    for i in range(10):
+        try:
+            with open('../' + filename, 'w+') as file:
+                file.write(contents)
+                print('>>>Sent ' + contents + ' to emulator.')
+                break
+        except:
+            sleep(1)

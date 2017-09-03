@@ -8,7 +8,8 @@ class User:
 
         if owner:
             role |= Roles.OWNER
-        elif moderator:
+
+        if moderator or owner:
             role |= Roles.MOD
 
         self._name = name
@@ -35,6 +36,11 @@ class User:
     def is_owner(self):
         return bool(self._role & Roles.OWNER)
 
+    @property
+    def role(self):
+        """Returns mask of all roles held by user."""
+        return self._role
+
     def mod(self):
         self._role |= Roles.MOD
 
@@ -45,10 +51,10 @@ class User:
         if self.is_owner:
             raise PermissionError('Can\'t ban the owner!')
 
-        self._role |= Roles.BANNED
+        self._role = Roles.BANNED
 
     def unban(self):
-        self._role &= ~Roles.BANNED
+        self._role = Roles.DEFAULT
 
     def vote(self, manager, choice_name):
         if self.is_banned:
