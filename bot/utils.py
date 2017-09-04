@@ -55,7 +55,6 @@ def finalize_thread(thread):
     """Removes thread from thread list after thread finishes."""
     with config.threads_lock:
         try:
-            print(1)
             config.threads.remove(thread)
         except:
             pass
