@@ -42,7 +42,7 @@ def stop_all_threads():
 
 def finalize_thread(thread):
     """Removes thread from thread list after thread finishes."""
-    with config.thread_list_lock:
+    with config.threads_lock:
         try:
             config.threads.remove(thread)
         except:
@@ -104,6 +104,7 @@ def read_button_input(message, user):
 
         config.vm.reset()
 
+
 def read_cheat_input(cheat, user):
     if cheat not in config.cheat_opts:
         return
@@ -118,6 +119,7 @@ def read_cheat_input(cheat, user):
 
         config.vm.reset()
         
+
 def send_input(filename, contents):
     for i in range(10):
         try:

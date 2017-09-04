@@ -1,7 +1,4 @@
 # main.py
-# TODO
-#   - add decorators for thread-safe resource accessors/mutators
-#     instead of repeated with blocks?
 
 import config
 import os

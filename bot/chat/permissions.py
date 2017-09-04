@@ -5,7 +5,6 @@ def permissions(required_role, silent=False):
     be used by anyone that isn't banned. PermissionError is raised
     if silent is false and the user doesn't have the required role.
     """
-
     def outer(func):
         def inner(*args, **kwargs):
             user = kwargs.get('user', None)
@@ -19,4 +18,5 @@ def permissions(required_role, silent=False):
                 raise ValueError('"user" parameter not found')
 
         return inner
+
     return outer

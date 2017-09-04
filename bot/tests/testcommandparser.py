@@ -1,6 +1,3 @@
-# TODO fix test
-import traceback
-
 from chat.commandparser import CommandParser
 from chat.user import User
 

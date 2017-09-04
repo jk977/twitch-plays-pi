@@ -31,10 +31,9 @@ threads = []
 
 # resource locks
 socket_lock = threading.Lock() 
-thread_list_lock = threading.Lock()
-user_list_lock = threading.Lock() 
+threads_lock = threading.Lock()
 
-# valid emulator inputs (literal for buttons, regex for cheats)
+# valid emulator inputs 
 button_opts = ['A', 'B', 'start', 'select', 'up', 'down', 'left', 'right']
 cheat_opts = ['heal', 'killall', 'showgil', 'attack']
 
