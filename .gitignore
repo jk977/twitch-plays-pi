@@ -1,6 +1,7 @@
 # project files
-roms/
+info/
 logs/
+roms/
 *.cfg
 *.txt
 

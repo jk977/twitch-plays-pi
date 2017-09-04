@@ -6,7 +6,8 @@ from time import sleep, time
 class StoppableThread(threading.Thread):
     """Thread class that loops the target function until stop() is called."""
     def __init__(self, period=-1, timeout=-1, after=None, **kwargs):
-        """Initializes class instance.
+        """
+        Initializes class instance.
 
         :param period: how often to repeat the target function (seconds). Set to less than 0 to not loop
         :param timeout: if loop is True, time to wait before stopping loop (seconds); doesn't timeout if value <= 0

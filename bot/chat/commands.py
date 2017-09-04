@@ -9,6 +9,7 @@ import socket
 import sys
 import utils
 
+from settings import Settings
 from utils import send_msg
 
 from chat.permissions import permissions
@@ -125,9 +126,10 @@ def unban(sock, user, args):
 @permissions(Roles.OWNER, silent=True)
 def restart(sock, user, args):
     send_msg(sock, 'Restarting chat bot... Inputs won\'t work until restart is finished.')
+    Settings.save_settings()
+    utils.stop_all_threads()
     sock.shutdown(socket.SHUT_RDWR)
     sock.close()
-    utils.stop_all_threads()
     sys.exit(0)
 
 

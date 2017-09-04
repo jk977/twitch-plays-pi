@@ -3,6 +3,7 @@
 import config
 import json
 import re
+import socket
 import urllib.request
 
 from stoppablethread import StoppableThread
@@ -12,6 +13,16 @@ from chat.user import User
 
 # IRC functions
 # =============
+
+def irc_connect():
+    """Sets up connection to IRC"""
+    sock = socket.socket()
+    sock.connect((config.HOST, config.PORT))
+    sock.send('PASS {}\r\n'.format(config.PASS).encode('utf-8'))
+    sock.send('NICK {}\r\n'.format(config.NICK).encode('utf-8'))
+    sock.send('JOIN #{}\r\n'.format(config.CHAN).encode('utf-8'))
+    return sock
+
 
 def send_msg(sock, msg):
     with config.socket_lock:
@@ -44,6 +55,7 @@ def finalize_thread(thread):
     """Removes thread from thread list after thread finishes."""
     with config.threads_lock:
         try:
+            print(1)
             config.threads.remove(thread)
         except:
             pass

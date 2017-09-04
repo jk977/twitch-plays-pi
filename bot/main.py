@@ -3,9 +3,9 @@
 import config
 import os
 import re
-import socket
 import utils
 
+from settings import Settings
 from stoppablethread import StoppableThread
 from time import sleep
 from utils import send_msg
@@ -26,19 +26,22 @@ def notify_restarts(sock):
 if __name__ == '__main__':
     CHAT_MSG = re.compile(r'^:\w+!\w+@\w+\.tmi\.twitch\.tv PRIVMSG #\w+ :')
 
-    # sets up connection to IRC
-    sock = socket.socket()
-    sock.connect((config.HOST, config.PORT))
-    sock.send('PASS {}\r\n'.format(config.PASS).encode('utf-8'))
-    sock.send('NICK {}\r\n'.format(config.NICK).encode('utf-8'))
-    sock.send('JOIN #{}\r\n'.format(config.CHAN).encode('utf-8'))
+    # loads settings from json
+    Settings.load_settings()
 
+    # gets socket connected to irc
+    sock = utils.irc_connect()
     send_msg(sock, 'Bot online!')
 
-    # polls restart file every second and posts stream status if exists
-    thread = StoppableThread(period=1, after=utils.finalize_thread, target=notify_restarts, args=(sock,), daemon=True)
-    thread.start()
-    config.threads.append(thread)
+    # polls restart file every second and posts stream status if restarting
+    stream_thread = StoppableThread(period=1, after=utils.finalize_thread, target=notify_restarts, args=(sock,), daemon=True)
+    stream_thread.start()
+    config.threads.append(stream_thread)
+
+    # periodically saves current users to settings file
+    settings_thread = StoppableThread(period=10, after=utils.finalize_thread, target=Settings.save_settings)
+    settings_thread.start()
+    config.threads.append(settings_thread)
 
     # main loop
     while True:
@@ -53,6 +56,10 @@ if __name__ == '__main__':
             msg = CHAT_MSG.sub('', response).strip()
             parts = re.split('\\s+', msg) # array of words in message
             print(response)
+
+            # ignores tmi messages
+            if username == 'tmi':
+                continue
 
            # adds user to list if not present
             if username not in config.users:

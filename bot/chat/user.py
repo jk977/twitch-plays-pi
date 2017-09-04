@@ -3,7 +3,7 @@ from votes.option import Option
 
 
 class User:
-    def __init__(self, name=None, choice=None, moderator=False, owner=False):
+    def __init__(self, name=None, choice=None, banned=False, moderator=False, owner=False):
         role = Roles.DEFAULT
 
         if owner:
@@ -11,6 +11,9 @@ class User:
 
         if moderator or owner:
             role |= Roles.MOD
+
+        if banned and not owner:
+            role = Roles.BANNED
 
         self._name = name
         self._choice = choice
