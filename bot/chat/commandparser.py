@@ -15,13 +15,14 @@ class CommandParser:
         cmds = {
                 'help': commands.get_help,
                 'game': commands.game_command,
+                'mods': commands.get_mods,
                 'banlist': commands.get_banlist,
-                'restart': commands.restart,
                 'ban': commands.ban,
                 'unban': commands.unban,
                 'roles': commands.get_roles,
                 'mod': commands.mod,
-                'unmod': commands.unmod
+                'unmod': commands.unmod,
+                'restart': commands.restart
         }
 
         parts = re.split('\\s+', message)

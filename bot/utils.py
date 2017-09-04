@@ -140,3 +140,10 @@ def send_input(filename, contents):
                 break
         except:
             sleep(1)
+
+
+def extract_username(name):
+    if not name:
+        return
+
+    return name.lower().replace('@', '').strip()

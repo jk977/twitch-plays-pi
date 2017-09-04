@@ -50,6 +50,18 @@ def get_roles(sock, user, args):
 
 
 @permissions(Roles.DEFAULT)
+def get_mods(sock, user, args):
+    mod_list = [u.name for u in config.users.values() if u.is_moderator]
+
+    if len(mod_list) == 0:
+        message = 'No moderators currently.'
+    else:
+        message = 'Moderators: ' + ', '.join(mod_list)
+
+    send_msg(sock, message)
+
+
+@permissions(Roles.DEFAULT)
 def get_banlist(sock, user, args):
     banlist = [u.name for u in config.users.values() if u.is_banned]
 
@@ -94,6 +106,7 @@ def ban(sock, user, args):
             return False
 
 
+    args = [utils.extract_username(user) for user in args]
     banned_users = []
 
     if user.is_owner:
@@ -110,14 +123,15 @@ def ban(sock, user, args):
 
 @permissions(Roles.MOD, silent=True)
 def unban(sock, user, args):
+    args = [utils.extract_username(user) for user in args]
     unbanned_list = []
+
     for name in args:
-        target_name = name.lower().replace('@', '').strip()
-        target = config.users.get(target_name, None)
+        target = config.users.get(name, None)
 
         if target and target.is_banned:
             target.unban()
-            unbanned_list.append(target_name)
+            unbanned_list.append(name)
 
     if unbanned_list:
         send_msg(sock, 'Unbanned {}.'.format(', '.join(unbanned_list)))
@@ -135,23 +149,24 @@ def restart(sock, user, args):
 
 @permissions(Roles.OWNER, silent=True)
 def mod(sock, user, args):
-    for name in args:
-        target_name = name.lower().replace('@', '').strip()
+    args = [utils.extract_username(user) for user in args]
 
-        if not target_name in config.users:
-            target = User(name=target_name)
-            config.users[target_name] = target
+    for name in args:
+        if not name in config.users:
+            target = User(name=name)
+            config.users[name] = target
         else:
-            target = config.users[target_name]
+            target = config.users[name]
             
         target.mod()
 
 
 @permissions(Roles.OWNER, silent=True)
 def unmod(sock, user, args):
+    args = [utils.extract_username(user) for user in args]
+
     for name in args:
-        target_name = name.lower().replace('@', '').strip()
-        target = config.users.get(target_name, None)
+        target = config.users.get(name, None)
 
         if target:
             target.unmod()
