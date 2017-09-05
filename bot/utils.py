@@ -60,22 +60,17 @@ def finalize_thread(thread):
             pass
 
 
-# TODO finish function
-# uncomment when config.users is thread safe
-#
-# def update_roles():
-#     chat_url = 'tmi.twitch.tv/group/user/{}/chatters'
-#     with urllib.request.urlopen(chat_url.format(config.CHAN)) as url:
-#         content = json.loads(url.read().decode())
-#         chatters = content['chatters']
-#         mods = chatters['moderators']
-#         admins = chatters['admins']
-
-
 def format_button_input(message):
     """Formats input to be sent to lua script"""
-    # maps buttons to single letters to allow shorter inputs
-    directions = {'r': 'right', 'l': 'left', 'u': 'up', 'd': 'down'}
+    # stores alternate mappings for buttons
+    mappings = {
+        ('r', '➡️', '☞', '👉'): 'right',  # right arrow and 2 pointing right emojis
+        ('l', '⬅️', '☜', '👈'): 'left',   # left arrow and 2 pointing left emojis
+        ('u', '⬆️', '☝', '👆'): 'up',     # up arrow and 2 pointing up emojis
+        ('d', '⬇️', '👇'): 'down',        # down arrow and pointing down emojis
+        ('🅱️', '👎', '🙅'): 'b',           # b, no good, and thumbs down emojis
+        ('🅰️', '👌', '👍'): 'a'            # a, ok hand, and thumbs up emojis
+    }
 
     has_leading_num = bool(re.search('^[1-9]', message))
     has_trailing_num = bool(re.search('[1-9]$', message))
@@ -92,11 +87,13 @@ def format_button_input(message):
 
     button = button.strip().lower()
 
+    for key in mappings:
+        if button in key:
+            button = mappings[key]
+
     # capitalizes 'a' and 'b' due to FCEUX input format
     if button in ['a', 'b']:
         button = button.upper()
-    elif button in directions:
-        button = directions[button]
     elif button not in config.button_opts or not re.match('[1-9]', mult):
         return
 
