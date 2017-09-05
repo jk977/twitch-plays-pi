@@ -86,6 +86,11 @@ local function in_battle()
 end
 
 
+local function get_attacking_member()
+    return memory.readbyte(consts.ATTACKING_MEMBER);
+end
+
+
 function ff.do_cheat(cheat)
     
     if cheat == 'heal' then
@@ -110,6 +115,14 @@ function ff.attack()
     end
 
     local living_members = 4;
+    local last_member;
+
+    -- set cursor to first party member
+    repeat
+        last_member = get_attacking_member();
+        emutils.press_button(1, 'B', 1);
+        emutils.advance_frames(40);
+    until last_member == get_attacking_member();
 
     -- ignore dead members
     for i = 1, 4 do
@@ -119,26 +132,10 @@ function ff.attack()
             living_members = living_members - 1;
         end
     end
-
-    -- if first member is attacking, press b to get out of menus
-    if memory.readbyte(consts.ATTACKING_MEMBER) == 0 then
-        emutils.press_button(1, 'B', 1);
-    end
-
-    -- makes sure first member is attacking
-    while memory.readbyte(consts.ATTACKING_MEMBER) ~= 0 do
-        -- prevents infinite loop in edge case where loop is entered out of battle
-        if not in_battle() then
-            return;
-        end
-
-        emutils.press_button(1, 'B', 1);
-    end
-
+    
     -- distributes attacks evenly between enemies
     for i = 1, living_members do
         -- moves cursor to enemy and attacks, compensating for battle animations
-        
         emutils.advance_frames(19);
         emutils.press_button(1, 'A', 1);
         emutils.press_button(1, 'down', i-1);
@@ -157,6 +154,15 @@ function ff.run()
     end
 
     local living_members = 4;
+    local last_member;
+
+     -- set cursor to first party member
+    repeat
+        last_member = get_attacking_member();
+        emutils.press_button(1, 'B', 1);
+        emutils.advance_frames(40);
+    until last_member == get_attacking_member();
+
 
     -- ignore dead members
     for i = 1, 4 do
@@ -165,21 +171,6 @@ function ff.run()
         if memory.readbyte(p_status) == 0x1 then
             living_members = living_members - 1;
         end
-    end
-
-    -- if first member is attacking, press b to get out of menus
-    if memory.readbyte(consts.ATTACKING_MEMBER) == 0 then
-        emutils.press_button(1, 'B', 1);
-    end
-
-    -- makes sure first member is attacking
-    while memory.readbyte(consts.ATTACKING_MEMBER) ~= 0 do
-        -- prevents infinite loop in edge case where loop is entered out of battle
-        if not in_battle() then
-            return;
-        end
-
-        emutils.press_button(1, 'B', 1);
     end
 
     for i = 1, living_members do
