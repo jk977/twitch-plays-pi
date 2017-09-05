@@ -74,6 +74,9 @@ def finalize_thread(thread):
 
 def format_button_input(message):
     """Formats input to be sent to lua script"""
+    # maps buttons to single letters to allow shorter inputs
+    directions = {'r': 'right', 'l': 'left', 'u': 'up', 'd': 'down'}
+
     has_leading_num = bool(re.search('^[1-9]', message))
     has_trailing_num = bool(re.search('[1-9]$', message))
 
@@ -90,10 +93,11 @@ def format_button_input(message):
     button = button.strip().lower()
 
     # capitalizes 'a' and 'b' due to FCEUX input format
-    if button == 'a' or button == 'b':
+    if button in ['a', 'b']:
         button = button.upper()
-
-    if button not in config.button_opts or not re.match('[1-9]', mult):
+    elif button in directions:
+        button = directions[button]
+    elif button not in config.button_opts or not re.match('[1-9]', mult):
         return
 
     return mult + button
@@ -107,7 +111,8 @@ def read_button_input(message, user):
 
     vote_count = user.vote(config.vm, vote)
 
-    # if vote brought vote count over threshold
+    # TODO allow VoteManager to take a callback that's called
+    # when threshold exceeded instead of exposing it here 
     if vote_count >= config.vm.threshold:
         t = StoppableThread(after=finalize_thread, target=send_input, args=('inputs.txt', vote))
         config.threads.append(t)
@@ -122,7 +127,7 @@ def read_cheat_input(cheat, user):
 
     vote_count = user.vote(config.vm, cheat)
 
-    # if vote brought vote count over threshold
+    # see the todo above
     if vote_count >= config.vm.threshold:
         t = StoppableThread(after=finalize_thread, target=send_input, args=('cheats.txt', cheat))
         config.threads.append(t)

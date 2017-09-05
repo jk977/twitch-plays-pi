@@ -96,6 +96,8 @@ function ff.do_cheat(cheat)
         ff.print_gil();
     elseif cheat == 'attack' then
         ff.attack();
+    elseif cheat == 'run' then
+        ff.run();
     end
 end
 
@@ -118,15 +120,24 @@ function ff.attack()
         end
     end
 
-    -- makes sure target select is chosen for first member
-    emutils.press_button(1, 'B', living_members);
+    -- if first member is attacking, press b to get out of menus
+    if memory.readbyte(consts.ATTACKING_MEMBER) == 0 then
+        emutils.press_button(1, 'B', 1);
+    end
+
+    -- makes sure first member is attacking
+    while memory.readbyte(consts.ATTACKING_MEMBER) ~= 0 do
+        -- prevents infinite loop in edge case where loop is entered out of battle
+        if not in_battle() then
+            return;
+        end
+
+        emutils.press_button(1, 'B', 1);
+    end
 
     -- distributes attacks evenly between enemies
     for i = 1, living_members do
-        -- moves cursor to enemy and attacks.
-        -- for some reason, there's additional frames where inputs
-        -- drop beyond lag frames in battles, so the
-        -- advance_frames() calls are needed. 
+        -- moves cursor to enemy and attacks, compensating for battle animations
         
         emutils.advance_frames(19);
         emutils.press_button(1, 'A', 1);
@@ -136,6 +147,48 @@ function ff.attack()
         emutils.advance_frames(19);
     end
 end
+
+
+-- runs with each person
+function ff.run()
+    if not in_battle() then
+        emu.message('Not in battle!');
+        return;
+    end
+
+    local living_members = 4;
+
+    -- ignore dead members
+    for i = 1, 4 do
+        local p_member = consts.PARTY_MEMBERS[i];
+        local p_status = p_member + consts.MEMBER_INFO['STATUS'];
+        if memory.readbyte(p_status) == 0x1 then
+            living_members = living_members - 1;
+        end
+    end
+
+    -- if first member is attacking, press b to get out of menus
+    if memory.readbyte(consts.ATTACKING_MEMBER) == 0 then
+        emutils.press_button(1, 'B', 1);
+    end
+
+    -- makes sure first member is attacking
+    while memory.readbyte(consts.ATTACKING_MEMBER) ~= 0 do
+        -- prevents infinite loop in edge case where loop is entered out of battle
+        if not in_battle() then
+            return;
+        end
+
+        emutils.press_button(1, 'B', 1);
+    end
+
+    for i = 1, living_members do
+        -- presses run for each party member
+        emutils.press_button(1, 'right', 1);
+        emutils.press_button(1, 'A', 1);
+    end
+end
+
 
 
 -- used for chat cheats

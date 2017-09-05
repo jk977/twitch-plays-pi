@@ -35,7 +35,7 @@ threads_lock = threading.Lock()
 
 # valid emulator inputs 
 button_opts = ['A', 'B', 'start', 'select', 'up', 'down', 'left', 'right']
-cheat_opts = ['heal', 'killall', 'showgil', 'attack']
+cheat_opts = ['heal', 'killall', 'showgil', 'attack', 'run']
 
 # used in vote tracking
 users = {}

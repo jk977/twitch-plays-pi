@@ -50,6 +50,11 @@ def get_roles(sock, user, args):
 
 
 @permissions(Roles.DEFAULT)
+def get_map(sock, user, args):
+    send_msg(sock, 'http://ff1maps.com/img/worldmap-small.png')
+
+
+@permissions(Roles.DEFAULT)
 def get_mods(sock, user, args):
     mod_list = [u.name for u in config.users.values() if u.is_moderator]
 
