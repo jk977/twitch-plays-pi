@@ -1,48 +1,8 @@
-# utils.py
-
 import config
-import json
 import re
-import socket
-import urllib.request
 
 from stoppablethread import StoppableThread
-from time import sleep
-from chat.user import User
 
-
-# IRC functions
-# =============
-
-def irc_connect():
-    """Sets up connection to IRC"""
-    sock = socket.socket()
-    sock.connect((config.HOST, config.PORT))
-    sock.send('PASS {}\r\n'.format(config.PASS).encode('utf-8'))
-    sock.send('NICK {}\r\n'.format(config.NICK).encode('utf-8'))
-    sock.send('JOIN #{}\r\n'.format(config.CHAN).encode('utf-8'))
-    return sock
-
-
-def send_msg(sock, msg):
-    with config.socket_lock:
-        print(':' + config.NICK + '!' + config.NICK + '@' + config.NICK + '.tmi.twitch.tv PRIVMSG #' + config.CHAN + ' :' + msg + '\r\n')
-        sock.send(bytes('PRIVMSG #' + config.CHAN + ' :' + msg + '\r\n', 'utf-8'))
-        sleep(config.RATE)
-
-
-def ban(sock, user):
-    if is_op(config.NICK):
-        send_msg(sock, '.ban {}'.format(user))
-
-
-def timeout(sock, user, seconds=600):
-    if is_op(config.NICK):
-        send_msg(sock, '.timeout {}'.format(user, seconds))
-
-
-# Bot-specific functions
-# ======================
 
 def stop_all_threads():
     """Stops created threads."""

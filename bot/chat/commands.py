@@ -5,12 +5,10 @@
 
 import config
 import re
-import socket
 import sys
 import utils
 
 from settings import Settings
-from utils import send_msg
 
 from chat.permissions import permissions
 from chat.roles import Roles
@@ -29,7 +27,7 @@ class Command:
         self._action(**self._kwargs)
 
 
-def get_roles(sock, user, args):
+def get_roles(chat, user, args):
     roles = []
 
     if user.is_moderator:
@@ -46,16 +44,16 @@ def get_roles(sock, user, args):
     else:
         msg += 'default'
 
-    send_msg(sock, msg)
+    chat.send_message(msg)
 
 
 @permissions(Roles.DEFAULT)
-def get_map(sock, user, args):
-    send_msg(sock, 'http://ff1maps.com/img/worldmap-small.png')
+def get_map(chat, user, args):
+    chat.send_message('http://ff1maps.com/img/worldmap-small.png')
 
 
 @permissions(Roles.DEFAULT)
-def get_mods(sock, user, args):
+def get_mods(chat, user, args):
     mod_list = [u.name for u in config.users.values() if u.is_moderator]
 
     if len(mod_list) == 0:
@@ -63,11 +61,11 @@ def get_mods(sock, user, args):
     else:
         message = 'Moderators: ' + ', '.join(mod_list)
 
-    send_msg(sock, message)
+    chat.send_message(message)
 
 
 @permissions(Roles.DEFAULT)
-def get_banlist(sock, user, args):
+def get_banlist(chat, user, args):
     banlist = [u.name for u in config.users.values() if u.is_banned]
 
     if len(banlist) == 0:
@@ -75,25 +73,25 @@ def get_banlist(sock, user, args):
     else:
         message = 'Banned users: ' + ', '.join(banlist)
 
-    send_msg(sock, message)
+    chat.send_message(message)
 
 
 @permissions(Roles.DEFAULT)
-def get_help(sock=None, user=None, args=None):
+def get_help(chat, user, args):
     with open('info/help.cfg', 'r') as file:
         help_msg = file.read().strip();
-    send_msg(sock, help_msg)
+    chat.send_message(help_msg)
 
 
 @permissions(Roles.DEFAULT)
-def game_command(sock, user, args):
+def game_command(chat, user, args):
     """Sends game command to emulator."""
     cheat = args[0].lower()
     utils.read_cheat_input(cheat, user)
 
 
 @permissions(Roles.MOD, silent=True)
-def ban(sock, user, args):
+def ban(chat, user, args):
     def true_ban(name):
         """Contains ban logic."""
         name = name.lower().replace('@', '').strip()
@@ -123,11 +121,11 @@ def ban(sock, user, args):
             banned_users = [args[0]]
 
     if banned_users:
-        send_msg(sock, 'Banned {}.'.format(', '.join(banned_users)))
+        chat.send_message('Banned {}.'.format(', '.join(banned_users)))
     
 
 @permissions(Roles.MOD, silent=True)
-def unban(sock, user, args):
+def unban(chat, user, args):
     args = [utils.extract_username(user) for user in args]
     unbanned_list = []
 
@@ -139,21 +137,20 @@ def unban(sock, user, args):
             unbanned_list.append(name)
 
     if unbanned_list:
-        send_msg(sock, 'Unbanned {}.'.format(', '.join(unbanned_list)))
+        chat.send_message('Unbanned {}.'.format(', '.join(unbanned_list)))
 
 
 @permissions(Roles.OWNER, silent=True)
-def restart(sock, user, args):
-    send_msg(sock, 'Restarting chat bot... Inputs won\'t work until restart is finished.')
+def restart(chat, user, args):
+    chat.send_message('Restarting chat bot... Inputs won\'t work until restart is finished.')
     Settings.save_settings()
     utils.stop_all_threads()
-    sock.shutdown(socket.SHUT_RDWR)
-    sock.close()
+    chat.close()
     sys.exit(0)
 
 
 @permissions(Roles.OWNER, silent=True)
-def mod(sock, user, args):
+def mod(chat, user, args):
     args = [utils.extract_username(user) for user in args]
 
     for name in args:
@@ -167,7 +164,7 @@ def mod(sock, user, args):
 
 
 @permissions(Roles.OWNER, silent=True)
-def unmod(sock, user, args):
+def unmod(chat, user, args):
     args = [utils.extract_username(user) for user in args]
 
     for name in args:

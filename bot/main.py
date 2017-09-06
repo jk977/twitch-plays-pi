@@ -1,80 +1,70 @@
-# main.py
-
 import config
 import os
-import re
 import utils
 
 from settings import Settings
 from stoppablethread import StoppableThread
-from time import sleep
-from utils import send_msg
 
+from chat.twitchchat import TwitchChat
 from chat.user import User
 from chat.commandparser import CommandParser
 
 
-def notify_restarts(sock):
+def notify_restarts(chat):
     """Notifies chat when stream is restarting by checking for flag file."""
     try:
         os.remove('../restartfile')
-        send_msg(sock, 'Stream is restarting!')
+        chat.send_message('Stream is restarting!')
     except FileNotFoundError:
         pass
 
 
 if __name__ == '__main__':
-    CHAT_MSG = re.compile(r'^:\w+!\w+@\w+\.tmi\.twitch\.tv PRIVMSG #\w+ :')
-
-    # loads settings from json
     Settings.load_settings()
-
-    # gets socket connected to irc
-    sock = utils.irc_connect()
-    send_msg(sock, 'Bot online!')
+    chat = TwitchChat(config.NICK, config.PASS, config.CHAN)
+    chat.send_message('Bot connected!')
 
     # polls restart file every second and posts stream status if restarting
-    stream_thread = StoppableThread(period=1, after=utils.finalize_thread, target=notify_restarts, args=(sock,), daemon=True)
+    stream_thread = StoppableThread(
+            period=1,
+            target=notify_restarts,
+            args=(chat,),
+            after=utils.finalize_thread,
+            daemon=True)
+
     stream_thread.start()
     config.threads.append(stream_thread)
 
     # periodically saves current users to settings file
-    settings_thread = StoppableThread(period=10, after=utils.finalize_thread, target=Settings.save_settings)
+    settings_thread = StoppableThread(
+            period=10,
+            target=Settings.save_settings,
+            after=utils.finalize_thread)
+
     settings_thread.start()
     config.threads.append(settings_thread)
 
     # main loop
     while True:
-        response = sock.recv(1024).decode('utf-8')
+        message = chat.wait_for_message()
+        author = message.author
+        print('Received message from {}: {}'.format(author, message.content))
 
-        if response.startswith('PING :tmi.twitch.tv'):
-            sock.send(bytes(response.replace('PING', 'PONG'), 'utf-8'))
-            continue
 
-        else:
-            username = re.search(r'(\w+)', response).group(0).strip()
-            msg = CHAT_MSG.sub('', response).strip()
-            parts = re.split('\\s+', msg) # array of words in message
-            print(response)
+       # adds user to list if not present
+        if message.author not in config.users:
+            is_owner = author == config.CHAN
+            config.users[author] = User(name=author, owner=is_owner)
 
-            # ignores tmi messages
-            if username == 'tmi':
-                continue
+        user = config.users[author]
+        cmd = CommandParser.parse(chat, message, user)
 
-           # adds user to list if not present
-            if username not in config.users:
-                is_owner = username == config.CHAN
-                config.users[username] = User(name=username, owner=is_owner)
+        try:
+            cmd.run()
+        except PermissionError as e:
+            send_msg(sock, str(e))
+        except AttributeError:
+            pass
 
-            user = config.users[username]
-            cmd = CommandParser.parse(msg, user, sock)
-
-            try:
-                cmd.run()
-            except PermissionError as e:
-                send_msg(sock, str(e))
-            except AttributeError:
-                pass
-
-            if not user.is_banned:
-                utils.read_button_input(msg, user)
+        if not user.is_banned:
+            utils.read_button_input(message.content, user)

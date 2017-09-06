@@ -7,9 +7,9 @@ from chat.commands import Command
 class CommandParser:
     prefix = '!'
 
-    def parse(message, user, sock):
+    def parse(chat, message, user):
         """Parses message and returns a command to execute."""
-        if not message.startswith(CommandParser.prefix):
+        if not message.content.startswith(CommandParser.prefix):
             return
 
         cmds = {
@@ -26,15 +26,11 @@ class CommandParser:
                 'restart': commands.restart
         }
 
-        parts = re.split('\\s+', message)
+        parts = re.split('\\s+', message.content)
         action = cmds.get(parts[0][1:], None)
         args = tuple(parts[1:])
 
-        kwargs = {'user': user, 'args': args, 'sock': sock}
-
-        if action:
-            cmd = Command(action=action, **kwargs)
-        else:
-            cmd = None
+        kwargs = {'user': user, 'args': args, 'chat': chat}
+        cmd = Command(action=action, **kwargs) if action else None
 
         return cmd
