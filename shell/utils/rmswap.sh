@@ -4,32 +4,23 @@
 
 dir="$( dirname $0 )"
 source "$dir/../config.sh"
-
-eval cd "$basedir"
-printf "Current directory: $(pwd)\n"
+printf "Searching directory $basedir\n\n"
 
 files=()
 
 # stores files to be deleted in $files
-for path in $(find)
-do
-    filename=$( basename "$path" )
-    if [[ "$filename" =~ \.sw[a-z] ]]
-    then
-        files+=("$path")
-    fi
+for file in $(find "$basedir" -name "*.sw[a-z]"); do
+    files+=("$file")
 done
 
-if [[ ${#files[@]} -eq 0 ]]
-then
+if [[ ${#files[@]} -eq 0 ]]; then
     printf "No swap files found.\n"
     exit 0
 fi
 
 printf "The following files will be removed:\n"
 
-for file in "${files[@]}"
-do
+for file in "${files[@]}"; do
     printf "$file\n"
 done
 
@@ -38,15 +29,12 @@ read input
 input="${input// }" # trim all whitespace
 printf "\n"
 
-if [[ -n "$input" ]]
-then
+if [[ -n "$input" ]]; then
     shopt -s nocasematch
 
     # if input is y (ignoring case), delete files
-    if [[ "$input" = 'y' ]]
-    then
-        for file in "${files[@]}"
-        do
+    if [[ "$input" = 'y' ]]; then
+        for file in "${files[@]}"; do
             rm "$file"
         done
 

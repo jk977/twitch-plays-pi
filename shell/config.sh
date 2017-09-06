@@ -2,10 +2,8 @@
 # Contains project directories.
 
 mkdirs_if_absent () {
-    for dir in $@
-    do
-        if [[ ! -e "$dir" ]]
-        then
+    for dir in $@; do
+        if [[ ! -e "$dir" ]]; then
             echo "Making directory $dir"
             mkdir "$dir"
         fi
@@ -22,8 +20,7 @@ audiodir="/media/usb1/audio"
 
 stream="rtmp://live.twitch.tv/app/$( cat "$basedir/streamkey.cfg" )"
 
-if [[ ! -e "$basedir" ]]
-then
+if [[ ! -e "$basedir" ]]; then
     echo "Error: Could not find project root."
     exit 1
 fi

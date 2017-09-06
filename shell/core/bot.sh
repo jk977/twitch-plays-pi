@@ -7,8 +7,7 @@ cd "$botdir"
 status=0
 
 # lets bot be restarted by calling sys.exit(0)
-while [[ $status -eq 0 ]]
-do
+while [[ $status -eq 0 ]]; do
     echo "Starting chat bot"
     python3 -u main.py 2>&1 | tee -a "$logdir/bot.log"
     status=$?

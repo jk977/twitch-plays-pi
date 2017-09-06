@@ -9,8 +9,7 @@ audiofile="$audiodir/all.mp3"
 # uncomment to save stream to a file
 #stream="/home/pi/Desktop/stream.flv"
 
-while :
-do
+while :; do
     ffmpeg \
         -i "$audiofile" \
         -threads 4 -f x11grab -r 30 -s 256x240 -i :0.0+0,36 \
