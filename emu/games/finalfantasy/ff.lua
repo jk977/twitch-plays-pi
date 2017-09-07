@@ -92,7 +92,6 @@ end
 
 
 function ff.do_cheat(cheat)
-    
     if cheat == 'heal' then
         ff.cure_all(true);
     elseif cheat == 'killall' then
@@ -116,14 +115,7 @@ function ff.attack()
 
     local living_members = 4;
     local last_member;
-
-    -- set cursor to first party member
-    repeat
-        last_member = get_attacking_member();
-        emutils.press_button(1, 'B', 1);
-        emutils.advance_frames(40);
-    until last_member == get_attacking_member();
-
+    
     -- ignore dead members
     for i = 1, 4 do
         local p_member = consts.PARTY_MEMBERS[i];
@@ -132,10 +124,23 @@ function ff.attack()
             living_members = living_members - 1;
         end
     end
-    
+
+    -- set cursor to first party member
+    repeat
+        last_member = get_attacking_member();
+        emutils.press_button(1, 'B', 1);
+        emutils.advance_frames(40);
+    until last_member == get_attacking_member();
+
     -- distributes attacks evenly between enemies
     for i = 1, living_members do
-        -- moves cursor to enemy and attacks, compensating for battle animations
+        -- fixes edge case where command is entered at end of battle
+        if not in_battle() then
+            return;
+        end
+
+-- moves cursor to enemy and attacks, compensating for battle animations
+        emu.message('Member ' .. tostring(i) .. ' attacking')
         emutils.advance_frames(19);
         emutils.press_button(1, 'A', 1);
         emutils.press_button(1, 'down', i-1);
