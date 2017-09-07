@@ -139,8 +139,7 @@ function ff.attack()
             return;
         end
 
--- moves cursor to enemy and attacks, compensating for battle animations
-        emu.message('Member ' .. tostring(i) .. ' attacking')
+        -- moves cursor to enemy and attacks, compensating for battle animations
         emutils.advance_frames(19);
         emutils.press_button(1, 'A', 1);
         emutils.press_button(1, 'down', i-1);
