@@ -1,3 +1,5 @@
+import json
+
 from chat.roles import Roles
 from votes.option import Option
 
@@ -43,6 +45,13 @@ class User:
     def role(self):
         """Returns mask of all roles held by user."""
         return self._role
+
+    def serialize(self):
+        user = {}
+        user['name'] = self._name
+        user['role'] = self._role
+        user['choice'] = self._choice
+        return user
 
     def mod(self):
         self.unban()

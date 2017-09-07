@@ -47,17 +47,10 @@ if __name__ == '__main__':
     # main loop
     while True:
         message = chat.wait_for_message()
-        author = message.author
-        print('Received message from {}: {}'.format(author, message.content))
+        user = message.author
+        print('Received message from {}: {}'.format(user.name, message.content))
 
-
-       # adds user to list if not present
-        if message.author not in config.users:
-            is_owner = author == config.CHAN
-            config.users[author] = User(name=author, owner=is_owner)
-
-        user = config.users[author]
-        cmd = CommandParser.parse(chat, message, user)
+        cmd = CommandParser.parse(chat, message)
 
         try:
             cmd.run()

@@ -46,10 +46,7 @@ class TwitchChat:
             if response.startswith('PING :tmi.twitch.tv'):
                 self._sock.send(bytes(response.replace('PING', 'PONG'), 'utf-8'))
             else:
-                message = Message(response)
-                
-                if message.author != 'tmi':
-                    return message
+                return Message(response)
 
 
     def ban(self, user):

@@ -17,16 +17,14 @@ class Settings:
         if not destination:
             destination = Settings.default_path
 
-        settings = {'users': {}}
+        settings = {'users': []}
 
         if not config.users:
             print('No users found.')
             return
 
         for user in config.users.values():
-            user_settings = {'role': None}
-            user_settings['role'] = user.role
-            settings['users'][user.name] = user_settings
+            settings['users'].append(user.serialize())
 
         try:
             with open(destination, 'w') as file:
@@ -36,6 +34,10 @@ class Settings:
 
 
     def load_settings(source=None):
+        """
+        Loads user info from file. Doesn't store user choice yet due to
+        VoteManager not being serializable.
+        """
         if not source:
             source = Settings.default_path
 
@@ -64,7 +66,8 @@ class Settings:
                 print('Failed to retrieve user list.')
                 return
 
-            for name, user in users.items():
+            for user in users:
+                name = user['name']
                 role = user['role']
                 mod = role & Roles.MOD
                 banned = role & Roles.BANNED

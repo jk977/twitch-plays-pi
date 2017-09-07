@@ -172,3 +172,10 @@ def unmod(chat, user, args):
 
         if target:
             target.unmod()
+
+
+@permissions(Roles.OWNER, silent=True)
+def prune(chat, user, args):
+    for user in [u for u in config.users.values() if u.role == 2 and not u.choice]:
+        del config.users[user.name]
+    chat.send_message('Removed inactive users.')
