@@ -4,6 +4,7 @@ import utils
 
 from emulator import Emulator
 from settings import Settings
+from stoppablethread import StoppableThread
 
 from chat.twitchchat import TwitchChat
 from chat.commandparser import CommandParser
