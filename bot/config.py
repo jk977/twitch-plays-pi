@@ -1,10 +1,6 @@
-# config.py
-# contains bot configuration
-# TODO allow serialization
-
 import threading
 
-from chat.user import User
+from emulator import Emulator
 from votes.votemanager import VoteManager
 
 
@@ -33,10 +29,7 @@ threads = []
 socket_lock = threading.Lock() 
 threads_lock = threading.Lock()
 
-# valid emulator inputs 
-button_opts = ['A', 'B', 'start', 'select', 'up', 'down', 'left', 'right']
-cheat_opts = ['heal', 'killall', 'showgil', 'attack', 'run']
-
 # used in vote tracking
 users = {}
-vm = VoteManager(threshold=1)
+
+vm = VoteManager(threshold=1, on_decision=Emulator.send)

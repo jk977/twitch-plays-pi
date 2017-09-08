@@ -1,4 +1,5 @@
-# TODO find a thread-safe alternative to signal to allow target to time out
+# TODO use multiprocessing instead of threading
+
 import threading
 from time import sleep, time
 

@@ -2,11 +2,10 @@ import config
 import os
 import utils
 
+from emulator import Emulator
 from settings import Settings
-from stoppablethread import StoppableThread
 
 from chat.twitchchat import TwitchChat
-from chat.user import User
 from chat.commandparser import CommandParser
 
 
@@ -47,17 +46,21 @@ if __name__ == '__main__':
     # main loop
     while True:
         message = chat.wait_for_message()
-        user = message.author
-        print('Received message from {}: {}'.format(user.name, message.content))
+        content = message.content
+        author = message.author
+        print('Received message from {}: {}'.format(author.name, message.content))
 
-        cmd = CommandParser.parse(chat, message)
-
-        try:
-            cmd.run()
-        except PermissionError as e:
-            send_msg(sock, str(e))
-        except AttributeError:
-            pass
-
-        if not user.is_banned:
-            utils.read_button_input(message.content, user)
+        if author.name == 'tmi':
+            # ignores twitch server messages
+            continue
+        elif Emulator.validate_input(content):
+            # sends vote if valid
+            config.vm.add_vote(author, content)
+        else:
+            try:
+                cmd = CommandParser.parse(chat, message)
+                cmd.run()
+            except PermissionError as e:
+                chat.send_message(str(e))
+            except:
+                pass

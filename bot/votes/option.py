@@ -11,6 +11,10 @@ class Option:
     def voters(self):
         return self._voters
 
+    @property
+    def vote_count(self):
+        return len(self._voters)
+
     def reset():
         self._voters = set()
 
@@ -20,6 +24,3 @@ class Option:
 
     def remove_voter(self, user):
         self._voters = [voter for voter in self._voters if voter != user]
-
-    def vote_count(self):
-        return len(self._voters)

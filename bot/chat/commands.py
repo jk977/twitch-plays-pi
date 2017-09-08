@@ -83,13 +83,6 @@ def get_help(chat, user, args):
     chat.send_message(help_msg)
 
 
-@permissions(Roles.DEFAULT)
-def game_command(chat, user, args):
-    """Sends game command to emulator."""
-    cheat = args[0].lower()
-    utils.read_cheat_input(cheat, user)
-
-
 @permissions(Roles.MOD, silent=True)
 def ban(chat, user, args):
     def true_ban(name):

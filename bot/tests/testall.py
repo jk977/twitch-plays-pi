@@ -1,3 +1,5 @@
+# TODO update tests to work with new project structure
+
 from tests.testcommandparser import test_command_parser
 from tests.testcommands import test_commands
 from tests.testvotes import test_votes

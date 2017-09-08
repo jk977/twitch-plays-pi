@@ -15,7 +15,6 @@ class CommandParser:
         cmds = {
                 'help': commands.get_help,
                 'map': commands.get_map,
-                'game': commands.game_command,
                 'mods': commands.get_mods,
                 'banlist': commands.get_banlist,
                 'ban': commands.ban,
