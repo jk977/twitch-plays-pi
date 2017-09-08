@@ -80,6 +80,8 @@ class Emulator:
 
 
     def parse_cheat(message):
+        message = message.strip().lower()
+
         if message not in Emulator.cheats:
             raise ValueError('Invalid cheat.')
 
