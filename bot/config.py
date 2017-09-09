@@ -1,6 +1,6 @@
-import threading
-
 from emulator import Emulator
+
+from threads.stoppablepool import StoppablePool
 from votes.votemanager import VoteManager
 
 
@@ -22,14 +22,8 @@ with open('info/oauth.cfg', 'r') as file:
 # Bot configuration
 # =================
 
-# tracks threads
-threads = []
-
-# resource locks
-socket_lock = threading.Lock() 
-threads_lock = threading.Lock()
+threads = StoppablePool()
 
 # used in vote tracking
 users = {}
-
 vm = VoteManager(threshold=1, on_decision=Emulator.send)

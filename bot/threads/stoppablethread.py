@@ -1,5 +1,3 @@
-# TODO use multiprocessing instead of threading
-
 import threading
 from time import sleep, time
 

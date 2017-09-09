@@ -137,7 +137,7 @@ def unban(chat, user, args):
 def restart(chat, user, args):
     chat.send_message('Restarting chat bot... Inputs won\'t work until restart is finished.')
     Settings.save_settings()
-    utils.stop_all_threads()
+    config.threads.stop_all_threads()
     chat.close()
     sys.exit(0)
 

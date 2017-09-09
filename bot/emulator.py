@@ -2,8 +2,6 @@ import config
 import re
 import utils
 
-from stoppablethread import StoppableThread
-
 
 class Emulator:
     _button_file = '../inputs.txt'
@@ -100,23 +98,9 @@ class Emulator:
 
 
     def _send_button(button):
-        t = StoppableThread(
-                after=utils.finalize_thread,
-                target=Emulator._send_to_file,
-                args=(Emulator._button_file, button))
-
-        config.threads.append(t)
-        t.start()
-
+        config.threads.start_thread(target=Emulator._send_to_file, args=(Emulator._button_file, button))
 
     def _send_cheat(cheat):
-        t = StoppableThread(
-                after=utils.finalize_thread,
-                target=Emulator._send_to_file,
-                args=(Emulator._cheat_file, cheat))
-
-        config.threads.append(t)
-        t.start()
-
+        config.threads.start_thread(target=Emulator._send_to_file, args=(Emulator._cheat_file, cheat))
 
 
