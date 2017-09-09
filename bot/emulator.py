@@ -14,7 +14,7 @@ class Emulator:
     def validate_input(message):
         """Returns true if message is valid emulator input"""
         try:
-            Emulator.parse_button(message)
+            Emulator.parse_buttons(message)
         except ValueError:
             try:
                 Emulator.parse_cheat(message)
@@ -27,7 +27,7 @@ class Emulator:
     def send(message):
         """Sends message to emulator if button or cheat."""
         try:
-            message = Emulator.parse_button(message)
+            message = Emulator.parse_buttons(message)
             Emulator._send_button(message)
         except ValueError:
             try:
@@ -37,17 +37,36 @@ class Emulator:
                 pass
 
 
+    def parse_buttons(message):
+        message = message.strip().lower()
+        parts = re.split('\\s+', message)
+        buttons = []
+
+        numbers = [int(n) for n in re.split('[^\\d]+', message) if n]
+        numbers.append(len(parts) - len(numbers)) # adds all implied 1's
+        total = sum(numbers) if numbers else 1
+
+        if total < 1 or total > 9:
+            raise ValueError('Total presses must be between 1 and 9.')
+
+        for button in parts:
+            button = Emulator.parse_button(button)
+            buttons.append(button)
+
+        return ' '.join(buttons)
+
+
     def parse_button(message):
         """Formats input to be sent to lua script"""
         # stores alternate mappings for buttons
-        mappings = {
+        button_map = {
             ('r', '➡️', '☞', '👉'): 'right',  # right arrow and 2 pointing right emojis
             ('l', '⬅️', '☜', '👈'): 'left',   # left arrow and 2 pointing left emojis
             ('u', '⬆️', '☝', '👆'): 'up',     # up arrow and 2 pointing up emojis
             ('d', '⬇️', '👇'): 'down',        # down arrow and pointing down emojis
             ('🅱️', '👎', '🙅'): 'b',           # b, no good, and thumbs down emojis
             ('🅰️', '👌', '👍'): 'a'            # a, ok hand, and thumbs up emojis
-        }
+        } 
 
         has_leading_num = bool(re.search('^[1-9]', message))
         has_trailing_num = bool(re.search('[1-9]$', message))
@@ -62,11 +81,10 @@ class Emulator:
             mult = '1'
             button = message
 
-        button = button.strip().lower()
-
-        for key in mappings:
+        # replaces button mappings
+        for key in button_map:
             if button in key:
-                button = mappings[key]
+                button = button_map[key]
 
         # capitalizes 'a' and 'b' due to FCEUX input format
         if button in ['a', 'b']:

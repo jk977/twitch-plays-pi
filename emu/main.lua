@@ -16,15 +16,17 @@ utils.reset_cheat_file();
 
 -- main loop
 while true do
-    local input = utils.poll_input(); -- input is in format '[1-9]%w+'
+    local inputs = utils.poll_input(); -- input is in format '[1-9]%w+'
     local cheat = utils.poll_cheat(); -- input is in format '[1-9]%w+'
 
-    if input ~= nil and input ~= '' then
-        print('Pressing "' .. input .. '"');
+    if inputs ~= nil and #inputs ~= 0 then
+        for _, input in pairs(inputs) do
+            print('Pressing "' .. input .. '"');
+            local count = tonumber(input:sub(1, 1));
+            local button = input:sub(2, #input);
+            emutils.press_button(1, button, count);
+        end
 
-        local count = tonumber(input:sub(1, 1));
-        local button = input:sub(2, #input);
-        emutils.press_button(1, button, count);
         utils.reset_input_file();
     end
 

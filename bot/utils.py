@@ -1,3 +1,6 @@
+import os
+
+
 def notify_restarts(chat):
     """Notifies chat when stream is restarting by checking for flag file."""
     try:

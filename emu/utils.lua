@@ -7,6 +7,21 @@ local input_dir = '../inputs.txt';
 local cheat_dir = '../cheats.txt';
 
 
+function utils.split(string, delimiter)
+    if delimiter == nil or string == nil then
+        return;
+    end
+
+    split_string = {};
+
+    for match in string.gmatch(contents, '([^' .. delimiter .. ']+)') do
+        table.insert(split_string, match);
+    end
+
+    return split_string;
+end
+
+
 -- removes trailing whitespace
 function utils.trim_string(input)
     if input == nil then
@@ -18,7 +33,7 @@ end
 
 
 -- checks if there's an input from twitch and returns the input, if any
--- inputs.txt contents in format "[1-9]%w+" (letters matching a button)
+-- inputs.txt contents in format "([1-9%w+] )*[1-9]%w+" (letters matching a button)
 function utils.poll_input()
     local file = io.open(input_dir, 'r');
 
@@ -28,7 +43,8 @@ function utils.poll_input()
         io.close();
     end
 
-    return utils.trim_string(contents);
+    contents = utils.trim_string(contents);
+    return utils.split(contents, ' ');
 end
 
 

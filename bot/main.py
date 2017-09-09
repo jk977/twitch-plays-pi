@@ -1,5 +1,4 @@
 import config
-import os
 import utils
 
 from emulator import Emulator
@@ -7,7 +6,6 @@ from settings import Settings
 
 from chat.twitchchat import TwitchChat
 from chat.commandparser import CommandParser
-
 
 
 if __name__ == '__main__':

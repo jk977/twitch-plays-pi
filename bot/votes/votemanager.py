@@ -48,6 +48,9 @@ class VoteManager:
 
 
     def add_vote(self, user, option_name):
+        if user.is_banned:
+            return
+
         try:
             user.unvote(self)
         except TypeError:
