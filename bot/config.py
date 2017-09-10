@@ -1,5 +1,4 @@
 from emulator import Emulator
-
 from threads.stoppablepool import StoppablePool
 from votes.votemanager import VoteManager
 

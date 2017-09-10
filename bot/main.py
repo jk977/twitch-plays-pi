@@ -28,7 +28,7 @@ if __name__ == '__main__':
         message = chat.wait_for_message()
         content = message.content
         author = message.author
-        print('Received message from {}: {}'.format(author.name, message.content))
+        print('Received message from {}: {}'.format(author.name, content))
 
         if author.name == 'tmi':
             # ignores twitch server messages
