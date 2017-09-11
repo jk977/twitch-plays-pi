@@ -8,7 +8,7 @@ local ff = require('games/finalfantasy/ff');
 utils.reset_input_file();
 utils.reset_cheat_file();
 
--- initializes value in ../ff/gil.txt and keeps value updated
+-- initializes value in ../game/gil.txt and keeps value updated
 ff.write_gil();
 ff.register_gil_tracker();
 
