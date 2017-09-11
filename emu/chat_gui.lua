@@ -3,7 +3,7 @@ local chat_gui = {};
 local screen_x1 = 2;
 local screen_y1 = 8;
 local screen_x2 = 256;
-local screen_y2 = 232;
+local screen_y2 = 231;
 
 local vote_file = '../game/votes.txt';
 
@@ -40,7 +40,7 @@ end
 
 
 -- writes lines aligned with the bottom border
-function chat_gui.write_lines(x_offset, list)
+function chat_gui.write_lines(x_offset, bg_color, list)
     if list == nil or #list == 0 then
         return;
     end
@@ -59,10 +59,10 @@ function chat_gui.write_lines(x_offset, list)
     local max_length = math.max(unpack(map(function(k,v) return k, #v end, list))) * 6;
 
     -- dimensions of box
-    local default_height = 27;
+    local default_height = 36;
     local height = math.max(default_height, #list * 9);
 
-    local default_width = screen_x2 / 2 + x_offset;
+    local default_width = screen_x2 / 2.5 + x_offset;
     local width = math.max(default_width, max_length);
 
     -- initial text coordinates
@@ -73,8 +73,11 @@ function chat_gui.write_lines(x_offset, list)
     local box_x1 = x - 2;
     local box_y1 = y - 3;
 
-    gui.opacity(0.75)
-    gui.box(box_x1, box_y1, width, screen_y2, 'gray');
+    gui.opacity(0.65)
+    gui.box(box_x1, box_y1, width, screen_y2, bg_color, 'white');
+
+    gui.text(x, y, 'Votes', nil, 'clear')
+    y = y + 9;
 
     for _, line in pairs(list) do
         gui.text(x, y, line, nil, 'clear');
@@ -87,7 +90,7 @@ end
 
 function chat_gui.update()
     commands = get_commands();
-    chat_gui.write_lines(0, commands);
+    chat_gui.write_lines(0, 'black', commands);
 end
 
 
