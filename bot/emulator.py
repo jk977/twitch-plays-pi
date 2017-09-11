@@ -4,11 +4,11 @@ import utils
 
 
 class Emulator:
-    _button_file = '../inputs.txt'
-    _cheat_file = '../cheats.txt'
+    _button_file = '../game/inputs.txt'
+    _cheat_file = '../game/cheats.txt'
 
     buttons = ['A', 'B', 'start', 'select', 'up', 'down', 'left', 'right']
-    cheats = ['heal', 'killall', 'showgil', 'attack', 'run']
+    cheats = ['heal', 'killall', 'attack', 'run']
 
 
     def validate_input(message):

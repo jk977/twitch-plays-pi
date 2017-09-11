@@ -48,6 +48,14 @@ def get_map(chat, user, args):
 
 
 @permissions(Roles.DEFAULT)
+def get_gil(chat, user, args):
+    with open('../game/gil.txt', 'r') as file:
+        gil = file.read()
+
+    chat.send_message('{:,}'.format(int(gil)))
+
+
+@permissions(Roles.DEFAULT)
 def get_mods(chat, user, args):
     mod_list = [u.name for u in config.users.values() if u.is_moderator]
 

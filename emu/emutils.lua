@@ -1,13 +1,12 @@
--- emutils.lua
--- ===========
--- Module with emulator utility functions
-
 local emutils = {};
+
+local chat_gui = require('chat_gui');
 
 
 -- advances emulation by <count> frames
 function emutils.advance_frames(count)
     for i = 1, count do
+        chat_gui.update();
         emu.frameadvance();
     end
 end
@@ -19,16 +18,16 @@ function emutils.press_button(player, button, count)
         -- loops until emu isn't lagged and button is registered  
         while emu.lagged() or not joypad.get(player)[button] do
             joypad.set(player, {[button]=true});
-            emu.frameadvance();
+            emutils.advance_frames(1);
         end
 
         -- makes sure button isn't held through to the next press 
         joypad.set(player, {[button]=false});
-        emu.frameadvance();
+        emutils.advance_frames(1);
 
         -- if there are still button presses to do, advance until no lag
         while emu.lagged() and i < count do
-            emu.frameadvance();
+            emutils.advance_frames(1);
         end
     end
 end

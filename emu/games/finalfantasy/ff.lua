@@ -6,6 +6,8 @@ local consts = require('games.finalfantasy.ff_const');
 local emutils = require('emutils');
 local ff = {};
 
+local gil_file = '../game/gil.txt';
+
 
 -- returns value (an int) as a big-endian table of bytes
 local function split_to_bytes(value, byte_count)
@@ -28,7 +30,7 @@ local function correct_stat_value(stat, value)
     stat = stat:lower();
 
     if value < 0 then
-        return false;
+        return;
     elseif stat == 'str' or stat == 'agl' or stat == 'int' or stat == 'vit' or stat == 'luck' then
         return value % 0x64;
     elseif stat == 'level' then
@@ -44,7 +46,7 @@ local function correct_stat_value(stat, value)
     elseif stat == 'armor_1' or stat == 'armor_2' or stat == 'armor_3' or stat == 'armor_4' then
         return value % 0xA2;
     else
-        return false;
+        return;
     end
 end
 
@@ -55,8 +57,8 @@ local function change_member_stat(member, stat, value)
     stat = tostring(stat):lower();
     value = correct_stat_value(stat, value);
 
-    if not value or member < 1 or member > 4 then
-        return false;
+    if value == nil or member < 1 or member > 4 then
+        return;
     end
 
     local p_member = consts.PARTY_MEMBERS[member];
@@ -75,8 +77,6 @@ local function change_member_stat(member, stat, value)
 
         memory.writebyte(p_stat, value);
     end
-
-    return true;
 end
 
 
@@ -91,6 +91,7 @@ local function get_attacking_member()
 end
 
 
+-- returns player gil
 local function get_gil()
     local p_gil_lo, p_gil_md, p_gil_hi = unpack(consts.GIL);
 
@@ -107,8 +108,6 @@ function ff.do_cheat(cheat)
         ff.cure_all(true);
     elseif cheat == 'killall' then
         ff.kill_all_enemies(true);
-    elseif cheat == 'showgil' then
-        ff.print_gil();
     elseif cheat == 'attack' then
         ff.attack();
     elseif cheat == 'run' then
@@ -117,22 +116,44 @@ function ff.do_cheat(cheat)
 end
 
 
+-- writes amount of gil to gil_file
+function ff.write_gil()
+    local file = io.open(gil_file, 'w');
+
+    if file ~= nil then
+        local gil = tostring(get_gil());
+        file:write(gil);
+        file:close();
+    end
+end
+
+
+-- updates gil.txt whenever gil amount changes
+function ff.register_gil_tracker()
+    memory.register(consts.GIL[1], 3, ff.write_gil);
+end
+
+
 -- used for chat cheats
 function ff.spend_gil(amount)
     local p_gil_lo, p_gil_md, p_gil_hi = unpack(consts.GIL);
     local current = get_gil();
 
-    if current >= amt then
+    if current >= amount then
         local balance = current - amount;
         local balance16 = string.format('%06x', balance);
+        
+        -- TODO fix split_to_bytes so it works here
+        local balance_hi = tonumber(balance16:sub(1,2), 16);
+        local balance_md = tonumber(balance16:sub(3,4), 16);
+        local balance_lo = tonumber(balance16:sub(5,6), 16);
 
-        local balance_hi, balance_md, balance_lo = split_to_bytes(balance16, 3);
-
-        memory.writebyte(p_gil_hi, balance_hi);
-        memory.writebyte(p_gil_md, balance_md);
         memory.writebyte(p_gil_lo, balance_lo);
+        memory.writebyte(p_gil_md, balance_md);
+        memory.writebyte(p_gil_hi, balance_hi);
 
         emu.message(tostring(amount) .. 'g spent!');
+        ff.write_gil();
         return true;
     else
         return false;
@@ -184,7 +205,7 @@ function ff.attack()
 end
 
 
--- runs with each person
+-- selects run in battle with each person
 function ff.run()
     if not in_battle() then
         emu.message('Not in battle!');
@@ -216,12 +237,6 @@ function ff.run()
         emutils.press_button(1, 'right', 1);
         emutils.press_button(1, 'A', 1);
     end
-end
-
-
--- prints gil amount on emulator screen
-function ff.print_gil()
-    emu.message('Current gil: ' .. get_gil());
 end
 
 

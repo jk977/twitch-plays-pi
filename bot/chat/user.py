@@ -74,11 +74,14 @@ class User:
         if self.is_banned:
             raise PermissionError('Banned users can\'t vote.')
 
+        self.unvote(manager)
+
         vote_count = manager.add_vote(self, choice_name)
         self._choice = choice_name
         return vote_count
 
     def unvote(self, manager):
+        # TODO fix this function
         vote_count = manager.remove_vote(self)
         self._choice = None
         return vote_count

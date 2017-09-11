@@ -35,7 +35,7 @@ if __name__ == '__main__':
             continue
         elif Emulator.validate_input(content):
             # sends vote if valid
-            config.vm.add_vote(author, content)
+            author.vote(config.vm, Emulator.parse_buttons(content))
         else:
             try:
                 cmd = CommandParser.parse(chat, message)
