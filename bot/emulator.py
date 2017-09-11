@@ -38,6 +38,7 @@ class Emulator:
 
 
     def parse_buttons(message):
+        """Returns string of buttons readable by lua script."""
         message = message.strip().lower()
         parts = re.split('\\s+', message)
         buttons = []
@@ -50,14 +51,14 @@ class Emulator:
             raise ValueError('Total presses must be between 1 and 9.')
 
         for button in parts:
-            button = Emulator.parse_button(button)
+            button = Emulator._parse_button(button)
             buttons.append(button)
 
         return ' '.join(buttons)
 
 
-    def parse_button(message):
-        """Formats input to be sent to lua script"""
+    def _parse_button(message):
+        """Formats individual button to be sent to lua script."""
         # stores alternate mappings for buttons
         button_map = {
             ('r', '➡️', '☞', '👉'): 'right',  # right arrow and 2 pointing right emojis
@@ -96,6 +97,7 @@ class Emulator:
 
 
     def parse_cheat(message):
+        """Returns cheat readable by lua script."""
         message = message.strip().lower()
 
         if message not in Emulator.cheats:
@@ -116,9 +118,13 @@ class Emulator:
 
 
     def _send_button(button):
-        config.threads.start_thread(target=Emulator._send_to_file, args=(Emulator._button_file, button))
+        config.threads.start_thread(
+                target=Emulator._send_to_file,
+                args=(Emulator._button_file, button))
 
     def _send_cheat(cheat):
-        config.threads.start_thread(target=Emulator._send_to_file, args=(Emulator._cheat_file, cheat))
+        config.threads.start_thread(
+                target=Emulator._send_to_file,
+                args=(Emulator._cheat_file, cheat))
 
 

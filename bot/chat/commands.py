@@ -1,8 +1,3 @@
-# TODO merge command functions into command class?
-#   - Likely slower to do that, since command instances would contain data for all commands
-#     Separate into Command and CommandList class, with CommandList containing parse()?
-#       - Name would be misleading
-
 import config
 import re
 import sys

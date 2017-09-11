@@ -83,7 +83,7 @@ ff_const.ENEMY_INFO = {
 };
 
 -- misc addresses
-ff_const.GIL = { 0x601C, 0x601D }; -- low and high bytes for gil amount
+ff_const.GIL = { 0x601C, 0x601D, 0x601E }; -- bytes for gil amount (little endian)
 ff_const.HIT_COUNT = 0x686A; -- number of hits in one attack
 ff_const.CRIT = 0x686B; -- assign to 0x1 for critical hit
 ff_const.ATTACKING_MEMBER = 0x6B7A; -- whose turn it is in battle (0-3)

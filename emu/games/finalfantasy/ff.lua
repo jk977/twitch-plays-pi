@@ -19,7 +19,7 @@ local function split_to_bytes(value, byte_count)
         table.insert(hex_bytes, byte);
     end
 
-    return hex_bytes;
+    return unpack(hex_bytes);
 end
 
 
@@ -91,6 +91,17 @@ local function get_attacking_member()
 end
 
 
+local function get_gil()
+    local p_gil_lo, p_gil_md, p_gil_hi = unpack(consts.GIL);
+
+    local gil_lo = string.format('%02x', memory.readbyte(p_gil_lo));
+    local gil_md = string.format('%02x', memory.readbyte(p_gil_md));
+    local gil_hi = string.format('%02x', memory.readbyte(p_gil_hi));
+
+    return tonumber(gil_hi .. gil_md .. gil_lo, 16);
+end
+
+
 function ff.do_cheat(cheat)
     if cheat == 'heal' then
         ff.cure_all(true);
@@ -102,6 +113,29 @@ function ff.do_cheat(cheat)
         ff.attack();
     elseif cheat == 'run' then
         ff.run();
+    end
+end
+
+
+-- used for chat cheats
+function ff.spend_gil(amount)
+    local p_gil_lo, p_gil_md, p_gil_hi = unpack(consts.GIL);
+    local current = get_gil();
+
+    if current >= amt then
+        local balance = current - amount;
+        local balance16 = string.format('%06x', balance);
+
+        local balance_hi, balance_md, balance_lo = split_to_bytes(balance16, 3);
+
+        memory.writebyte(p_gil_hi, balance_hi);
+        memory.writebyte(p_gil_md, balance_md);
+        memory.writebyte(p_gil_lo, balance_lo);
+
+        emu.message(tostring(amount) .. 'g spent!');
+        return true;
+    else
+        return false;
     end
 end
 
@@ -185,41 +219,9 @@ function ff.run()
 end
 
 
-
--- used for chat cheats
-function ff.spend_gil(amt)
-    local p_gil_hi = consts.GIL[2];
-    local p_gil_lo = consts.GIL[1];
-    local gil_hi = string.format('%02x', memory.readbyte(p_gil_hi));
-    local gil_lo = string.format('%02x', memory.readbyte(p_gil_lo));
-
-    local current = tonumber(gil_hi .. gil_lo, 16);
-
-    if current >= amt then
-        local balance = current - amt;
-        local balance16 = string.format('%04x', balance);
-
-        local balance_hi = tonumber(balance16:sub(1,2), 16);
-        local balance_lo = tonumber(balance16:sub(3,4), 16);
-
-        emu.message(tostring(amt) .. 'g spent!');
-        memory.writebyte(p_gil_hi, balance_hi);
-        memory.writebyte(p_gil_lo, balance_lo);
-        return true;
-    else
-        return false;
-    end
-end
-
-
 -- prints gil amount on emulator screen
 function ff.print_gil()
-    p_gil = consts.GIL;
-    gil_lo = string.format('%02x', memory.readbyte(p_gil[1]));
-    gil_hi = string.format('%02x', memory.readbyte(p_gil[2]));
-
-    gil = tostring(tonumber(gil_hi .. gil_lo, 16));
-    emu.message('Current gil: ' .. gil);
+    emu.message('Current gil: ' .. get_gil());
 end
 
 
