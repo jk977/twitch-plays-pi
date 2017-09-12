@@ -15,6 +15,10 @@ with open('info/oauth.cfg', 'r') as file:
 # tracks all threads used by bot
 threads = StoppablePool()
 
+# TODO make threshold a piecewise function that returns:
+#   - 1 for active chatters < 10
+#   - % of active chatters for active chatters >= 10
+
 # used in vote tracking
 users = {}
 vm = VoteManager(threshold=1, on_decision=Emulator.send)

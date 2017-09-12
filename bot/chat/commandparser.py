@@ -18,6 +18,7 @@ class CommandParser:
                 'gil': commands.get_gil,
                 'mods': commands.get_mods,
                 'banlist': commands.get_banlist,
+                'threshold': commands.get_threshold,
                 'ban': commands.ban,
                 'unban': commands.unban,
                 'roles': commands.get_roles,

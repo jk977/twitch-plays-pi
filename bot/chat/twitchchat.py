@@ -33,14 +33,16 @@ class TwitchChat:
     def send_message(self, content):
         with self._lock:
             try:
-                self._sock.send(bytes('PRIVMSG #' + self._chan + ' :' + content + '\r\n', 'utf-8'))
-                print('Sent in {}: {}'.format(self._chan, content))
-                sleep(TwitchChat.rate_limit)
+                self._sock.send(bytes('PRIVMSG #{} :{}\r\n'.format(self._chan, content), 'utf-8'))
             except TimeoutError:
+                self.close()
+                self._socket = socket.socket()
                 self._connect()
-                self._sock.send(bytes('PRIVMSG #' + self._chan + ' :' + content + '\r\n', 'utf-8'))
-                print('Sent in {}: {}'.format(self._chan, content))
-                sleep(TwitchChat.rate_limit)
+
+                self._sock.send(bytes('PRIVMSG #{} :{}\r\n'.format(self._chan, content), 'utf-8'))
+
+            print('Sent in {}: {}'.format(self._chan, content))
+            sleep(TwitchChat.rate_limit)
 
 
     def wait_for_message(self):

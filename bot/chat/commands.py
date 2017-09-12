@@ -43,8 +43,15 @@ def get_roles(chat, user, args):
 
 
 @permissions(Roles.DEFAULT)
-def get_map(chat, user, args):
-    chat.send_message('http://ff1maps.com/img/worldmap-small.png')
+def get_banlist(chat, user, args):
+    banlist = [u.name for u in config.users.values() if u.is_banned]
+
+    if len(banlist) == 0:
+        message = 'No one is currently banned.'
+    else:
+        message = 'Banned users: ' + ', '.join(banlist)
+
+    chat.send_message(message)
 
 
 @permissions(Roles.DEFAULT)
@@ -53,6 +60,18 @@ def get_gil(chat, user, args):
         gil = file.read()
 
     chat.send_message('{:,}'.format(int(gil)))
+
+
+@permissions(Roles.DEFAULT)
+def get_help(chat, user, args):
+    with open('info/help.cfg', 'r') as file:
+        help_msg = file.read().strip();
+    chat.send_message(help_msg)
+
+
+@permissions(Roles.DEFAULT)
+def get_map(chat, user, args):
+    chat.send_message('http://ff1maps.com/img/worldmap-small.png')
 
 
 @permissions(Roles.DEFAULT)
@@ -68,22 +87,9 @@ def get_mods(chat, user, args):
 
 
 @permissions(Roles.DEFAULT)
-def get_banlist(chat, user, args):
-    banlist = [u.name for u in config.users.values() if u.is_banned]
-
-    if len(banlist) == 0:
-        message = 'No one is currently banned.'
-    else:
-        message = 'Banned users: ' + ', '.join(banlist)
-
-    chat.send_message(message)
-
-
-@permissions(Roles.DEFAULT)
-def get_help(chat, user, args):
-    with open('info/help.cfg', 'r') as file:
-        help_msg = file.read().strip();
-    chat.send_message(help_msg)
+def get_threshold(chat, user, args):
+    threshold = config.vm.threshold
+    chat.send_message('The vote threshold is currently {}.'.format(threshold))
 
 
 @permissions(Roles.MOD, silent=True)

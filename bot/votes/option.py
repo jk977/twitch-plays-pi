@@ -3,12 +3,6 @@ class Option:
         self._name = name
         self._voters = list(set(voters))
 
-    def __lt__(self, other):
-        return len(self._voters) < len(other._voters)
-
-    def __gt__(self, other):
-        return len(self._voters) > len(other._voters)
-
     @property
     def name(self):
         return self._name

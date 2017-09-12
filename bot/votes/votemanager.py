@@ -27,7 +27,7 @@ class VoteManager:
 
 
     def __find_option(self, name):
-        if name is None:
+        if not name:
             raise TypeError('Option name must be a string.')
 
         for option in self._options:
@@ -38,14 +38,22 @@ class VoteManager:
 
 
     def __get_top(self, count):
-        return sorted(self._options)[:count]
+        opts = self._options[:]
+
+        # TODO change to a more efficient algorithm (quicksort?)
+        for i in range(len(opts)):
+            for j in range(i, len(opts)):
+                if opts[i].vote_count < opts[j].vote_count:
+                    opts[i], opts[j] = opts[j], opts[i]
+
+        return opts
 
 
     def __export_top(self, count):
         if self.threshold == 1:
             return
 
-        top = [Emulator.parse_buttons(opt.name) + ': {}'.format(opt.vote_count) for opt in self.__get_top(count) if opt.vote_count > 0]
+        top = ['{}: {}'.format(Emulator.parse_input(opt.name), opt.vote_count) for opt in self.__get_top(count) if opt.vote_count > 0]
 
         with open(VoteManager._vote_file, 'w') as file:
             for opt in top:
@@ -90,7 +98,6 @@ class VoteManager:
 
 
     def remove_vote(self, user):
-        # TODO fix this function
         try:
             option = self.__find_option(user.choice)
             option.remove_voter(user)
@@ -99,7 +106,7 @@ class VoteManager:
             # removes option from list if no votes
             if votes == 0:
                 self._options = [opt for opt in self._options if opt.name != option.name]
-        except TypeError:
+        except (ValueError, TypeError):
             pass
 
 

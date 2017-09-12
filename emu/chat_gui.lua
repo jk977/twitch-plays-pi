@@ -76,7 +76,7 @@ function chat_gui.write_lines(x_offset, bg_color, list)
     gui.opacity(0.65)
     gui.box(box_x1, box_y1, width, screen_y2, bg_color, 'white');
 
-    gui.text(x, y, 'Votes', nil, 'clear')
+    gui.text(x, y, 'Top Votes', nil, 'clear')
     y = y + 9;
 
     for _, line in pairs(list) do

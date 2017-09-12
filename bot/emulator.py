@@ -1,3 +1,6 @@
+# TODO separate cheats and buttons into own class to allow operations on them?
+#   - e.g., condensing "start start start" to "3start"
+
 import config
 import re
 import utils
@@ -35,6 +38,18 @@ class Emulator:
                 Emulator._send_cheat(message)
             except ValueError:
                 pass
+
+
+    def parse_input(message):
+        try:
+            output = Emulator.parse_buttons(message)
+        except:
+            try:
+                output = Emulator.parse_cheat(message)
+            except:
+                return
+
+        return output
 
 
     def parse_buttons(message):
