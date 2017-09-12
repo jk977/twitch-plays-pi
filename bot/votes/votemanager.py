@@ -37,27 +37,17 @@ class VoteManager:
         raise ValueError('Option not in list.')
 
 
-    def __get_top(self, count):
-        opts = self._options[:]
-
-        # TODO change to a more efficient algorithm (quicksort?)
-        for i in range(len(opts)):
-            for j in range(i, len(opts)):
-                if opts[i].vote_count < opts[j].vote_count:
-                    opts[i], opts[j] = opts[j], opts[i]
-
-        return opts
-
-
     def __export_top(self, count):
         if self.threshold == 1:
             return
 
-        top = ['{}: {}'.format(Emulator.parse_input(opt.name), opt.vote_count) for opt in self.__get_top(count) if opt.vote_count > 0]
+        # gets all options with a nonzero number of votes, sorted by vote count
+        opts = [o for o in sorted(self._options, key=lambda o: o.vote_count) if o.vote_count > 0]
+        top = ['{}: {}'.format(Emulator.parse_input(o.name), o.vote_count) for o in opts[:count]]
 
         with open(VoteManager._vote_file, 'w') as file:
             for opt in top:
-                file.writelines(opt + '\n')
+                file.write(opt + '\n')
 
 
     @property
@@ -68,6 +58,7 @@ class VoteManager:
             return self._threshold
 
 
+    @property
     def vote_total(self):
         total = 0
         for option in self._options:
