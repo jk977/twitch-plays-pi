@@ -6,8 +6,12 @@ from votes.votemanager import VoteManager
 from tests.utils import *
 
 
+def on_decision(name):
+    print("Voted for " + name)
+
+
 # initializing test variables
-v = VoteManager(threshold=3)
+v = VoteManager(threshold=3, on_decision=on_decision, debug=True)
 u1 = User(name='Phil')
 u2 = User(name='Bob')
 u3 = User(name='Steve')
@@ -26,19 +30,14 @@ def print_all_votes():
         if user.choice is None:
             continue
         print(user.name + ': ' + user.choice)
-    if v.vote_total() == 0:
+    if v.vote_total == 0:
         print('No votes')
     print('----------------------')
 
 
 def vote_and_print(user, choice):
-    try:
-        result = user.vote(v, choice)
-        print(user.name + ' cast vote for ' + choice)
-        print(choice + ' total: ' + str(result))
-    except ValueError:
-        print('Bad input')
-
+    result = user.vote(v, choice)
+    print(user.name + ' cast vote for ' + choice)
     print('----------------------')
     return result
 
@@ -59,11 +58,9 @@ def test_votes(test_count):
         if user.choice:
             scores[user.choice] -= 1
 
-        result = vote_and_print(user, choice)
-
         try:
-            assert(v.vote_total() <= len(users))
-            assert(scores[choice] == result)
+            vote_and_print(user, choice)
+            assert(v.vote_total <= len(users))
         except AssertionError:
             print_all_votes()
             print('Debug info\n')
@@ -71,7 +68,6 @@ def test_votes(test_count):
             print('User vote: ' + user.choice)
             print('Choice: ' + choice)
             print('Choice is user vote: ' + str(user.choice == choice))
-            print('Number of recorded votes: ' + str(votes_stored))
             print('Total number of votes cast: ' + str(i+1))
             print('Total users: ' + str(len(users)))
             return False

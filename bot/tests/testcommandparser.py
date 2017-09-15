@@ -1,3 +1,4 @@
+# TODO rewrite this to match command changes
 from chat.commandparser import CommandParser
 from chat.user import User
 
@@ -19,9 +20,9 @@ u2 = User(name='Bob', moderator=True)
 u3 = User(name='Steve', moderator=True)
 u4 = User(name='Mark')
 u5 = User(name='Henry')
-users = [u1,u2,u3,u4,u5]
-
 u5.ban()
+
+users = [u1,u2,u3,u4,u5]
 
 sock = 'dummy'
 valid_commands = []
@@ -30,15 +31,13 @@ invalid_commands = []
 
 def parse(message, user):
     print('Parsing {} from {}...'.format(message, user.name))
-    cmd = CommandParser.parse(message, user, sock)
+    cmd = CommandParser.parse(message, user)
     print('Command parsed!\n')
 
     return cmd
 
 
 def test_command_parser():
-    # TODO find out why permission-related commands work in a test environment,
-    # but do in the actual bot
     try:
         cmd1 = parse(m1,u1)
         cmd2 = parse(m2,u2)

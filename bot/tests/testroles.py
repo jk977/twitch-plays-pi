@@ -1,6 +1,5 @@
 """Testing new vote functionality."""
 from chat.user import User
-from tests.utils import *
 
 
 # initializing test variables

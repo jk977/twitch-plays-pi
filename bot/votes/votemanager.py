@@ -8,12 +8,13 @@ class VoteManager:
     _vote_file = '../game/votes.txt'
 
 
-    def __init__(self, options=None, threshold=1, on_decision=None):
+    def __init__(self, options=None, threshold=1, on_decision=None, debug=False):
         """
         Initializes vote manager with specified threshold (may be callable or a number)
         :param threshold: Number or function that returns number.
         :param predicate: Function that takes a string and returns boolean value
         :param on_decision: Callable function that takes option name as argument and is executed when threshold is exceeded.
+        :param debug: If set to true, prevents sending to stream overlay.
         """
         if not callable(on_decision):
             raise TypeError('"on_decision" must be callable')
@@ -24,6 +25,7 @@ class VoteManager:
         self._options = [] if options is None else list(set(options))
         self._threshold = threshold
         self._on_decision = on_decision
+        self._debug = debug
 
 
     def __find_option(self, name):
@@ -62,7 +64,7 @@ class VoteManager:
     def vote_total(self):
         total = 0
         for option in self._options:
-            total += option.vote_count()
+            total += option.vote_count
         return total
 
 
@@ -81,7 +83,8 @@ class VoteManager:
             self._options.append(option)
             votes = 1
 
-        self.__export_top(3)
+        if not self._debug:
+            self.__export_top(3)
 
         if votes >= self.threshold:
             self._on_decision(option_name)

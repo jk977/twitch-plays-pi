@@ -1,6 +1,6 @@
 import threading
 from time import sleep
-from stoppablethread import StoppableThread
+from threads.stoppablethread import StoppableThread
 
 
 # initializing test variables
