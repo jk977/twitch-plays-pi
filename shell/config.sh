@@ -14,7 +14,7 @@ basedir=$( realpath ~/Desktop/twitch-plays )
 botdir="$basedir/bot"
 emudir="$basedir/emu"
 logdir="/media/usb/twitch-plays-logs/"
-romdir="$basedir/roms/ff.nes"
+romdir="$basedir/roms/"
 shldir="$basedir/shell"
 audiodir="/media/usb1/audio"
 
@@ -25,4 +25,4 @@ if [[ ! -e "$basedir" ]]; then
     exit 1
 fi
 
-mkdirs_if_absent "$logdir" "$basedir/roms" "$audiodir"
+mkdirs_if_absent "$logdir" "$romdir" "$audiodir"

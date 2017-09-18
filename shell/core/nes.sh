@@ -4,7 +4,9 @@
 dir="$( dirname $0 )"
 source "$dir/../config.sh"
 
-fceux "$romdir" \
+game="$romdir/dq.nes"
+
+fceux "$game" \
     --opengl 0 \
     --loadlua "$emudir/main.lua" \
     --xscale 1 \

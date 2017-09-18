@@ -7,11 +7,12 @@ import utils
 
 
 class Emulator:
+    _input_limit = 9
     _button_file = '../game/inputs.txt'
     _cheat_file = '../game/cheats.txt'
 
     buttons = ['A', 'B', 'start', 'select', 'up', 'down', 'left', 'right']
-    cheats = ['heal', 'killall', 'attack', 'run']
+    cheats = ['bullets', 'strength']
 
 
     def validate_input(message):
@@ -62,7 +63,7 @@ class Emulator:
         numbers.append(len(parts) - len(numbers)) # adds all implied 1's
         total = sum(numbers) if numbers else 1
 
-        if total < 1 or total > 9:
+        if total < 1 or total > Emulator._input_limit:
             raise ValueError('Total presses must be between 1 and 9.')
 
         for button in parts:
@@ -77,11 +78,11 @@ class Emulator:
         # stores alternate mappings for buttons
         button_map = {
             ('r', '➡️', '☞', '👉'): 'right',  # right arrow and 2 pointing right emojis
-            ('l', '⬅️', '☜', '👈'): 'left',   # left arrow and 2 pointing left emojis
+            ('l', '⬅️', '☜', '👈', 'los'): 'left',   # left arrow and 2 pointing left emojis
             ('u', '⬆️', '☝', '👆'): 'up',     # up arrow and 2 pointing up emojis
             ('d', '⬇️', '👇'): 'down',        # down arrow and pointing down emojis
             ('🅱️', '👎', '🙅'): 'b',           # b, no good, and thumbs down emojis
-            ('🅰️', '👌', '👍'): 'a'            # a, ok hand, and thumbs up emojis
+            ('🅰️', '👌', '👍', 'angeles'): 'a'            # a, ok hand, and thumbs up emojis
         } 
 
         has_leading_num = bool(re.search('^[1-9]', message))

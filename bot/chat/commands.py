@@ -42,6 +42,10 @@ def get_roles(chat, user, args):
     chat.send_message(msg)
 
 
+def get_song(chat, user, args):
+    chat.send_message('Dragon Quest 1 and 2 Symphonic Suites - https://www.youtube.com/playlist?list=PL2jLKwo6ZTmQ0vKgGwbcp5m2sp7vy9GXY')
+
+
 @permissions(Roles.DEFAULT)
 def get_banlist(chat, user, args):
     banlist = [u.name for u in config.users.values() if u.is_banned]
@@ -71,7 +75,7 @@ def get_help(chat, user, args):
 
 @permissions(Roles.DEFAULT)
 def get_map(chat, user, args):
-    chat.send_message('http://ff1maps.com/img/worldmap-small.png')
+    chat.send_message('https://i.imgur.com/mkotcf9.png')
 
 
 @permissions(Roles.DEFAULT)

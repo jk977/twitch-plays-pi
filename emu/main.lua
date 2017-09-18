@@ -2,15 +2,10 @@
 
 local utils = require('utils');
 local emutils = require('emutils');
-local ff = require('games/finalfantasy/ff');
 
 -- wipes any pre-existing input info
 utils.reset_input_file();
 utils.reset_cheat_file();
-
--- initializes value in ../game/gil.txt and keeps value updated
-ff.write_gil();
-ff.register_gil_tracker();
 
 -- main loop
 while true do
@@ -23,13 +18,13 @@ while true do
             local count = tonumber(input:sub(1, 1));
             local button = input:sub(2, #input);
             emutils.press_button(1, button, count);
+            emutils.advance_frames(10);
         end
 
         utils.reset_input_file();
     end
 
     if cheat ~= nil and cheat ~= '' then
-        ff.do_cheat(cheat);
         utils.reset_cheat_file();
     end
 

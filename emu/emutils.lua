@@ -1,5 +1,4 @@
 local emutils = {};
-
 local chat_gui = require('chat_gui');
 
 
@@ -19,6 +18,10 @@ function emutils.press_button(player, button, count)
         while emu.lagged() or not joypad.get(player)[button] do
             joypad.set(player, {[button]=true});
             emutils.advance_frames(1);
+        end
+
+        if button == 'left' or button == 'right' then
+            emutils.advance_frames(25);
         end
 
         -- makes sure button isn't held through to the next press 

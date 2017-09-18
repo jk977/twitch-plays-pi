@@ -4,7 +4,7 @@
 dir="$( dirname $0 )"
 source "$dir/../config.sh"
 
-audiofile="$audiodir/all.mp3"
+audiofile="$audiodir/dq.mp3"
 
 # uncomment to save stream to a file
 #stream="/home/pi/Desktop/stream.flv"
