@@ -3,6 +3,7 @@ game/
 info/
 logs/
 roms/
+working-audio/
 *.cfg
 *.txt
 
