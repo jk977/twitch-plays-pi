@@ -34,7 +34,7 @@ class TwitchChat:
         with self._lock:
             try:
                 self._sock.send(bytes('PRIVMSG #{} :{}\r\n'.format(self._chan, content), 'utf-8'))
-            except TimeoutError:
+            except socket.error:
                 self.close()
                 self._socket = socket.socket()
                 self._connect()
