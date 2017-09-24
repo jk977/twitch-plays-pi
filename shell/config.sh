@@ -13,7 +13,7 @@ mkdirs_if_absent () {
 basedir=$( realpath ~/Desktop/twitch-plays )
 botdir="$basedir/bot"
 emudir="$basedir/emu"
-logdir="/media/usb/twitch-plays-logs/"
+logdir="/media/usb1/twitch-plays-logs/"
 romdir="$basedir/roms/"
 shldir="$basedir/shell"
 audiodir="/media/usb1/audio"
