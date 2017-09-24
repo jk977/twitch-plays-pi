@@ -76,8 +76,9 @@ class User:
 
         try:
             self.unvote(manager)
-        except:
-            pass
+        except Exception as e:
+            if self.choice:
+                print('There was an error removing the vote. Info: "{}"'.format(e))
 
         vote_count = manager.add_vote(self, choice_name)
         self._choice = choice_name
