@@ -5,9 +5,12 @@ local screen_y1 = 8;
 local screen_x2 = 256;
 local screen_y2 = 231;
 
+local line_height = 9; -- height of a line of text in fceux gui
+
 local vote_file = '../game/votes.txt';
 
 
+-- basic map function that applies function (func) to each k-v pair in a table (tab)
 local function map(func, tab)
     local new_table = {};
 
@@ -20,6 +23,7 @@ local function map(func, tab)
 end
 
 
+-- extracts commands from file containing list of commands
 local function get_commands()
     local file = io.open(vote_file, 'r');
     commands = {};
@@ -40,6 +44,9 @@ end
 
 
 -- writes lines aligned with the bottom border
+-- x_offset specifies the distance from the side of the screen to the text
+-- bg_color is the background color of the box containing the text
+-- list is a table containing the lines to write
 function chat_gui.write_lines(x_offset, bg_color, list)
     if list == nil or #list == 0 then
         return;
@@ -76,18 +83,21 @@ function chat_gui.write_lines(x_offset, bg_color, list)
     gui.opacity(0.65)
     gui.box(box_x1, box_y1, width, screen_y2, bg_color, 'white');
 
+    -- prints header
     gui.text(x, y, 'Top Votes', nil, 'clear')
-    y = y + 9;
+    y = y + line_height;
 
+    -- prints each line from list
     for _, line in pairs(list) do
         gui.text(x, y, line, nil, 'clear');
-        y = y + 9;
+        y = y + line_height;
     end
                 
     gui.opacity(1);
 end
 
 
+-- updates gui with command list sent by python script
 function chat_gui.update()
     commands = get_commands();
     chat_gui.write_lines(0, 'black', commands);

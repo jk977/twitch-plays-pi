@@ -14,6 +14,9 @@ class Settings:
 
 
     def save_settings(destination=None):
+        """
+        Serializes all tracked users to a json and stores in file.
+        """
         if not destination:
             destination = Settings.default_path
 
@@ -23,8 +26,8 @@ class Settings:
             print('No users found.')
             return
 
-        for user in config.users.values():
-            settings['users'].append(user.serialize())
+        for user in [u.serialize() for u in config.users.values()]:
+            settings['users'].append(user)
 
         try:
             with open(destination, 'w') as file:
@@ -46,7 +49,6 @@ class Settings:
         try:
             with open(source, 'r') as file:
                 settings = json.load(file)
-
         except FileNotFoundError:
             file_valid = False
 
