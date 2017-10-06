@@ -53,6 +53,7 @@ class TwitchChat:
 
             if response.startswith('PING :tmi.twitch.tv'):
                 self._sock.send(bytes(response.replace('PING', 'PONG'), 'utf-8'))
+                print('Ping received.')
             else:
                 return Message(response)
 

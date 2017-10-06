@@ -4,7 +4,7 @@
 dir="$( dirname $0 )"
 source "$dir/../config.sh"
 
-game="$romdir/dq.nes"
+game="$romdir/fire.nes"
 
 fceux "$game" \
     --opengl 0 \
