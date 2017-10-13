@@ -45,7 +45,7 @@ class TestInput(unittest.TestCase):
 
 class TestEmulator(unittest.TestCase):
     def test_send(self):
-        test_input = '6down'
+        test_input = 'down6'
         self.assertEqual(test_input, DummyEmu.send_input(test_input), 'Emulator send failed.')
 
 

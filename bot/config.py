@@ -10,7 +10,12 @@ def find_project_root():
     except:
         return False
 
+users = {}
 root = find_project_root()
+info_dir = os.path.join(root, 'bot', 'info')
 
 if not os.access(root, os.W_OK):
     raise PermissionError('Project root is not writable.')
+
+with open(os.path.join(info_dir, 'owner.cfg'), 'r') as file:
+    owner = file.read().strip()

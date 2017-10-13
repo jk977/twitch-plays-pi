@@ -12,9 +12,9 @@ class TestMessage(unittest.TestCase):
         m_time = time.time()
         message = Message(author, content, m_time)
 
-        self.assertEqual(message.author, author, fail_msg)
+        self.assertEqual(message.author.name, author, fail_msg)
         self.assertEqual(message.content, content, fail_msg)
-        self.assertEqual(message.time, m_time, fail_msg)
+        self.assertEqual(message.timestamp, m_time, fail_msg)
 
     def test_serialize(self):
         message = Message('frank', 'howdy')

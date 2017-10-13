@@ -1,8 +1,13 @@
+import re
 import socket
 import time
+
+from chat.message import Message
+from chat.user import User
 from interfaces.chat import Chat
 
 class TwitchChat(Chat):
+    blacklist = ['tmi\.twitch\.tv', 'shira_bot$'] # list of user regexes to ignore
     host = 'irc.twitch.tv'
     port = 6667
     rate = 3/2
@@ -34,7 +39,20 @@ class TwitchChat(Chat):
         self.__authenticate('NICK', self._nick)
         self.__authenticate('JOIN', self._chan)
 
+    def _parse_message(raw_message):
+        '''
+        Parses raw message from server and returns a Message object.
+        :param raw_message: UTF-8 decoded message from server.
+        '''
+        author, content = re.search(r'^:(\w+)!\w+@[\w.]+ [A-Z]+ #\w+ :(.+)\r\n', raw_message).groups()
+        author = User(author)
+        return Message(author, content)
+
     def send_message(self, content):
+        '''
+        Sends message to server and sleeps.
+        :param content: The message to send.
+        '''
         message = 'PRIVMSG {} :{}\r\n'.format(self._chan, content)
         self.__sock_send(message)
         time.sleep(TwitchChat.rate)
@@ -49,16 +67,21 @@ class TwitchChat(Chat):
 
         while (timeout < 0) or (time.time() - start) < timeout:
             message = self._sock.recv(1024).decode('utf-8')
+            author = re.search('^:([\\w.]+)', message)
+            author = author.groups()[0] if author else None
 
             if message.startswith('PING'):
                 self.__sock_send(message.replace('PING', 'PONG'))
                 print('Ping received.')
-            else:
-                return message
+            elif not any(re.search(user, author) for user in TwitchChat.blacklist):
+                return TwitchChat._parse_message(message)
 
         if not quiet:
             raise TimeoutError('No messages received within timeout duration.')
 
     def close(self):
+        '''
+        Closes server connection.
+        '''
         self._sock.shutdown(socket.SHUT_RDWR)
         self._sock.close()
