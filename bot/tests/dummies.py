@@ -3,6 +3,7 @@ from tests.structs.dummychat import DummyChat
 from tests.structs.dummyinput import DummyInput
 from tests.structs.dummyemu import DummyEmu
 
+
 class TestChat(unittest.TestCase):
     def setUp(self):
         self.chat = DummyChat()
@@ -24,15 +25,22 @@ class TestInput(unittest.TestCase):
         
     def test_validate(self):
         fail_msg = 'Input validate failed'
-        self.assertTrue(DummyInput.validate('9*right'), fail_msg)
-        self.assertFalse(DummyInput.validate('wrong*9'), fail_msg)
+        self.assertTrue(DummyInput.validate('right*9'), fail_msg)
+        self.assertTrue(DummyInput.validate('right9'), fail_msg)
+        self.assertTrue(DummyInput.validate('right'), fail_msg)
+
+        self.assertFalse(DummyInput.validate('9*wrong'), fail_msg)
 
     def test_serialize(self):
         self.assertEqual(self.input.serialize(), '6*down', 'Input serialize failed.')
 
     def test_deserialize(self):
-        other = DummyInput.deserialize('6*down')
-        self.assertEqual(other, self.input, 'Input deserialize failed.')
+        fail_msg = 'Input deserialize failed.'
+        other = DummyInput.deserialize('down*6')
+        other2 = DummyInput.deserialize('down6')
+        
+        self.assertEqual(other, self.input, fail_msg)
+        self.assertEqual(other2, self.input, fail_msg)
 
 
 class TestEmulator(unittest.TestCase):

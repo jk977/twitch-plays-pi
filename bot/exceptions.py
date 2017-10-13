@@ -1,2 +1,0 @@
-class UndefinedMethodError(Exception):
-    pass

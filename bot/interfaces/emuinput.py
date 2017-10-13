@@ -1,14 +1,20 @@
+import config
+import os
+import re
+
 from . import *
 from numbers import Number
 from interfaces.serializable import Serializable
+from umake.tools import classproperty
 
 class EmuInput(Serializable):
     '''
     Base class for nes inputs. Children classes must define functions _validate_content and
     _validate_count to return true when the respective fields are valid, and may optionally
-    define a delimiter other than '*'.
+    define a delimiter other than '*' and a destination path other than project_root/game.
     '''
     delimiter = '*'
+    _location = os.path.join(config.root, 'game')
 
     @abstractstaticmethod
     def _validate_content(content):
@@ -17,7 +23,7 @@ class EmuInput(Serializable):
     @abstractstaticmethod
     def _validate_count(count):
         pass
-
+    
     def __init__(self, content, count = 1):
         content = str(content)
         count = int(count)
@@ -33,7 +39,7 @@ class EmuInput(Serializable):
 
     def serialize(self):
         '''
-        Serializes input to send to nes.
+        Serializes input to send to NES.
         '''
         return self.delimiter.join(str(x) for x in [self.count, self.content])
 
@@ -44,7 +50,10 @@ class EmuInput(Serializable):
         :param cls: Current class.
         :param message: Message to parse.
         '''
-        return message.split(cls.delimiter)[1]
+        if cls.delimiter in message:
+            return message.split(cls.delimiter)[0]
+        else:
+            return re.sub('\\d+$', '', message)
 
     @classmethod
     def _parse_count(cls, message):
@@ -54,7 +63,13 @@ class EmuInput(Serializable):
         :param message: Message to parse.
         :returns: int
         '''
-        return int(message.split(cls.delimiter)[0])
+        if cls.delimiter in message:
+            result = message.split(cls.delimiter)[1]
+        else:
+            match = re.search('\\d+$', message)
+            result = match.group(0) if match else 1
+            
+        return int(result)
 
     @classmethod
     def deserialize(cls, serialized):
@@ -67,8 +82,8 @@ class EmuInput(Serializable):
         if not cls.validate(serialized):
             return
 
-        count, content = serialized.split(cls.delimiter)
-        count = int(count)
+        content = cls._parse_content(serialized)
+        count = cls._parse_count(serialized)
         return cls(content, count)
 
     @classmethod
@@ -93,3 +108,10 @@ class EmuInput(Serializable):
     @property
     def count(self):
         return self._count
+    
+    @classproperty
+    def destination(cls):
+        if not cls._filename:
+            raise NotImplementedError('Class does not define a destination file in cls._filename.')
+
+        return os.path.join(cls._location, cls._filename)
