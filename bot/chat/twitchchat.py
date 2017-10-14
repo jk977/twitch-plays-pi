@@ -55,7 +55,12 @@ class TwitchChat(Chat):
         :param content: The message to send.
         '''
         message = 'PRIVMSG {} :{}\r\n'.format(self._chan, content)
-        self.__sock_send(message)
+
+        try:
+            self.__sock_send(message)
+        except socket.error:
+            self.__sock_send(message)
+
         time.sleep(TwitchChat.rate)
 
     def get_message(self, timeout=-1, quiet=False):

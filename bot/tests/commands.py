@@ -1,10 +1,15 @@
 import unittest
 from chat.commands.commandlist import CommandList
+from chat.commands.command import Command
+from tests.structs.dummychat import DummyChat
 
 class TestCommands(unittest.TestCase):
+    def setUp(self):
+        self.chat = DummyChat()
+
     def test_get(self):
-        command = CommandList.get('help')
-        self.assertTrue(command and callable(command), 'Command get failed')
+        command = CommandList.get('help', self.chat, 'message')
+        self.assertTrue(command and isinstance(command, Command), 'Command get failed')
         
     def test_validate(self):
         fail_msg = 'Command validate failed'

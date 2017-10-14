@@ -1,7 +1,7 @@
 import unittest
 
 from chat.user import User
-from chat.voting.choice import Choice
+from nes.choice import EmuChoice
 from chat.voting.inputmanager import InputManager
 
 def decision(choice):
@@ -15,8 +15,8 @@ class TestVoting(unittest.TestCase):
         self.u1 = User('bob')
         self.u2 = User('frank')
 
-        self.c1 = Choice('start*9')
-        self.c2 = Choice('A*3')
+        self.c1 = EmuChoice('start*9')
+        self.c2 = EmuChoice('A*3')
 
     def test_cast(self):
         fail_msg = 'Voting cast failed'

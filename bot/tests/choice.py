@@ -1,7 +1,7 @@
 import unittest
 
 from chat.user import User
-from chat.voting.choice import Choice
+from nes.choice import EmuChoice
 from chat.voting.choices import Choices
 
 
@@ -10,9 +10,9 @@ class TestChoices(unittest.TestCase):
         self.u1 = User('fred')
         self.u2 = User('tony')
 
-        c1 = Choice('start*8', [self.u1])
-        c2 = Choice('up*1', [self.u2])
-        c3 = Choice('down*9')
+        c1 = EmuChoice('start*8', [self.u1])
+        c2 = EmuChoice('up*1', [self.u2])
+        c3 = EmuChoice('down*9')
 
         self.choices = Choices(c1, c2, c3)
 
@@ -58,28 +58,28 @@ class TestChoices(unittest.TestCase):
     def test_equals(self):
         fail_msg = 'Choices equals failed'
 
-        choices = Choices(Choice('start*9'))
+        choices = Choices(EmuChoice('start*9'))
         self.assertEqual(self.choices, self.choices, fail_msg)
         self.assertNotEqual(self.choices, choices, fail_msg)
         
     def test_serialize(self):
-        c1 = Choice('start*9')
-        c2 = Choice('A*6')
-        c3 = Choice('down*1')
+        c1 = EmuChoice('start*9')
+        c2 = EmuChoice('A*6')
+        c3 = EmuChoice('down*1')
 
         choices = Choices(c1, c2, c3)
         ser = choices.serialize()
         deser = Choices.deserialize(ser)
         self.assertEqual(choices, deser, 'Choices serialize failed')
 
-class TestChoice(unittest.TestCase):
+class TestEmuChoice(unittest.TestCase):
     def setUp(self):
         self.u1 = User('bob')
         self.u2 = User('steve')
         self.u3 = User('frank')
 
     def test_equals(self):
-        fail_msg = 'Choice constructor failed'
+        fail_msg = 'EmuChoice constructor failed'
 
         n1 = 'down*7'
         v1 = [self.u1, self.u2]
@@ -87,11 +87,11 @@ class TestChoice(unittest.TestCase):
         n2 = 'start*3'
         v2 = [self.u2, self.u3]
 
-        c1 = Choice(n1, v1)
-        c2 = Choice(n1, v2)
-        c3 = Choice(n2, v1)
-        c4 = Choice(n2, v2)
-        c5 = Choice(n1, v1)
+        c1 = EmuChoice(n1, v1)
+        c2 = EmuChoice(n1, v2)
+        c3 = EmuChoice(n2, v1)
+        c4 = EmuChoice(n2, v2)
+        c5 = EmuChoice(n1, v1)
 
         self.assertEqual(c1, c1, fail_msg)
         self.assertEqual(c2, c2, fail_msg)
@@ -110,9 +110,9 @@ class TestChoice(unittest.TestCase):
         self.assertNotEqual(c1, c4, fail_msg)
 
     def test_vote(self):
-        fail_msg = 'Choice vote failed'
+        fail_msg = 'EmuChoice vote failed'
 
-        choice = Choice('run*1')
+        choice = EmuChoice('run*1')
 
         self.assertFalse(choice.voters, fail_msg)
 
@@ -125,8 +125,8 @@ class TestChoice(unittest.TestCase):
         fail_msg = 'User serialize failed'
 
         user = User('bob')
-        choice = Choice('attack*1', [user])
+        choice = EmuChoice('attack*1', [user])
         ser = choice.serialize()
 
-        deser = Choice.deserialize(ser)
+        deser = EmuChoice.deserialize(ser)
         self.assertEqual(choice, deser, fail_msg)

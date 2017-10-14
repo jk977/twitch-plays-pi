@@ -6,11 +6,7 @@ from chat.twitchchat import TwitchChat
 class TestChat(unittest.TestCase):
     def setUp(self):
         path = os.path.join(config.info_dir, 'oauth.cfg')
-
-        with open(path, 'r') as file:
-            password = file.read().strip()
-
-        self.chat = TwitchChat('shira_bot', password, '#shira_dummy')
+        self.chat = TwitchChat('shira_bot', config.password, '#shira_dummy')
 
     def test_send(self):
         self.chat.send_message('Testing')

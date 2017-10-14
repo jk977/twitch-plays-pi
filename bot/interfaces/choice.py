@@ -1,34 +1,9 @@
 import json
+
 from chat.user import User
-from interfaces.emuinput import EmuInput
 from interfaces.serializable import Serializable
-from nes.button import Button
-from nes.cheat import Cheat
 
 class Choice(Serializable):
-    def __init__(self, choice, voters=set()):
-        '''
-        Initializes Choice object, containing EmuInput object and list of Users.
-        :param choice: Name of choice.
-        :param voters: List of Users that voted for choice.
-        '''
-        voters = set(voters)
-
-        if not all(isinstance(voter, User) for voter in voters):
-            raise ValueError('Voters must be an iterable containing Users.')
-
-        if isinstance(choice, EmuInput):
-            pass
-        elif Button.validate(choice):
-            choice = Button.deserialize(choice)
-        elif Cheat.validate(choice):
-            choice = Cheat.deserialize(choice)
-        else:
-            raise ValueError('Choice "{}" is not a valid emulator input.'.format(choice))
-
-        self._choice = choice
-        self._voters = voters
-
     def __eq__(self, other):
         return (isinstance(other, Choice) and
                 self._voters == other._voters and
@@ -36,13 +11,6 @@ class Choice(Serializable):
 
     def __hash__(self):
         return hash((frozenset(self._voters), self._choice))
-
-    @property
-    def input(self):
-        '''
-        Returns actual EmuInput choice.
-        '''
-        return self._choice
 
     @property
     def name(self):
@@ -105,9 +73,10 @@ class Choice(Serializable):
 
         return json.dumps(fields)
 
-    def deserialize(serialized):
+    @classmethod
+    def deserialize(cls, serialized):
         fields = json.loads(serialized)
         name = fields['name']
         voters = [User.deserialize(u) for u in fields['voters']]
 
-        return Choice(name, voters)
+        return cls(name, voters)

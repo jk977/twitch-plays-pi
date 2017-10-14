@@ -1,15 +1,15 @@
 import json
 
-from chat.voting.choice import Choice
+from nes.choice import EmuChoice
 from interfaces.serializable import Serializable
 
 class Choices(Serializable):
     def __init__(self, *args):
         '''
-        Initializes Choices object, which wraps dictionary pairing choice name with Choice object.
+        Initializes Choices object, which wraps dictionary pairing choice name with EmuChoice object.
         '''
-        if not all(isinstance(choice, Choice) for choice in args):
-            raise TypeError('Arguments must be Choice objects.')
+        if not all(isinstance(choice, EmuChoice) for choice in args):
+            raise TypeError('Arguments must be EmuChoice objects.')
 
         choices = set(args)
         self._choices = {}
@@ -28,7 +28,7 @@ class Choices(Serializable):
         Adds choice to list.
         :param choice_name: Name of choice to add.
         '''
-        choice = Choice(choice_name)
+        choice = EmuChoice(choice_name)
         self._choices[choice_name] = choice
         return True
 
@@ -103,5 +103,5 @@ class Choices(Serializable):
 
     def deserialize(serialized):
         fields = json.loads(serialized)
-        fields = [Choice.deserialize(choice) for choice in fields]
+        fields = [EmuChoice.deserialize(choice) for choice in fields]
         return Choices(*fields)
