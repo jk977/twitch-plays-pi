@@ -8,6 +8,9 @@ class User(Serializable):
 
     def __eq__(self, other):
         return isinstance(other, User) and self.name == other.name
+    
+    def __hash__(self):
+        return hash(self._name)
 
     @property
     def admin(self):

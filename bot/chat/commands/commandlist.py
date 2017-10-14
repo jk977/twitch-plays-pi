@@ -1,11 +1,12 @@
-from chat.commands.admin import *
-from chat.commands.info import *
+import chat.commands.admin as admin
+import chat.commands.info as info
 
 class CommandList:
     _map = {
-        'help': help,
-        'song': song,
-        'restart': restart
+        'help': info.show_help,
+        'map': info.game_map,
+        'song': info.song,
+        'restart': admin.restart
     }
 
     def get(name):

@@ -16,11 +16,12 @@ class TwitchChat(Chat):
         if not channel.startswith('#'):
             channel = '#' + channel
 
-        self._sock = socket.socket()
         self._nick = username
         self._pass = 'oauth:' + oauth
         self._chan = channel
 
+        self._sock = socket.socket()
+        self._sock.setblocking(True)
         self.__connect()
 
     def __sock_send(self, message, encoding='utf-8'):
@@ -67,7 +68,7 @@ class TwitchChat(Chat):
 
         while (timeout < 0) or (time.time() - start) < timeout:
             message = self._sock.recv(1024).decode('utf-8')
-            author = re.search('^:([\\w.]+)', message)
+            author = re.search(r'^:([\w.]+)', message)
             author = author.groups()[0] if author else None
 
             if message.startswith('PING'):

@@ -37,11 +37,14 @@ class EmuInput(Serializable):
     def __eq__(self, other):
         return isinstance(other, self.__class__) and self.count == other.count and self.content == other.content
 
+    def __hash__(self):
+        return hash((self.content, self.count))
+
     def serialize(self):
         '''
         Serializes input to send to NES.
         '''
-        return self.delimiter.join(str(x) for x in [self.count, self.content])
+        return self.delimiter.join(str(x) for x in [self.content, self.count])
 
     @classmethod
     def _parse_content(cls, message):

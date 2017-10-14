@@ -1,0 +1,132 @@
+import unittest
+
+from chat.user import User
+from chat.voting.choice import Choice
+from chat.voting.choices import Choices
+
+
+class TestChoices(unittest.TestCase):
+    def setUp(self):
+        self.u1 = User('fred')
+        self.u2 = User('tony')
+
+        c1 = Choice('start*8', [self.u1])
+        c2 = Choice('up*1', [self.u2])
+        c3 = Choice('down*9')
+
+        self.choices = Choices(c1, c2, c3)
+
+    def test_add_choice(self):
+        fail_msg = 'Choices add_choice failed'
+        
+        c1 = 'right*4'
+        c2 = 'down*3'
+
+        self.assertNotIn(c1, self.choices, fail_msg)
+        self.assertNotIn(c2, self.choices, fail_msg)
+
+        self.choices.add_choice(c1)
+        self.choices.add_choice(c2)
+
+        self.assertIn(c1, self.choices, fail_msg)
+        self.assertIn(c2, self.choices, fail_msg)
+
+    def test_add_vote(self):
+        fail_msg = 'Choices add_vote failed'
+
+        c1 = 'down*9'
+
+        self.assertNotIn(self.u1, self.choices.get_voters(c1), fail_msg)
+        self.assertTrue(self.choices.add_vote(self.u1, c1), fail_msg)
+        self.assertIn(self.u1, self.choices.get_voters(c1), fail_msg)
+
+    def test_remove_vote(self):
+        fail_msg = 'Choices remove_vote failed'
+
+        c1 = 'start*8'
+        c2 = 'up*1'
+
+        self.assertIn(self.u1, self.choices.get_voters(c1), fail_msg)
+        self.assertIn(self.u2, self.choices.get_voters(c2), fail_msg)
+        
+        self.assertTrue(self.choices.remove_vote(self.u1, c1), fail_msg)
+        self.assertTrue(self.choices.remove_vote(self.u2, c2), fail_msg)
+
+        self.assertNotIn(self.u1, self.choices.get_voters(c1), fail_msg)
+        self.assertNotIn(self.u2, self.choices.get_voters(c2), fail_msg)
+        
+    def test_equals(self):
+        fail_msg = 'Choices equals failed'
+
+        choices = Choices(Choice('start*9'))
+        self.assertEqual(self.choices, self.choices, fail_msg)
+        self.assertNotEqual(self.choices, choices, fail_msg)
+        
+    def test_serialize(self):
+        c1 = Choice('start*9')
+        c2 = Choice('A*6')
+        c3 = Choice('down*1')
+
+        choices = Choices(c1, c2, c3)
+        ser = choices.serialize()
+        deser = Choices.deserialize(ser)
+        self.assertEqual(choices, deser, 'Choices serialize failed')
+
+class TestChoice(unittest.TestCase):
+    def setUp(self):
+        self.u1 = User('bob')
+        self.u2 = User('steve')
+        self.u3 = User('frank')
+
+    def test_equals(self):
+        fail_msg = 'Choice constructor failed'
+
+        n1 = 'down*7'
+        v1 = [self.u1, self.u2]
+
+        n2 = 'start*3'
+        v2 = [self.u2, self.u3]
+
+        c1 = Choice(n1, v1)
+        c2 = Choice(n1, v2)
+        c3 = Choice(n2, v1)
+        c4 = Choice(n2, v2)
+        c5 = Choice(n1, v1)
+
+        self.assertEqual(c1, c1, fail_msg)
+        self.assertEqual(c2, c2, fail_msg)
+        self.assertEqual(c3, c3, fail_msg)
+        self.assertEqual(c4, c4, fail_msg)
+        self.assertEqual(c1, c5, fail_msg)
+
+        self.assertEqual(c1.name, n1, fail_msg)
+        self.assertEqual(c2.name, n1, fail_msg)
+        self.assertEqual(c3.name, n2, fail_msg)
+        self.assertEqual(c4.name, n2, fail_msg)
+
+        self.assertNotEqual(c1, c2, fail_msg)
+        self.assertNotEqual(c2, c3, fail_msg)
+        self.assertNotEqual(c3, c4, fail_msg)
+        self.assertNotEqual(c1, c4, fail_msg)
+
+    def test_vote(self):
+        fail_msg = 'Choice vote failed'
+
+        choice = Choice('run*1')
+
+        self.assertFalse(choice.voters, fail_msg)
+
+        choice.add_vote(self.u1)
+
+        self.assertEqual(choice.votes, 1, fail_msg)
+        self.assertIn(self.u1, choice.voters, fail_msg)
+
+    def test_serialize(self):
+        fail_msg = 'User serialize failed'
+
+        user = User('bob')
+        choice = Choice('attack*1', [user])
+        ser = choice.serialize()
+
+        deser = Choice.deserialize(ser)
+        self.assertEqual(choice, deser, fail_msg)

@@ -32,7 +32,7 @@ class TestInput(unittest.TestCase):
         self.assertFalse(DummyInput.validate('9*wrong'), fail_msg)
 
     def test_serialize(self):
-        self.assertEqual(self.input.serialize(), '6*down', 'Input serialize failed.')
+        self.assertEqual(self.input.serialize(), 'down*6', 'Input serialize failed.')
 
     def test_deserialize(self):
         fail_msg = 'Input deserialize failed.'
