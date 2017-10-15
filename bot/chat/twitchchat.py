@@ -8,22 +8,25 @@ from interfaces.chat import Chat
 
 
 class TwitchChat(Chat):
-    blacklist = [ 'tmi\\.twitch\\.tv', 'shira_bot$']
+    blacklist = ['tmi\.twitch\.tv', 'shira_bot$']
     host = 'irc.twitch.tv'
     port = 6667
     rate = 1.5
 
     def __init__(self, username, oauth, channel):
+        '''
+        Creates IRC client for Twitch chat at specified channel.
+        :param username: Username to log in with.
+        :param oauth: OAuth token to authenticate with.
+        :param channel: Channel to connect to.
+        '''
         if not channel.startswith('#'):
             channel = '#' + channel
-
+            
         self._nick = username
         self._pass = 'oauth:' + oauth
         self._chan = channel
-        self._sock = socket.socket()
-        self._sock.setblocking(True)
-
-        self._TwitchChat__connect()
+        self.__connect()
 
     def __sock_send(self, message, encoding='utf-8'):
         self._sock.send(bytes(message, encoding))
@@ -33,13 +36,16 @@ class TwitchChat(Chat):
             raise ValueError('Invalid auth type.')
 
         message = '{} {}\r\n'.format(auth_type, content)
-        self._TwitchChat__sock_send(message)
+        self.__sock_send(message)
 
     def __connect(self):
+        self._sock = socket.socket()
+        self._sock.setblocking(True)
         self._sock.connect((TwitchChat.host, TwitchChat.port))
-        self._TwitchChat__authenticate('PASS', self._pass)
-        self._TwitchChat__authenticate('NICK', self._nick)
-        self._TwitchChat__authenticate('JOIN', self._chan)
+
+        self.__authenticate('PASS', self._pass)
+        self.__authenticate('NICK', self._nick)
+        self.__authenticate('JOIN', self._chan)
 
     def _parse_message(raw_message):
         """
@@ -58,34 +64,47 @@ class TwitchChat(Chat):
         message = 'PRIVMSG {} :{}\r\n'.format(self._chan, content)
 
         try:
-            self._TwitchChat__sock_send(message)
-        except socket.error:
-            self._TwitchChat__sock_send(message)
+            self.__sock_send(message)
+        except socket.error as e:
+            if type(e) != socket.timeout:
+                self.close()
+                self.__connect()
+
+            self.__sock_send(message)
 
         time.sleep(TwitchChat.rate)
 
-    def get_message(self, timeout=-1, quiet=False):
+    def get_message(self, timeout=None):
         """
         Returns next message from server.
         :param timeout: How long to wait before timing out, in seconds (less than 0 indicates never).
-        :param quiet: Whether or not to raise an exception or exit silently on timeout.
         """
         start = time.time()
-        while True:
-            if timeout < 0 or time.time() - start < timeout:
-                message = self._sock.recv(1024).decode('utf-8')
-                author = re.search('^:([\\w.]+)', message)
-                author = author.groups()[0] if author else None
 
-                if message.startswith('PING'):
-                    self._TwitchChat__sock_send(message.replace('PING', 'PONG'))
-                    print('Ping received.')
+        while (timeout < 0) or (time.time() - start) < timeout:
+            remaining = timeout - (time.time() - start) if timeout else None
+            self._sock.settimeout(remaining)
+
+            try:
+                message = self._sock.recv(1024).decode('utf-8')
+            except socket.timeout:
+                self._sock.setblocking(True)
+                raise
+            except socket.error:
+                self.close()
+                self.__connect()
+                continue
+
+            author = re.search('^:([\\w.]+)', message)
+            author = author.groups()[0] if author else None
+
+            if message.startswith('PING'):
+                self.__sock_send(message.replace('PING', 'PONG'))
+                print('Ping received.')
 
             elif not any((re.search(user, author) for user in TwitchChat.blacklist)):
+                self._sock.setblocking(True)
                 return TwitchChat._parse_message(message)
-
-        if not quiet:
-            raise TimeoutError('No messages received within timeout duration.')
 
     def close(self):
         """

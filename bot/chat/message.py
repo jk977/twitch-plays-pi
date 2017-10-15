@@ -1,3 +1,4 @@
+import datetime
 import json
 import time
 
@@ -17,7 +18,10 @@ class Message(Serializable):
         self._time = time
 
     def __eq__(self, other):
-        return isinstance(other, Message) and self.author == other.author and self.content == other.content and self.timestamp == other.timestamp
+        return (isinstance(other, Message) and
+                self.author == other.author and
+                self.content == other.content and
+                self.timestamp == other.timestamp)
 
     @property
     def author(self):
@@ -26,6 +30,10 @@ class Message(Serializable):
     @property
     def content(self):
         return self._content
+
+    @property
+    def date(self):
+        return datetime.datetime.fromtimestamp(self._time)
 
     @property
     def timestamp(self):
