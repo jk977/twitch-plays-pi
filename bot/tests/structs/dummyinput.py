@@ -5,7 +5,6 @@ class DummyInput(EmuInput):
     """
     Dummy class for use in unit testing.
     """
-
     def _validate_content(content):
         return True
 

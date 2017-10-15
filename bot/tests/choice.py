@@ -1,10 +1,10 @@
 import unittest
+
 from chat.user import User
 from nes.choice import EmuChoice
 from chat.voting.choices import Choices
 
 class TestChoices(unittest.TestCase):
-
     def setUp(self):
         self.u1 = User('fred')
         self.u2 = User('tony')
@@ -17,6 +17,7 @@ class TestChoices(unittest.TestCase):
         fail_msg = 'Choices add_choice failed'
         c1 = 'right*4'
         c2 = 'down*3'
+
         self.assertNotIn(c1, self.choices, fail_msg)
         self.assertNotIn(c2, self.choices, fail_msg)
         self.choices.add_choice(c1)
@@ -27,6 +28,7 @@ class TestChoices(unittest.TestCase):
     def test_add_vote(self):
         fail_msg = 'Choices add_vote failed'
         c1 = 'down*7 up*2'
+
         self.assertNotIn(self.u1, self.choices.get_voters(c1), fail_msg)
         self.assertTrue(self.choices.add_vote(self.u1, c1), fail_msg)
         self.assertIn(self.u1, self.choices.get_voters(c1), fail_msg)
@@ -35,6 +37,7 @@ class TestChoices(unittest.TestCase):
         fail_msg = 'Choices remove_vote failed'
         c1 = 'start*8'
         c2 = 'up*1'
+
         self.assertIn(self.u1, self.choices.get_voters(c1), fail_msg)
         self.assertIn(self.u2, self.choices.get_voters(c2), fail_msg)
         self.assertTrue(self.choices.remove_vote(self.u1, c1), fail_msg)
@@ -59,7 +62,6 @@ class TestChoices(unittest.TestCase):
 
 
 class TestEmuChoice(unittest.TestCase):
-
     def setUp(self):
         self.u1 = User('bob')
         self.u2 = User('steve')
@@ -71,20 +73,24 @@ class TestEmuChoice(unittest.TestCase):
         v1 = [self.u1, self.u2]
         n2 = 'start*3'
         v2 = [self.u2, self.u3]
+
         c1 = EmuChoice(n1, v1)
         c2 = EmuChoice(n1, v2)
         c3 = EmuChoice(n2, v1)
         c4 = EmuChoice(n2, v2)
         c5 = EmuChoice(n1, v1)
+
         self.assertEqual(c1, c1, fail_msg)
         self.assertEqual(c2, c2, fail_msg)
         self.assertEqual(c3, c3, fail_msg)
         self.assertEqual(c4, c4, fail_msg)
         self.assertEqual(c1, c5, fail_msg)
+
         self.assertEqual(c1.name, n1, fail_msg)
         self.assertEqual(c2.name, n1, fail_msg)
         self.assertEqual(c3.name, n2, fail_msg)
         self.assertEqual(c4.name, n2, fail_msg)
+
         self.assertNotEqual(c1, c2, fail_msg)
         self.assertNotEqual(c2, c3, fail_msg)
         self.assertNotEqual(c3, c4, fail_msg)
@@ -94,6 +100,7 @@ class TestEmuChoice(unittest.TestCase):
         fail_msg = 'EmuChoice vote failed'
         choice = EmuChoice('run*1')
         self.assertFalse(choice.voters, fail_msg)
+
         choice.add_vote(self.u1)
         self.assertEqual(choice.votes, 1, fail_msg)
         self.assertIn(self.u1, choice.voters, fail_msg)

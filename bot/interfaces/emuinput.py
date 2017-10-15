@@ -16,10 +16,12 @@ class EmuInput(Validator):
     def __init__(self, content, count=1):
         content = str(content)
         count = int(count)
+
         if not type(self)._validate_count(count):
             raise ValueError('Invalid count "{}".'.format(count))
         elif not type(self)._validate_content(content):
             raise ValueError('Invalid content "{}".'.format(content))
+
         self._content = content
         self._count = count
 
@@ -65,9 +67,12 @@ class EmuInput(Validator):
         else:
             match = re.search('\\d+$', message)
             result = match.group(0) if match else 1
+
         result = int(result)
+
         if not cls._validate_count(result):
             raise ValueError('Invalid count "{}".'.format(result))
+
         return int(result)
 
     @property
@@ -81,8 +86,10 @@ class EmuInput(Validator):
     @property
     def destination(self):
         cls = type(self)
+
         if not cls._filename:
             raise NotImplementedError('Class does not define a destination file in {}._filename.'.format(cls.__name__))
+
         return os.path.join(type(self)._location, cls._filename)
 
     def serialize(self):
@@ -113,6 +120,7 @@ class EmuInput(Validator):
         for i in range(1, len(inputs)):
             in1 = inputs[i - 1]
             in2 = inputs[i]
+
             if in1.content == in2.content:
                 inputs[i - 1] = None
                 count = in1.count + in2.count

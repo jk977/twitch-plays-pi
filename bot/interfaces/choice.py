@@ -4,7 +4,6 @@ from chat.user import User
 from interfaces.serializable import Serializable
 
 class Choice(Serializable):
-
     def __eq__(self, other):
         return isinstance(other, Choice) and self._voters == other._voters and self.name == other.name
 
@@ -42,7 +41,9 @@ class Choice(Serializable):
         else:
             if voter in self._voters:
                 return False
+
             self._voters.add(voter)
+
         return True
 
     def remove_vote(self, voter):
@@ -55,7 +56,9 @@ class Choice(Serializable):
         else:
             if voter not in self._voters:
                 return False
+
             self._voters.remove(voter)
+
         return True
 
     def clear(self):
@@ -65,8 +68,11 @@ class Choice(Serializable):
         self._voters = set()
 
     def serialize(self):
-        fields = {'name': self.name,
-         'voters': [u.serialize() for u in self._voters]}
+        fields = {
+            'name': self.name,
+            'voters': [u.serialize() for u in self._voters]
+        }
+
         return json.dumps(fields)
 
     @classmethod

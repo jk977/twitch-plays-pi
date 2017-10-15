@@ -5,7 +5,6 @@ from nes.buttons import Buttons
 from nes.cheat import Cheat
 
 class EmuChoice(Choice):
-
     def __init__(self, choice, voters=set()):
         """
         Initializes EmuChoice object, containing EmuInput object and list of Users.

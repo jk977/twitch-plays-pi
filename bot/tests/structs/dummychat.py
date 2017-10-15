@@ -4,7 +4,6 @@ class DummyChat(Chat):
     """
     Dummy class for use in unit testing.
     """
-
     def __init__(self):
         self.message = 'Hello, world!'
 

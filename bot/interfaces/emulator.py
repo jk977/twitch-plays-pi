@@ -1,8 +1,6 @@
-
-
 class Emulator:
     """
-    Interface for sending nes inputs.
+    Interface for sending emulator inputs.
     """
 
     def send_input(input):

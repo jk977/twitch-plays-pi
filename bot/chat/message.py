@@ -1,15 +1,17 @@
 import json
 import time
+
 from chat.user import User
 from interfaces.serializable import Serializable
 
-class Message(Serializable):
 
+class Message(Serializable):
     def __init__(self, author, content, time=time.time()):
         if isinstance(author, str):
             author = User(author)
         elif not isinstance(author, User):
             raise ValueError('Author must be a string or User object.')
+
         self._author = author
         self._content = content
         self._time = time
@@ -30,9 +32,12 @@ class Message(Serializable):
         return self._time
 
     def serialize(self):
-        fields = {'author': self._author.serialize(),
-         'content': self._content,
-         'time': self._time}
+        fields = {
+            'author': self._author.serialize(),
+            'content': self._content,
+            'time': self._time
+        }
+
         return json.dumps(fields)
 
     def deserialize(message):
@@ -40,7 +45,9 @@ class Message(Serializable):
         author = fields.get('author', None)
         content = fields.get('content', None)
         time = fields.get('time', None)
+
         if not (author and content and time):
             raise ValueError('Invalid JSON.')
+
         author = User.deserialize(author)
         return Message(author, content, time)

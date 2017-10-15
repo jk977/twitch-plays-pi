@@ -7,9 +7,11 @@ class Buttons(EmuInputs):
     def __init__(self, *args):
         if not all((isinstance(b, Button) for b in args)):
             raise TypeError('Arguments must be Button objects.')
+
         buttons = Button.condense(args)
         inputs = []
         total = 0
+
         for b in buttons:
             if total + b.count > Buttons.limit:
                 count = Buttons.limit - total

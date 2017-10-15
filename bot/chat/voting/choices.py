@@ -1,9 +1,10 @@
 import json
+
 from nes.choice import EmuChoice
 from interfaces.serializable import Serializable
 
-class Choices(Serializable):
 
+class Choices(Serializable):
     def __init__(self, *args):
         """
         Initializes Choices object, which wraps dictionary pairing choice name with EmuChoice object.

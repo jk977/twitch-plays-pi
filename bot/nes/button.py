@@ -11,13 +11,10 @@ class Button(EmuInput):
         Overrides parent method to accomodate for FCEUX Lua interface button format.
         """
         result = super()._parse_content(message)
-        if result == 'a' or result == 'b':
-            return result.upper()
-        return result
+        return result.upper() if (result == 'a' or result == 'b') else result
 
     def _validate_count(count):
         return isinstance(count, Number)
 
     def _validate_content(content):
-        return content.lower() in ('a', 'b', 'start', 'select', 'up', 'down', 'left',
-                                   'right')
+        return content.lower() in ('a', 'b', 'start', 'select', 'up', 'down', 'left', 'right')

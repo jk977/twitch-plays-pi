@@ -1,7 +1,7 @@
 from interfaces.votemanager import VoteManager
 
-class InputManager(VoteManager):
 
+class InputManager(VoteManager):
     def cast_vote(self, user, choice_name):
         """
         Cast vote towards choice_name for the given user and return True if decision is reached
@@ -11,13 +11,17 @@ class InputManager(VoteManager):
         """
         if choice_name not in self._choices:
             self._choices.add_choice(choice_name)
+
         self._choices.remove_vote(user, choice_name)
         self._choices.add_vote(user, choice_name)
+
         choice = self._choices.get_choice(choice_name)
+
         if choice.votes >= self.threshold:
             self._decision(choice)
             self._choices.clear_votes()
             return True
+
         return False
 
     def remove_vote(self, user, choice_name):
