@@ -46,6 +46,7 @@ class Choices(Serializable):
         """
         if choice_name not in self._choices:
             return False
+
         self._choices.remove(choice_name)
         return True
 
@@ -71,6 +72,7 @@ class Choices(Serializable):
         """
         if choice_name not in self._choices:
             return False
+
         return self._choices[choice_name].voters
 
     def get_votes(self, choice_name):
@@ -80,6 +82,7 @@ class Choices(Serializable):
         """
         if choice_name not in self._choices:
             return False
+
         return self._choices[choice_name].votes
 
     def clear_votes(self, hard=False):

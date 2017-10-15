@@ -1,4 +1,5 @@
 from interfaces.votemanager import VoteManager
+from nes.choice import EmuChoice
 
 
 class InputManager(VoteManager):
@@ -9,13 +10,15 @@ class InputManager(VoteManager):
         :param user: User casting the vote.
         :param choice_name: Name of choice to vote for.
         """
-        if choice_name not in self._choices:
+        choice = EmuChoice(choice_name)
+
+        if choice.name not in self._choices:
             self._choices.add_choice(choice_name)
 
-        self._choices.remove_vote(user, choice_name)
-        self._choices.add_vote(user, choice_name)
+        self._choices.remove_vote(user, choice.name)
+        self._choices.add_vote(user, choice.name)
 
-        choice = self._choices.get_choice(choice_name)
+        choice = self._choices.get_choice(choice.name)
 
         if choice.votes >= self.threshold:
             self._decision(choice)

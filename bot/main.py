@@ -4,7 +4,6 @@ from chat.commands.commandlist import CommandList
 from chat.twitchchat import TwitchChat
 from chat.voting.inputmanager import InputManager
 
-from nes.choice import EmuChoice
 from nes.emulator import NES
 
 
@@ -19,9 +18,9 @@ if __name__ == '__main__':
         print('{} {}: {}'.format(date, message.author.name, content))
         
         try:
-            choice = EmuChoice(content)
-            manager.cast_vote(message.author, choice.name)
+            manager.cast_vote(message.author, content)
         except:
-            if CommandList.validate(content):
-                cmd = CommandList.get(content, chat, message)
+            cmd = CommandList.get(content, chat, message)
+
+            if cmd:
                 cmd.run()

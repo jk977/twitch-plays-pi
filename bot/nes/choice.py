@@ -12,8 +12,10 @@ class EmuChoice(Choice):
         :param voters: List of Users that voted for choice.
         """
         voters = set(voters)
+
         if not all((isinstance(voter, User) for voter in voters)):
             raise ValueError('Voters must be an iterable containing Users.')
+
         if isinstance(choice, EmuInput):
             pass
         elif Cheat.validate(choice):
