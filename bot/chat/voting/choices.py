@@ -1,10 +1,3 @@
-# uncompyle6 version 2.13.2
-# Python bytecode 3.5 (3350)
-# Decompiled from: Python 3.5.2 (default, Sep 14 2017, 22:51:06) 
-# [GCC 5.4.0 20160609]
-# Embedded file name: /home/jk/Desktop/cs/projects/twitch-plays/bot/chat/voting/choices.py
-# Compiled at: 2017-10-14 20:14:23
-# Size of source mod 2**32: 3276 bytes
 import json
 from nes.choice import EmuChoice
 from interfaces.serializable import Serializable
@@ -106,4 +99,4 @@ class Choices(Serializable):
     def deserialize(serialized):
         fields = json.loads(serialized)
         fields = [EmuChoice.deserialize(choice) for choice in fields]
-        return Choices(*)
+        return Choices(*fields)
