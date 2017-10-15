@@ -1,20 +1,34 @@
 import unittest
+
 from nes.button import Button
 from nes.buttons import Buttons
 from nes.cheat import Cheat
 
 class TestButtons(unittest.TestCase):
+    def setUp(self):
+        self.b1 = Button('start', 3)
+        self.b2 = Button('select', 5)
+        self.b3 = Button('A', 8)
+        self.b4 = Button('A', 1)
+        self.buttons = Buttons(self.b1, self.b2, self.b3)
+
     def test_overflow(self):
         fail_msg = 'Buttons overflow failed'
 
-        b1 = Button('start', 3)
-        b2 = Button('select', 5)
-        b3 = Button('A', 8)
-        b4 = Button('A', 1)
-        buttons = Buttons(b1, b2, b3)
+        self.assertNotEqual(self.buttons.inputs, [self.b1, self.b2, self.b3], fail_msg)
+        self.assertEqual(self.buttons.inputs, [self.b1, self.b2, self.b4], fail_msg)
+        
+    def test_equals(self):
+        fail_msg = 'Buttons equals failed'
 
-        self.assertNotEqual(buttons.inputs, [b1, b2, b3], fail_msg)
-        self.assertEqual(buttons.inputs, [b1, b2, b4], fail_msg)
+        self.assertEqual(self.buttons, self.buttons, fail_msg)
+        self.assertNotEqual(self.buttons, 'not buttons', fail_msg)
+        self.assertNotEqual(self.buttons, Buttons(self.b2, self.b4, self.b1), fail_msg)
+        
+    def test_serialize(self):
+        ser = self.buttons.serialize()
+        deser = Buttons.deserialize(ser)
+        self.assertEqual(self.buttons, deser, 'Buttons serialize failed')
 
 
 class TestButton(unittest.TestCase):

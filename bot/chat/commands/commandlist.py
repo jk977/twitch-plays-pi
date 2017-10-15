@@ -19,3 +19,9 @@ class CommandList:
         command = CommandList._map.get(name, None)
         kwargs = {'chat': chat,'message': message}
         return Command(command, kwargs) if command else default
+    
+    def validate(name):
+        if name.startswith('!'):
+            name = name[1:]
+
+        return name in CommandList._map

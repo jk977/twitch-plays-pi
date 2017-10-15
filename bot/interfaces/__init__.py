@@ -1,1 +1,1 @@
-from abc import ABC, abstractmethod, abstractproperty, abstractstaticmethod
+from abc import ABC, ABCMeta, abstractmethod, abstractproperty, abstractstaticmethod
