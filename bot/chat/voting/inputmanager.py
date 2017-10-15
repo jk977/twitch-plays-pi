@@ -1,5 +1,5 @@
 from interfaces.votemanager import VoteManager
-from nes.choice import EmuChoice
+from nes.emuchoice import EmuChoice
 
 
 class InputManager(VoteManager):

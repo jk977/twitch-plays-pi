@@ -1,7 +1,7 @@
 import unittest
 
 from chat.user import User
-from nes.choice import EmuChoice
+from nes.emuchoice import EmuChoice
 from chat.voting.choices import Choices
 
 class TestChoices(unittest.TestCase):

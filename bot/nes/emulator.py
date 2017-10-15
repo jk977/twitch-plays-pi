@@ -1,6 +1,6 @@
 import os
 from interfaces.emulator import Emulator
-from nes.choice import EmuChoice
+from nes.emuchoice import EmuChoice
 
 class NES(Emulator):
     def send_input(choice):

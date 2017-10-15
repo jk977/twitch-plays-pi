@@ -117,14 +117,16 @@ class EmuInput(Validator):
         merged into one, then returns condensed list.
         :param inputs: List of inputs to condense.
         """
-        for i in range(1, len(inputs)):
+        inputs = list(inputs) # in case of immutable tuple
+
+        for i in range(1, len(inputs)-1):
             in1 = inputs[i - 1]
             in2 = inputs[i]
 
             if in1.content == in2.content:
-                inputs[i - 1] = None
                 count = in1.count + in2.count
                 button = cls(in1.content, count)
+                inputs[i - 1] = None
                 inputs[i] = button
 
         return [b for b in inputs if b]

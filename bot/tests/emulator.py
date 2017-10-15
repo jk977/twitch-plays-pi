@@ -1,6 +1,6 @@
 import unittest
 
-from nes.choice import EmuChoice
+from nes.emuchoice import EmuChoice
 from nes.emulator import NES
 
 class TestEmulator(unittest.TestCase):

@@ -1,8 +1,8 @@
 import unittest
 
 from chat.user import User
-from nes.choice import EmuChoice
 from chat.voting.inputmanager import InputManager
+from nes.emuchoice import EmuChoice
 
 
 def decision(choice):

@@ -1,6 +1,6 @@
 import json
 
-from nes.choice import EmuChoice
+from nes.emuchoice import EmuChoice
 from interfaces.serializable import Serializable
 
 
