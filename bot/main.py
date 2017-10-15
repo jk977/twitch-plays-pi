@@ -19,8 +19,7 @@ if __name__ == '__main__':
         
         try:
             manager.cast_vote(message.author, content)
-        except Exception as e:
-            print(e)
+        except:
             cmd = CommandList.get(content, chat, message)
 
             if cmd:
