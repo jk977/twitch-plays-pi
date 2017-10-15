@@ -81,7 +81,7 @@ class TwitchChat(Chat):
         """
         start = time.time()
 
-        while (timeout < 0) or (time.time() - start) < timeout:
+        while (timeout is None) or (time.time() - start) < timeout:
             remaining = timeout - (time.time() - start) if timeout else None
             self._sock.settimeout(remaining)
 

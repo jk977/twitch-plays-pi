@@ -7,15 +7,18 @@ from interfaces.serializable import Serializable
 
 
 class Message(Serializable):
-    def __init__(self, author, content, time=time.time()):
+    def __init__(self, author, content, timestamp=None):
         if isinstance(author, str):
             author = User(author)
         elif not isinstance(author, User):
             raise ValueError('Author must be a string or User object.')
+        
+        if not timestamp:
+            timestamp = time.time()
 
         self._author = author
         self._content = content
-        self._time = time
+        self._time = timestamp
 
     def __eq__(self, other):
         return (isinstance(other, Message) and

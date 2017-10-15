@@ -15,8 +15,8 @@ if __name__ == '__main__':
     while True:
         message = chat.get_message()
         content = message.content
-        date = message.date.strftime('%H:%M:%S')
-        print('{}\t{}: {}'.format(date, message.author.name, content))
+        date = message.date.strftime('%c')
+        print('{} {}: {}'.format(date, message.author.name, content))
         
         try:
             choice = EmuChoice(content)
