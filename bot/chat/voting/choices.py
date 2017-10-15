@@ -11,8 +11,10 @@ class Choices(Serializable):
         """
         if not all((isinstance(choice, EmuChoice) for choice in args)):
             raise TypeError('Arguments must be EmuChoice objects.')
+
         choices = set(args)
         self._choices = {}
+
         for choice in choices:
             self._choices[choice.name] = choice
 
@@ -28,7 +30,7 @@ class Choices(Serializable):
         :param choice_name: Name of choice to add.
         """
         choice = EmuChoice(choice_name)
-        self._choices[choice_name] = choice
+        self._choices[choice.name] = choice
         return True
 
     def add_vote(self, user, choice_name):
@@ -50,13 +52,16 @@ class Choices(Serializable):
         self._choices.remove(choice_name)
         return True
 
-    def remove_vote(self, user, choice_name):
+    def remove_vote(self, user):
         """
-        Removes vote for choice_name by user.
+        Removes vote by user.
         :param user: User removing vote.
-        :param choice_name: Name of choice to remove vote for.
         """
-        return self._choices[choice_name].remove_vote(user)
+        for k in self._choices.keys():
+            if self._choices[k].remove_vote(user):
+                return True
+
+        return False
 
     def get_choice(self, choice_name):
         """

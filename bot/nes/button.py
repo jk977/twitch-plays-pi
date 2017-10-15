@@ -1,6 +1,8 @@
 import os
+
 from interfaces.emuinput import EmuInput
 from numbers import Number
+
 
 class Button(EmuInput):
     destination = os.path.join(EmuInput.path, 'inputs.txt')

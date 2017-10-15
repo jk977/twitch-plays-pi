@@ -7,6 +7,7 @@ class NES(Emulator):
         if not isinstance(choice, EmuChoice):
             raise TypeError('Input must be an EmuChoice object.')
 
+        choice = choice.input
         destination = choice.destination
 
         if not os.access(destination, os.W_OK):

@@ -13,14 +13,14 @@ class TestEmulator(unittest.TestCase):
         NES.send_input(self.buttons)
         NES.send_input(self.cheat)
 
-        with open(self.buttons.destination, 'r') as file:
+        with open(self.buttons.input.destination, 'r') as file:
             button_contents = file.read()
 
-        with open(self.cheat.destination, 'r') as file:
+        with open(self.cheat.input.destination, 'r') as file:
             cheat_contents = file.read()
 
-        self.assertEqual(button_contents, self.buttons.serialize(), fail_msg)
-        self.assertEqual(cheat_contents, self.cheat.serialize(), fail_msg)
+        self.assertEqual(button_contents, self.buttons.input.serialize(), fail_msg)
+        self.assertEqual(cheat_contents, self.cheat.input.serialize(), fail_msg)
 
         try:
             NES.send_input('not an input')

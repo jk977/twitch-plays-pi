@@ -15,7 +15,7 @@ class InputManager(VoteManager):
         if choice.name not in self._choices:
             self._choices.add_choice(choice_name)
 
-        self._choices.remove_vote(user, choice.name)
+        self._choices.remove_vote(user)
         self._choices.add_vote(user, choice.name)
 
         choice = self._choices.get_choice(choice.name)
@@ -27,10 +27,10 @@ class InputManager(VoteManager):
 
         return False
 
-    def remove_vote(self, user, choice_name):
+    def remove_vote(self, user):
         """
         Remove vote and return True on success.
         :param user: User to remove vote for.
         :param choice_name: Name of choice to remove vote for.
         """
-        return self._choices.remove_vote(user, choice_name)
+        return self._choices.remove_vote(user)

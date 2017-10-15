@@ -40,8 +40,8 @@ class TestChoices(unittest.TestCase):
 
         self.assertIn(self.u1, self.choices.get_voters(c1), fail_msg)
         self.assertIn(self.u2, self.choices.get_voters(c2), fail_msg)
-        self.assertTrue(self.choices.remove_vote(self.u1, c1), fail_msg)
-        self.assertTrue(self.choices.remove_vote(self.u2, c2), fail_msg)
+        self.assertTrue(self.choices.remove_vote(self.u1), fail_msg)
+        self.assertTrue(self.choices.remove_vote(self.u2), fail_msg)
         self.assertNotIn(self.u1, self.choices.get_voters(c1), fail_msg)
         self.assertNotIn(self.u2, self.choices.get_voters(c2), fail_msg)
 

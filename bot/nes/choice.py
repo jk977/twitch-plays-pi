@@ -30,10 +30,6 @@ class EmuChoice(Choice):
         self._voters = voters
 
     @property
-    def destination(self):
-        return self._choice.destination
-
-    @property
     def input(self):
         return self._choice
 

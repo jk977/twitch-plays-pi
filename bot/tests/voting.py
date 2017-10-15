@@ -29,6 +29,6 @@ class TestVoting(unittest.TestCase):
         self.assertTrue(self.vm2.cast_vote(self.u2, self.c2.name), fail_msg)
 
         self.assertFalse(self.vm2.cast_vote(self.u1, self.c1.name), fail_msg)
-        self.assertTrue(self.vm2.remove_vote(self.u1, self.c1.name), fail_msg)
+        self.assertTrue(self.vm2.remove_vote(self.u1), fail_msg)
         self.assertFalse(self.vm2.cast_vote(self.u1, self.c1.name), fail_msg)
         self.assertTrue(self.vm2.cast_vote(self.u2, self.c1.name), fail_msg)

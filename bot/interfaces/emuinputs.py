@@ -1,6 +1,7 @@
 from . import *
 from interfaces.validator import Validator
 
+
 class EmuInputs(Validator):
     '''
     Base class for type-safe containers containing EmuInput children classes. Note that children
@@ -34,6 +35,11 @@ class EmuInputs(Validator):
         '''
         out = []
         total = 0
+        
+        if limit == 0:
+            return out
+        elif limit < 0:
+            raise ValueError('Limit must be a positive number.')
 
         for i in inputs:
             elem_cls = type(i)

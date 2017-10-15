@@ -1,6 +1,7 @@
 from interfaces.emuinputs import EmuInputs
 from nes.button import Button
 
+
 class Buttons(EmuInputs):
     def __init__(self, *args):
         if not all(isinstance(b, Button) for b in args):
@@ -20,7 +21,7 @@ class Buttons(EmuInputs):
     def deserialize(serialized):
         buttons = []
 
-        for i in serialized.split(' '):
-            buttons.append(Button.deserialize(i))
+        for b in serialized.split(' '):
+            buttons.append(Button.deserialize(b))
 
         return Buttons(*buttons)
