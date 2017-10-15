@@ -1,20 +1,40 @@
+# uncompyle6 version 2.13.2
+# Python bytecode 3.5 (3350)
+# Decompiled from: Python 3.5.2 (default, Sep 14 2017, 22:51:06) 
+# [GCC 5.4.0 20160609]
+# Embedded file name: /home/jk/Desktop/cs/projects/twitch-plays/bot/interfaces/emuinput.py
+# Compiled at: 2017-10-14 19:21:47
+# Size of source mod 2**32: 3900 bytes
 import config
 import os
 import re
-
 from . import *
-from numbers import Number
-from interfaces.serializable import Serializable
-from umake.tools import classproperty
+from interfaces.validator import Validator
 
-class EmuInput(Serializable):
-    '''
-    Base class for nes inputs. Children classes must define functions _validate_content and
+class EmuInput(Validator):
+    """
+    Base class for emulator inputs. Children classes must define functions _validate_content and
     _validate_count to return true when the respective fields are valid, and may optionally
     define a delimiter other than '*' and a destination path other than project_root/game.
-    '''
+    """
     delimiter = '*'
-    _location = os.path.join(config.root, 'game')
+    path = os.path.join(config.root, 'game')
+
+    def __init__(self, content, count=1):
+        content = str(content)
+        count = int(count)
+        if not type(self)._validate_count(count):
+            raise ValueError('Invalid count "{}".'.format(count))
+        elif not type(self)._validate_content(content):
+            raise ValueError('Invalid content "{}".'.format(content))
+        self._content = content
+        self._count = count
+
+    def __eq__(self, other):
+        return isinstance(other, type(self)) and self.count == other.count and self.content == other.content
+
+    def __hash__(self):
+        return hash((self.content, self.count))
 
     @abstractstaticmethod
     def _validate_content(content):
@@ -23,86 +43,39 @@ class EmuInput(Serializable):
     @abstractstaticmethod
     def _validate_count(count):
         pass
-    
-    def __init__(self, content, count = 1):
-        content = str(content)
-        count = int(count)
-
-        if not isinstance(count, Number):
-            raise TypeError('Expected number, got {} "{}".'.format(type(count).__name__, count))
-        
-        self._content = content
-        self._count = count
-
-    def __eq__(self, other):
-        return isinstance(other, self.__class__) and self.count == other.count and self.content == other.content
-
-    def __hash__(self):
-        return hash((self.content, self.count))
-
-    def serialize(self):
-        '''
-        Serializes input to send to NES.
-        '''
-        return self.delimiter.join(str(x) for x in [self.content, self.count])
 
     @classmethod
     def _parse_content(cls, message):
-        '''
+        """
         Retrieves content portion of input.
         :param cls: Current class.
         :param message: Message to parse.
-        '''
+        """
         if cls.delimiter in message:
-            return message.split(cls.delimiter)[0]
+            result = message.split(cls.delimiter)[0]
         else:
-            return re.sub('\\d+$', '', message)
+            result = re.sub('\\d+$', '', message)
+        if not cls._validate_content(result):
+            raise ValueError('Invalid content "{}".'.format(result))
+        return result
 
     @classmethod
     def _parse_count(cls, message):
-        '''
+        """
         Retrieves count portion of input.
         :param cls: Current class.
         :param message: Message to parse.
         :returns: int
-        '''
+        """
         if cls.delimiter in message:
             result = message.split(cls.delimiter)[1]
         else:
             match = re.search('\\d+$', message)
             result = match.group(0) if match else 1
-            
+        result = int(result)
+        if not cls._validate_count(result):
+            raise ValueError('Invalid count "{}".'.format(result))
         return int(result)
-
-    @classmethod
-    def deserialize(cls, serialized):
-        '''
-        Deserializes serialized input.
-        :param cls: Current class.
-        :param serialized: The serialized input.
-        :returns: EmuInput object
-        '''
-        if not cls.validate(serialized):
-            return
-
-        content = cls._parse_content(serialized)
-        count = cls._parse_count(serialized)
-        return cls(content, count)
-
-    @classmethod
-    def validate(cls, message):
-        '''
-        Verifies that an input is properly formatted.
-        :param cls: Current class.
-        :param message: Message to validate.
-        :returns: bool
-        '''
-        try:
-            content = cls._parse_content(message)
-            count = cls._parse_count(message)
-            return cls._validate_count(count) and cls._validate_content(content)
-        except:
-            return False
 
     @property
     def content(self):
@@ -111,10 +84,46 @@ class EmuInput(Serializable):
     @property
     def count(self):
         return self._count
-    
-    @classproperty
-    def destination(cls):
-        if not cls._filename:
-            raise NotImplementedError('Class does not define a destination file in cls._filename.')
 
-        return os.path.join(cls._location, cls._filename)
+    @property
+    def destination(self):
+        cls = type(self)
+        if not cls._filename:
+            raise NotImplementedError('Class does not define a destination file in {}._filename.'.format(cls.__name__))
+        return os.path.join(type(self)._location, cls._filename)
+
+    def serialize(self):
+        """
+        Serializes input to send to NES.
+        """
+        return self.delimiter.join((str(x) for x in [self.content, self.count]))
+
+    @classmethod
+    def deserialize(cls, serialized):
+        """
+        Deserializes serialized input.
+        :param cls: Current class.
+        :param serialized: The serialized input.
+        :returns: EmuInput object
+        """
+        content = cls._parse_content(serialized)
+        count = cls._parse_count(serialized)
+        return cls(content, count)
+
+    @classmethod
+    def condense(cls, inputs):
+        """
+        Condenses list of inputs into equivalent list with identical consecutive inputs
+        merged into one, then returns condensed list.
+        :param inputs: List of inputs to condense.
+        """
+        for i in range(1, len(inputs)):
+            in1 = inputs[i - 1]
+            in2 = inputs[i]
+            if in1.content == in2.content:
+                inputs[i - 1] = None
+                count = in1.count + in2.count
+                button = cls(in1.content, count)
+                inputs[i] = button
+
+        return [b for b in inputs if b]

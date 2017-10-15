@@ -1,3 +1,7 @@
+# eclipse files
+.project
+.pydevproject
+
 # project files
 game/
 info/

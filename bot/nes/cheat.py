@@ -1,10 +1,18 @@
+# uncompyle6 version 2.13.2
+# Python bytecode 3.5 (3350)
+# Decompiled from: Python 3.5.2 (default, Sep 14 2017, 22:51:06) 
+# [GCC 5.4.0 20160609]
+# Embedded file name: /home/jk/Desktop/cs/projects/twitch-plays/bot/nes/cheat.py
+# Compiled at: 2017-10-14 19:25:26
+# Size of source mod 2**32: 274 bytes
+import os
 from interfaces.emuinput import EmuInput
 
 class Cheat(EmuInput):
-    _filename = 'cheats.txt'
+    destination = os.path.join(EmuInput.path, 'cheats.txt')
 
     def _validate_count(count):
         return count == 1
 
     def _validate_content(content):
-        return content in ['run', 'attack']
+        return content in ('run', 'attack')

@@ -1,19 +1,24 @@
+# uncompyle6 version 2.13.2
+# Python bytecode 3.5 (3350)
+# Decompiled from: Python 3.5.2 (default, Sep 14 2017, 22:51:06) 
+# [GCC 5.4.0 20160609]
+# Embedded file name: /home/jk/Desktop/cs/projects/twitch-plays/bot/chat/voting/choices.py
+# Compiled at: 2017-10-14 20:14:23
+# Size of source mod 2**32: 3276 bytes
 import json
-
 from nes.choice import EmuChoice
 from interfaces.serializable import Serializable
 
 class Choices(Serializable):
-    def __init__(self, *args):
-        '''
-        Initializes Choices object, which wraps dictionary pairing choice name with EmuChoice object.
-        '''
-        if not all(isinstance(choice, EmuChoice) for choice in args):
-            raise TypeError('Arguments must be EmuChoice objects.')
 
+    def __init__(self, *args):
+        """
+        Initializes Choices object, which wraps dictionary pairing choice name with EmuChoice object.
+        """
+        if not all((isinstance(choice, EmuChoice) for choice in args)):
+            raise TypeError('Arguments must be EmuChoice objects.')
         choices = set(args)
         self._choices = {}
-
         for choice in choices:
             self._choices[choice.name] = choice
 
@@ -24,73 +29,70 @@ class Choices(Serializable):
         return isinstance(other, Choices) and self._choices == other._choices
 
     def add_choice(self, choice_name):
-        '''
+        """
         Adds choice to list.
         :param choice_name: Name of choice to add.
-        '''
+        """
         choice = EmuChoice(choice_name)
         self._choices[choice_name] = choice
         return True
 
     def add_vote(self, user, choice_name):
-        '''
+        """
         Adds vote for choice_name by user, and returns True on success.
         :param user: User voting.
         :param choice_name: Name of choice to vote for.
-        '''
+        """
         return self._choices[choice_name].add_vote(user)
 
     def remove_choice(self, choice_name):
-        '''
+        """
         Removes choice from list.
         :param choice_name: Name of choice to remove.
-        '''
-        if not choice_name in self._choices:
+        """
+        if choice_name not in self._choices:
             return False
-
         self._choices.remove(choice_name)
         return True
 
     def remove_vote(self, user, choice_name):
-        '''
+        """
         Removes vote for choice_name by user.
         :param user: User removing vote.
         :param choice_name: Name of choice to remove vote for.
-        '''
+        """
         return self._choices[choice_name].remove_vote(user)
 
     def get_choice(self, choice_name):
-        '''
+        """
         Gets specified choice, or returns False.
         :param choice_name: Name of choice to get.
-        '''
+        """
         return self._choices.get(choice_name, False)
 
     def get_voters(self, choice_name):
-        '''
+        """
         Gets list of voters for specified choice.
         :param choice_name: Name of choice to get voter list for.
-        '''
-        if not choice_name in self._choices:
+        """
+        if choice_name not in self._choices:
             return False
-
         return self._choices[choice_name].voters
 
     def get_votes(self, choice_name):
-        '''
+        """
         Gets vote count for specified choice.
         :param choice_name: Name of choice to get vote count for.
-        '''
-        if not choice_name in self._choices:
+        """
+        if choice_name not in self._choices:
             return False
-
         return self._choices[choice_name].votes
 
     def clear_votes(self, hard=False):
-        '''
+        """
         Clears votes for all choices.
         :param hard: If True, removes all choices as well as votes.
-        '''
+        """
         if hard:
             self._choices = {}
         else:
@@ -104,4 +106,4 @@ class Choices(Serializable):
     def deserialize(serialized):
         fields = json.loads(serialized)
         fields = [EmuChoice.deserialize(choice) for choice in fields]
-        return Choices(*fields)
+        return Choices(*)
