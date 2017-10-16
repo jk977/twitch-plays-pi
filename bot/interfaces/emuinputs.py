@@ -16,6 +16,9 @@ class EmuInputs(Validator):
                 return False
 
         return True
+    
+    def __str__(self):
+        return ' '.join(str(i) for i in self.inputs)
 
     @abstractproperty
     def destination(self):

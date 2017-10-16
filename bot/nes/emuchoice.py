@@ -6,11 +6,11 @@ from nes.cheat import Cheat
 
 class EmuChoice(Choice):
     def __init__(self, choice, voters=set()):
-        """
+        '''
         Initializes EmuChoice object, containing EmuInput object and list of Users.
         :param choice: EmuInput object or name of choice.
         :param voters: List of Users that voted for choice.
-        """
+        '''
         voters = set(voters)
 
         if not all((isinstance(voter, User) for voter in voters)):

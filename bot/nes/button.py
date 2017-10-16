@@ -16,7 +16,7 @@ class Button(EmuInput):
         return result.upper() if (result == 'a' or result == 'b') else result
 
     def _validate_count(count):
-        return isinstance(count, Number)
+        return isinstance(count, Number) and count > 0
 
     def _validate_content(content):
         return content.lower() in ('a', 'b', 'start', 'select', 'up', 'down', 'left', 'right')

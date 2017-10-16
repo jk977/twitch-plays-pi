@@ -35,11 +35,12 @@ class TestButton(unittest.TestCase):
     def test_condense(self):
         fail_msg = 'Button condense failed'
 
-        buttons = [Button('start', 9), Button('start', 3), Button('up', 4), Button('start', 1)]
+        buttons = [Button('start', 3), Button('start', 3), Button('up', 4), Button('start', 1), Button('start', 5)]
         condensed = Button.condense(buttons)
+        result = [Button('start', 6), Button('up', 4), Button('start', 6)]
 
         self.assertNotEqual(buttons, condensed, fail_msg)
-        self.assertEqual(condensed[0], Button('start', 12), fail_msg)
+        self.assertListEqual(condensed, result, fail_msg)
 
     def test_validation(self):
         fail_msg = 'Button validate failed'

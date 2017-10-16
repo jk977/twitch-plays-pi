@@ -15,10 +15,8 @@ while true do
     if inputs ~= nil and #inputs ~= 0 then
         for _, input in pairs(inputs) do
             print('Pressing "' .. input .. '"');
-            local count = tonumber(input:sub(1, 1));
-            local button = input:sub(2, #input);
+            local button, count = unpack(utils.split(input, '*'))
             emutils.press_button(1, button, count);
-            emutils.advance_frames(10);
         end
 
         utils.reset_input_file();

@@ -6,9 +6,9 @@ from interfaces.serializable import Serializable
 
 class Choices(Serializable):
     def __init__(self, *args):
-        """
+        '''
         Initializes Choices object, which wraps dictionary pairing choice name with EmuChoice object.
-        """
+        '''
         if not all((isinstance(choice, EmuChoice) for choice in args)):
             raise TypeError('Arguments must be EmuChoice objects.')
 
@@ -25,27 +25,27 @@ class Choices(Serializable):
         return isinstance(other, Choices) and self._choices == other._choices
 
     def add_choice(self, choice_name):
-        """
+        '''
         Adds choice to list.
         :param choice_name: Name of choice to add.
-        """
+        '''
         choice = EmuChoice(choice_name)
         self._choices[choice.name] = choice
         return True
 
     def add_vote(self, user, choice_name):
-        """
+        '''
         Adds vote for choice_name by user, and returns True on success.
         :param user: User voting.
         :param choice_name: Name of choice to vote for.
-        """
+        '''
         return self._choices[choice_name].add_vote(user)
 
     def remove_choice(self, choice_name):
-        """
+        '''
         Removes choice from list.
         :param choice_name: Name of choice to remove.
-        """
+        '''
         if choice_name not in self._choices:
             return False
 
@@ -53,48 +53,54 @@ class Choices(Serializable):
         return True
 
     def remove_vote(self, user):
-        """
+        '''
         Removes vote by user.
         :param user: User removing vote.
-        """
+        '''
         for k in self._choices.keys():
             if self._choices[k].remove_vote(user):
                 return True
 
         return False
 
+    def get_all(self, key=None, reverse=False):
+        '''
+        Gets all choices. If key isn't None, sorts the choices by key.
+        '''
+        return dict(sorted(self._choices.items(), key=key, reverse=reverse)) if key else self._choices
+
     def get_choice(self, choice_name):
-        """
+        '''
         Gets specified choice, or returns False.
         :param choice_name: Name of choice to get.
-        """
+        '''
         return self._choices.get(choice_name, False)
 
     def get_voters(self, choice_name):
-        """
+        '''
         Gets list of voters for specified choice.
         :param choice_name: Name of choice to get voter list for.
-        """
+        '''
         if choice_name not in self._choices:
             return False
 
         return self._choices[choice_name].voters
 
     def get_votes(self, choice_name):
-        """
+        '''
         Gets vote count for specified choice.
         :param choice_name: Name of choice to get vote count for.
-        """
+        '''
         if choice_name not in self._choices:
             return False
 
         return self._choices[choice_name].votes
 
     def clear_votes(self, hard=False):
-        """
+        '''
         Clears votes for all choices.
         :param hard: If True, removes all choices as well as votes.
-        """
+        '''
         if hard:
             self._choices = {}
         else:

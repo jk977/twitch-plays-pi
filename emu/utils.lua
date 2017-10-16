@@ -15,7 +15,8 @@ local function poll_file(filename)
         file:close();
     end
 
-    return contents;
+    contents = utils.trim_string(contents);
+    return utils.split(contents, ' ');
 end
 
 
@@ -59,16 +60,14 @@ end
 
 
 -- checks if there's an input from twitch and returns the input, if any
--- inputs.txt contents in format "([1-9%w+] )*[1-9]%w+" (letters matching a button)
 function utils.poll_input()
-    contents = utils.trim_string(poll_file(input_dir));
-    return utils.split(contents, ' ');
+    return poll_file(input_dir);
 end
 
 
 -- same as poll_input for cheat file
 function utils.poll_cheat()
-    return utils.trim_string(poll_file(cheat_dir));
+    return poll_file(cheat_dir);
 end
 
 

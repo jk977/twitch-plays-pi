@@ -10,7 +10,7 @@ class TestChoices(unittest.TestCase):
         self.u2 = User('tony')
         c1 = EmuChoice('start*8', [self.u1])
         c2 = EmuChoice('up*1', [self.u2])
-        c3 = EmuChoice('down*7 up*2')
+        c3 = EmuChoice('down*6 up*3')
         self.choices = Choices(c1, c2, c3)
 
     def test_add_choice(self):
@@ -27,7 +27,7 @@ class TestChoices(unittest.TestCase):
 
     def test_add_vote(self):
         fail_msg = 'Choices add_vote failed'
-        c1 = 'down*7 up*2'
+        c1 = 'down*6 up*3'
 
         self.assertNotIn(self.u1, self.choices.get_voters(c1), fail_msg)
         self.assertTrue(self.choices.add_vote(self.u1, c1), fail_msg)
