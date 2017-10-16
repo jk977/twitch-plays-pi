@@ -15,7 +15,7 @@ while true do
     if inputs ~= nil and #inputs ~= 0 then
         for _, input in pairs(inputs) do
             print('Pressing "' .. input .. '"');
-            local button, count = unpack(utils.split(input, '*'))
+            local button, count = unpack(utils.split(input, '&'))
             emutils.press_button(1, button, count);
         end
 

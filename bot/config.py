@@ -21,6 +21,9 @@ if not os.access(root, os.W_OK):
 with open(os.path.join(info_dir, 'nick.cfg'), 'r') as file:
     nick = file.read().strip()
 
+with open(os.path.join(info_dir, 'host.cfg'), 'r') as file:
+    host = file.read().strip()
+
 with open(os.path.join(info_dir, 'owner.cfg'), 'r') as file:
     owner = file.read().strip()
 

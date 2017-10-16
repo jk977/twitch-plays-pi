@@ -22,7 +22,7 @@ def log_votes(manager):
 
 
 if __name__ == '__main__':
-    chat = TwitchChat(config.nick, config.password, config.owner)
+    chat = TwitchChat(config.nick, config.password, config.host)
     manager = InputManager(threshold=1, on_decision=NES.send_input, on_vote=log_votes)
     
     while True:

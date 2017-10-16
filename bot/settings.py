@@ -24,6 +24,9 @@ class Settings:
         with open(path, 'r') as file:
             ser = file.read().strip()
 
+        if not ser:
+            return
+
         fields = json.loads(ser)
         config.users = {}
 

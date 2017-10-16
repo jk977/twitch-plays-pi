@@ -34,8 +34,8 @@ local function reset_file(filename)
 end
 
 
-function utils.split(string, delimiter)
-    if delimiter == nil or string == nil then
+function utils.split(contents, delimiter)
+    if delimiter == nil or contents == nil then
         return;
     end
 
