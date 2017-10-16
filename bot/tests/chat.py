@@ -6,7 +6,7 @@ from chat.twitchchat import TwitchChat
 
 class TestChat(unittest.TestCase):
     def setUp(self):
-        self.chat = TwitchChat(config.nick, config.password, config.owner)
+        self.chat = TwitchChat(config.nick, config.password, config.host)
 
     def test_send(self):
         self.chat.send_message('Testing')

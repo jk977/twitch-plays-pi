@@ -10,7 +10,7 @@ class EmuInput(Validator):
     _validate_count to return true when the respective fields are valid, and may optionally
     define a delimiter other than '*' and a destination path other than project_root/game.
     '''
-    delimiter = '&'
+    delimiter = '*'
     path = os.path.join(config.root, 'game')
 
     def __init__(self, content, count=1):
@@ -51,12 +51,16 @@ class EmuInput(Validator):
         :param cls: Current class.
         :param message: Message to parse.
         '''
+        message = message.lower()
+
         if cls.delimiter in message:
             result = message.split(cls.delimiter)[0]
         else:
             result = re.sub('\\d+$', '', message)
+
         if not cls._validate_content(result):
             raise ValueError('Invalid content "{}".'.format(result))
+
         return result
 
     @classmethod
