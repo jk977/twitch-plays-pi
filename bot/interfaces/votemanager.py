@@ -3,7 +3,6 @@ from chat.voting.choices import Choices
 from numbers import Number
 
 class VoteManager:
-
     def __init__(self, threshold, on_decision=None, on_vote=None):
         '''
         Instantiates a VoteManager object.

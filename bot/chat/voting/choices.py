@@ -113,5 +113,5 @@ class Choices(Serializable):
 
     def deserialize(serialized):
         fields = json.loads(serialized)
-        fields = [EmuChoice.deserialize(choice) for choice in fields]
+        fields = (EmuChoice.deserialize(choice) for choice in fields)
         return Choices(*fields)

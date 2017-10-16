@@ -18,7 +18,7 @@ def log_votes(manager):
 
     path = os.path.join(config.root, 'game', 'votes.txt')
     choices = manager.options.get_all(key=lambda p: p[1].votes, reverse=True)
-    votes = ['{}: {}'.format(c.input, c.votes) for c in choices.values()[:3]]
+    votes = ('{}: {}\n'.format(c.input, c.votes) for c in choices.values()[:3])
 
     with open(path, 'w') as file:
         file.writelines(votes)

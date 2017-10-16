@@ -5,6 +5,9 @@ from interfaces.serializable import Serializable
 
 
 class User(Serializable):
+    '''
+    Represents a chat user.
+    '''
     def __init__(self, name):
         self._name = name
 

@@ -58,4 +58,4 @@ class EmuInputs(Validator):
         return out
 
     def serialize(self):
-        return ' '.join((i.serialize() for i in self.inputs))
+        return ' '.join(i.serialize() for i in self.inputs)

@@ -6,9 +6,10 @@ from interfaces.validator import Validator
 
 class EmuInput(Validator):
     '''
-    Base class for emulator inputs. Children classes must define functions _validate_content and
-    _validate_count to return true when the respective fields are valid, and may optionally
-    define a delimiter other than '*' and a destination path other than project_root/game.
+    Base class for emulator inputs. Children classes only need to implement functions
+    _validate_content and _validate_count to return true when the respective fields are valid,
+    and may optionally define a delimiter other than '*' and a destination path other than
+    project_root/game.
     '''
     delimiter = '*'
     path = os.path.join(config.root, 'game')
@@ -101,24 +102,6 @@ class EmuInput(Validator):
 
         return os.path.join(type(self)._location, cls._filename)
 
-    def serialize(self):
-        '''
-        Serializes input to send to NES.
-        '''
-        return self.delimiter.join((str(x) for x in [self.content, self.count]))
-
-    @classmethod
-    def deserialize(cls, serialized):
-        '''
-        Deserializes serialized input.
-        :param cls: Current class.
-        :param serialized: The serialized input.
-        :returns: EmuInput object
-        '''
-        content = cls._parse_content(serialized)
-        count = cls._parse_count(serialized)
-        return cls(content, count)
-
     @classmethod
     def condense(cls, inputs):
         '''
@@ -147,3 +130,21 @@ class EmuInput(Validator):
             inputs = [i for i in inputs if i]
 
         return inputs
+
+    def serialize(self):
+        '''
+        Serializes input to send to NES.
+        '''
+        return self.delimiter.join((str(x) for x in [self.content, self.count]))
+
+    @classmethod
+    def deserialize(cls, serialized):
+        '''
+        Deserializes serialized input.
+        :param cls: Current class.
+        :param serialized: The serialized input.
+        :returns: EmuInput object
+        '''
+        content = cls._parse_content(serialized)
+        count = cls._parse_count(serialized)
+        return cls(content, count)

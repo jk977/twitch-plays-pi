@@ -19,16 +19,16 @@ class InputManager(VoteManager):
         self._choices.add_vote(user, choice.name)
         
         choice = self._choices.get_choice(choice.name)
+        exceeded = choice.votes >= self.threshold
 
         if self._vote:
             self._vote(self)
 
-        if choice.votes >= self.threshold:
+        if exceeded:
             self._decision(choice)
             self._choices.clear_votes()
-            return True
 
-        return False
+        return exceeded
 
     def remove_vote(self, user):
         '''

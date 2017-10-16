@@ -46,7 +46,7 @@ class Message(Serializable):
         fields = {
             'author': self._author.serialize(),
             'content': self._content,
-            'time': self._time
+            'timestamp': self._time
         }
 
         return json.dumps(fields)
@@ -55,10 +55,10 @@ class Message(Serializable):
         fields = json.loads(message)
         author = fields.get('author', None)
         content = fields.get('content', None)
-        time = fields.get('time', None)
+        timestamp = fields.get('timestamp', None)
 
-        if not (author and content and time):
+        if not all((author, content, time)):
             raise ValueError('Invalid JSON.')
 
         author = User.deserialize(author)
-        return Message(author, content, time)
+        return Message(author, content, timestamp)

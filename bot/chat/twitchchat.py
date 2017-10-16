@@ -48,19 +48,19 @@ class TwitchChat(Chat):
         self.__authenticate('JOIN', self._chan)
 
     def _parse_message(raw_message):
-        """
+        '''
         Parses raw message from server and returns a Message object.
         :param raw_message: UTF-8 encoded message from server.
-        """
+        '''
         author, content = re.search('^:(\\w+)!\\w+@[\\w.]+ [A-Z]+ #\\w+ :(.+)\\r\\n', raw_message).groups()
         author = User(author)
         return Message(author, content)
 
     def send_message(self, content):
-        """
+        '''
         Sends message to server and sleeps.
         :param content: The message to send.
-        """
+        '''
         message = 'PRIVMSG {} :{}\r\n'.format(self._chan, content)
 
         try:
@@ -75,10 +75,10 @@ class TwitchChat(Chat):
         time.sleep(TwitchChat.rate)
 
     def get_message(self, timeout=None):
-        """
+        '''
         Returns next message from server.
-        :param timeout: How long to wait before timing out, in seconds (less than 0 indicates never).
-        """
+        :param timeout: How long to wait before timing out, in seconds (None indicates never).
+        '''
         start = time.time()
 
         while (timeout is None) or (time.time() - start) < timeout:
@@ -102,13 +102,13 @@ class TwitchChat(Chat):
                 self.__sock_send(message.replace('PING', 'PONG'))
                 print('Ping received.')
 
-            elif not any((re.search(user, author) for user in TwitchChat.blacklist)):
+            elif not any(re.search(user, author) for user in TwitchChat.blacklist):
                 self._sock.setblocking(True)
                 return TwitchChat._parse_message(message)
 
     def close(self):
-        """
+        '''
         Closes server connection.
-        """
+        '''
         self._sock.shutdown(socket.SHUT_RDWR)
         self._sock.close()

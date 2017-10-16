@@ -4,8 +4,9 @@ class Serializable(ABC):
     '''
     Interface for serializable classes.
     '''
+    @abstractmethod
     def __init__(self):
-        raise NotImplementedError()
+        pass
 
     @abstractmethod
     def serialize(self):

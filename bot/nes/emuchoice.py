@@ -7,9 +7,9 @@ from nes.cheat import Cheat
 class EmuChoice(Choice):
     def __init__(self, choice, voters=set()):
         '''
-        Initializes EmuChoice object, containing EmuInput object and list of Users.
-        :param choice: EmuInput object or name of choice.
-        :param voters: List of Users that voted for choice.
+        Initializes EmuChoice object, representing an emulator button choice for voting on.
+        :param choice: EmuInput object or name of choice as string.
+        :param voters: Initial list of Users that voted for choice, if any.
         '''
         voters = set(voters)
 
@@ -36,3 +36,7 @@ class EmuChoice(Choice):
     @property
     def name(self):
         return self._choice.serialize()
+    
+    @property
+    def voters(self):
+        return self._voters
