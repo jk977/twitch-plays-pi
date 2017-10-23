@@ -55,6 +55,11 @@ class TestButton(unittest.TestCase):
         self.assertTrue(Button.validate('A*8'), fail_msg)
         self.assertTrue(Button.validate('B*9'), fail_msg)
 
+        self.assertTrue(Button.validate('^*4'), fail_msg)
+        self.assertTrue(Button.validate('<*3'), fail_msg)
+        self.assertTrue(Button.validate('>*1'), fail_msg)
+        self.assertTrue(Button.validate('v*6'), fail_msg)
+
         self.assertFalse(Button.validate('1*start'), fail_msg)
         self.assertFalse(Button.validate('2*select'), fail_msg)
         self.assertFalse(Button.validate('3*start'), fail_msg)
