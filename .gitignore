@@ -7,10 +7,14 @@ game/
 info/
 logs/
 roms/
-working-audio/
 *.bk
 *.cfg
 *.txt
+
+# stream video files
+*.avi
+*.flv
+*.mp4
 
 # python compiled files
 __pycache__/

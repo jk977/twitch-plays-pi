@@ -14,8 +14,10 @@ bot=1
 nes=2
 stream=4
 
+scriptdir=shell/core/
+
 scripts=0               # mask of scripts to run; if 0, all will run
-dryrun=0                # whether or not to actually execute the target scripts
+dryrun=false            # whether or not to actually execute the target scripts
 myterm=gnome-terminal   # terminal to use for executing scripts
 
 while getopts "ht:dbns" opt; do
@@ -33,7 +35,7 @@ while getopts "ht:dbns" opt; do
 			    -s      Start the streaming script.
 			    -d      Debug (don't execute core scripts, dump status).
 
-			If any of [-bns] are used, only the specified scripts will be ran.
+			If any of [-bns] are used, only the specified scripts will run.
 			Otherwise, all scripts will run.
 			EOF
 
@@ -43,7 +45,7 @@ while getopts "ht:dbns" opt; do
             myterm=$OPTARG
             ;;
         d)
-            dryrun=1
+            dryrun=true
             ;;
         b)
             scripts=$((scripts | bot))
@@ -57,22 +59,22 @@ while getopts "ht:dbns" opt; do
     esac
 done
 
-if [ "$dryrun" -eq 0 ]; then
+if ! $dryrun; then
     # run each script indicated by flags in $scripts.
 
     if getflag $scripts $bot; then
         echo "Starting bot script"
-        $myterm -e shell/core/bot.sh
+        $myterm -e "$scriptdir/bot.sh"
     fi
 
     if getflag $scripts $nes; then
         echo "Starting NES script"
-      $myterm -e shell/core/nes.sh
+        $myterm -e "$scriptdir/nes.sh"
     fi
 
     if getflag $scripts $stream; then
         echo "Starting stream script"
-        $myterm -e shell/core/stream.sh
+        $myterm -e "$scriptdir/stream.sh"
     fi
 else
     echo "Terminal: $myterm"
