@@ -1,6 +1,6 @@
 # Twitch Plays Bot
 
-A 3-piece set of scripts to host a Twitch Plays style bot on a Raspberry Pi 3 Model B. Note that this is intended for private use, and may not work on different systems without tweaking code.
+A 3-piece set of scripts originally intended to host a Twitch Plays style bot on a Raspberry Pi 3 Model B, but tested to work on Ubuntu as well. Note that this is intended for private use, and may not work on different systems without tweaking configurations.
 
 ## Requirements
 
@@ -8,31 +8,29 @@ A 3-piece set of scripts to host a Twitch Plays style bot on a Raspberry Pi 3 Mo
 * Lua 5.1+
 * ffmpeg with libx264 and libmp3lame enabled
 * FCEUX 2.2.3 compiled with:
-    * SDL 1.2.15
-    * GTK 3.14.5
+	* SDL 1.2.15
+	* GTK 3.14.5
 
 ## Usage
 
-Intended for private use. To run it yourself, make the following changes:
+The following files may need to be changed or added before using the bot:
 
 * Project root/
-    * run.sh
-        * Replace lxterminal with appropriate command if necessary
+	* run.sh: Replace default terminal with appropriate command if necessary
+	* streamkey.cfg: Store Twitch stream key in file (found in channel's Dashboard)
 * bot/
-    * cfg.py
-        * Assign PASS to Twitch oauth
-        * Assign CHAN to host channel
+	* info/
+		* nick.cfg: Add bot username
+		* oauth.cfg: Add oauth token for IRC connection
+		* host.cfg: Add host channel
+		* owner.cfg: Add name of bot owner (your username)
 * shell/
-    * streamkey.cfg
-        * Store Twitch stream key in file
-    * config.sh
-        * Update paths if necessary
-    * core/
-        * stream.sh
-            * Update ffmpeg audio and video settings as needed
+	* config.sh
+		* Update paths if necessary
+	* core/
+		* stream.sh
+			* Update ffmpeg settings as needed
         
-To start, execute run.sh by itself or shell/bot.sh, shell/nes.sh, and shell/stream.sh concurrently. For performance reasons, the resulting emulator window is not fullscreen, and should be positioned in the spot captured by ffmpeg (default is 36px from the top of the screen)
+To start, execute run.sh (use the script's -h option for details, or run without parameters for default behavior). For performance reasons, the resulting emulator window is not fullscreen, and should be positioned in the spot captured by ffmpeg (default is 36px from the top of the screen)
 
-Once running, Twitch users can type an input in the following format (case-insensitive, space optional): {button} {presscount}
-
-{button} corresponds to any of "A", "B", "start", "select", "up", "down", "left", or "right", and {presscount} is a number between 1 and 9.
+Once running, Twitch users can type a case-insensitive input corresponding to a valid emulator input, optionally followed by the number of times to press the input. The choice is voted for, and once a choice has enough votes, the input is sent to the emulator.
