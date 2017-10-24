@@ -71,8 +71,6 @@ if [ -z "$dryrun" ] || [ "$dryrun" -ne 1 ]; then
             $myterm -e shell/core/stream.sh
         fi
     done
-
-    wait
 else
     echo "Terminal: $myterm"
     echo "Scripts: $scripts"

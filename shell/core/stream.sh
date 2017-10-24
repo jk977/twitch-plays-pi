@@ -4,17 +4,11 @@
 dir="$( dirname $0 )"
 source "$dir/../config.sh"
 
-audiofile="$audiodir/dq.mp3"
-
 # uncomment to save stream to a file
-#stream="/home/pi/Desktop/stream.flv"
+#stream="/home/jk/Desktop/stream.avi"
 
-while :; do
-    ffmpeg \
-        -i "$audiofile" \
-        -threads 4 -f x11grab -r 30 -s 256x240 -i :0.0+0,36 \
-        -c:a copy -ar 44100 -ac 2 \
-        -c:v libx264 -preset slow -pix_fmt yuv420p \
-        -shortest -f flv "$stream" 2>&1 | tee -a "$logdir/stream.log"
-    touch "$basedir/restartfile"
-done
+ffmpeg \
+    -thread_queue_size 64 -threads 4 -f x11grab -r 30 -s 256x240 -i :1.0+0,91 \
+    -thread_queue_size 64 -f pulse -ar 44100 -i default \
+    -c:v libx264 -preset medium -pix_fmt yuv420p \
+    -f avi "$stream" 2>&1 | tee -a "$logdir/stream.log"
