@@ -31,6 +31,6 @@ The following files may need to be changed or added before using the bot:
 		* stream.sh
 			* Update ffmpeg settings as needed
         
-To start, execute run.sh (use the script's -h option for details, or run without parameters for default behavior). For performance reasons, the resulting emulator window is not fullscreen, and should be positioned in the spot captured by ffmpeg (default is 36px from the top of the screen)
+To start, execute run.sh (use the script's -h option for details, or run without parameters for default behavior). For performance reasons, the resulting emulator window is not fullscreen, and should be positioned in the spot captured by ffmpeg (default is in the top left corner of the screen, 36px from the top edge).
 
 Once running, Twitch users can type a case-insensitive input corresponding to a valid emulator input, optionally followed by the number of times to press the input. The choice is voted for, and once a choice has enough votes, the input is sent to the emulator.

@@ -1,5 +1,7 @@
 #!/bin/bash
-# Starts nes emulator with lua input script loaded. If called with -s, enables sound.
+# Usage: nes.sh [-s]
+# Options:
+#   -s      Enables emulator sound.
 
 soundargs="--sound 0"
 
