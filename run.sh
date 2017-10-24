@@ -9,6 +9,7 @@ getflag() {
     [ $(( $1 & $2 )) -eq $2 ] || [ $1 -eq 0 ]
 }
 
+# script flags
 bot=1
 nes=2
 stream=4
@@ -17,9 +18,11 @@ scripts=0               # mask of scripts to run; if 0, all will run
 dryrun=0                # whether or not to actually execute the target scripts
 myterm=gnome-terminal   # terminal to use for executing scripts
 
-while getopts ":ht:dbns" opt; do
+while getopts "ht:dbns" opt; do
     case $opt in
         h)
+            # whitespace type is important here
+            # leading *tabs* are ignored in heredoc with <<-, but not leading *spaces*
             cat <<-EOF
 			Usage: ./run.sh [-h] [-t TERMINAL] [-bns] [-d]
 			Options:
