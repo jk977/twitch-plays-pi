@@ -1,12 +1,13 @@
 # Twitch Plays Bot
 
-A 3-piece set of scripts originally intended to host a Twitch Plays style bot on a Raspberry Pi 3 Model B, but tested to work on Ubuntu as well. Note that this is intended for private use, and may not work on different systems without tweaking configurations.
+A 3-piece set of scripts originally intended to host a Twitch Plays style bot on a Raspberry Pi 3 Model B, but tested to work on Ubuntu as well. Note that this is intended for private use, so it may not work on systems that haven't been tested without tweaking configurations.
 
 ## Requirements
 
 * Python 3
 * FCEUX 2.1.2 or higher (for built-in Lua)
 * ffmpeg with libx264 and libmp3lame enabled
+
 ## Usage
 
 The following files may need to be changed or added before using the bot:
