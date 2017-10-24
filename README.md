@@ -5,8 +5,7 @@ A 3-piece set of scripts originally intended to host a Twitch Plays style bot on
 ## Requirements
 
 * Python 3
-* Lua 5.1+
-* FCEUX
+* FCEUX 2.1.2 or higher (for built-in Lua)
 * ffmpeg with libx264 and libmp3lame enabled
 
 ## Usage
