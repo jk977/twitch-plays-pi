@@ -7,7 +7,6 @@ A 3-piece set of scripts originally intended to host a Twitch Plays style bot on
 * Python 3
 * FCEUX 2.1.2 or higher (for built-in Lua)
 * ffmpeg with libx264 and libmp3lame enabled
-
 ## Usage
 
 The following files may need to be changed or added before using the bot:
@@ -27,6 +26,8 @@ The following files may need to be changed or added before using the bot:
 	* core/
 		* stream.sh
 			* Update ffmpeg settings as needed
+        * nes.sh
+            * Update rom path as needed
         
 To start, execute run.sh (use the script's -h option for details, or run without parameters for default behavior). For performance reasons, the resulting emulator window is not fullscreen, and should be positioned in the spot captured by ffmpeg (default is in the top left corner of the screen).
 
