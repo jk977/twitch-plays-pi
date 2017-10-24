@@ -2,7 +2,8 @@ local emutils = {};
 local chat_gui = require('chat_gui');
 
 
--- advances emulation by <count> frames
+-- advances emulation by <count> frames and updates gui
+-- this should be used over emu.frameadvance in all related scripts
 function emutils.advance_frames(count)
     for i = 1, count do
         chat_gui.update();

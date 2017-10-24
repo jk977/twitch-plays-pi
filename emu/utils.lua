@@ -1,7 +1,3 @@
--- utils.lua
--- =========
--- Module with general utility functions
-
 local utils = {};
 local input_dir = '../game/inputs.txt';
 local cheat_dir = '../game/cheats.txt';

@@ -20,7 +20,7 @@ scripts=0               # mask of scripts to run; if 0, all will run
 dryrun=false            # whether or not to actually execute the target scripts
 myterm=gnome-terminal   # terminal to use for executing scripts
 
-while getopts "ht:dbns" opt; do
+while getopts "ht:bnsd" opt; do
     case $opt in
         h)
             # whitespace type is important here
@@ -28,7 +28,7 @@ while getopts "ht:dbns" opt; do
             cat <<-EOF
 			Usage: ./run.sh [-h] [-t TERMINAL] [-bns] [-d]
 			Options:
-			    -h      Show this help message and quit.
+			    -h      Show this help message and exit.
 			    -t      Specify a terminal to use for scripts.
 			    -b      Start the bot script.
 			    -n      Start the NES script.
