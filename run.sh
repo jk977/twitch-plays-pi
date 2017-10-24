@@ -1,11 +1,20 @@
 #!/bin/bash
-# Runs the 3 twitch-plays scripts concurrently
+# Runs the 3 twitch-plays scripts concurrently. Configurable options are listed in the help command.
+
+getflag() {
+    # param $1: Masked number to check for flag
+    # param $2: Flag to check number for
+    # returns success if flag found or $1 is 0, otherwise fails
+
+    [ $(( $1 & $2 )) -eq $2 ] || [ $1 -eq 0 ]
+}
 
 bot=1
 nes=2
 stream=4
 
-scripts=0 # mask of scripts to run; if 0, all will run
+scripts=0   # mask of scripts to run; if 0, all will run
+dryrun=0    # whether or not to actually execute the target scripts
 
 while getopts ":ht:dbns" opt; do
     case $opt in
@@ -48,31 +57,27 @@ if [ -z $myterm ]; then
     myterm=gnome-terminal
 fi
 
-if [ -z "$dryrun" ] || [ "$dryrun" -ne 1 ]; then
-    for i in $(seq 0 2); do
-        val=$(( 2**i ))         # value of current flag
-        mask=$(( scripts & val ))  # 0 if $scripts doesn't contain flag
+if [ "$dryrun" -eq 0 ]; then
+    # run each script indicated by flags in $scripts.
 
-        # run each script indicated by flags in $scripts.
-        # if $scripts is 0, run all
+    if getflag $scripts $bot; then
+        echo "Starting bot script"
+        $myterm -e shell/core/bot.sh
+    fi
 
-        if [ $mask -eq $bot ] || [ $scripts -eq 0 ]; then
-            echo "Starting bot script"
-            $myterm -e shell/core/bot.sh
-        fi
+    if getflag $scripts $nes; then
+        echo "Starting NES script"
+      $myterm -e shell/core/nes.sh
+    fi
 
-        if [ $mask -eq $nes ] || [ $scripts -eq 0 ]; then
-            echo "Starting NES script"
-          $myterm -e shell/core/nes.sh
-        fi
-
-        if [ $mask -eq $stream ] || [ $scripts -eq 0 ]; then
-            echo "Starting stream script"
-            $myterm -e shell/core/stream.sh
-        fi
-    done
+    if getflag $scripts $stream; then
+        echo "Starting stream script"
+        $myterm -e shell/core/stream.sh
+    fi
 else
     echo "Terminal: $myterm"
-    echo "Scripts: $scripts"
-    echo "Dry run: $dryrun"
+    echo "Enabled scripts:"
+    getflag $scripts $bot && printf "\t* Bot\n"
+    getflag $scripts $nes && printf "\t* NES\n"
+    getflag $scripts $stream && printf "\t* Stream\n"
 fi
