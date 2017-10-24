@@ -8,6 +8,7 @@ info/
 logs/
 roms/
 working-audio/
+*.bk
 *.cfg
 *.txt
 
