@@ -1,6 +1,6 @@
 # Twitch Plays Bot
 
-A 3-piece set of scripts originally intended to host a Twitch Plays style bot on a Raspberry Pi 3 Model B, but tested to work on Ubuntu as well. Note that this is intended for private use, so it may not work on systems that haven't been tested without tweaking configurations.
+A 3-piece set of scripts originally intended to host a Twitch Plays style bot on a Raspberry Pi 3 Model B, but tested to work on Ubuntu as well. Note that this may not work on systems that haven't been tested without tweaking the code a bit.
 
 ## Requirements
 
