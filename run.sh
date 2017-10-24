@@ -13,8 +13,9 @@ bot=1
 nes=2
 stream=4
 
-scripts=0   # mask of scripts to run; if 0, all will run
-dryrun=0    # whether or not to actually execute the target scripts
+scripts=0               # mask of scripts to run; if 0, all will run
+dryrun=0                # whether or not to actually execute the target scripts
+myterm=gnome-terminal   # terminal to use for executing scripts
 
 while getopts ":ht:dbns" opt; do
     case $opt in
@@ -52,10 +53,6 @@ while getopts ":ht:dbns" opt; do
             ;;
     esac
 done
-
-if [ -z $myterm ]; then
-    myterm=gnome-terminal
-fi
 
 if [ "$dryrun" -eq 0 ]; then
     # run each script indicated by flags in $scripts.
