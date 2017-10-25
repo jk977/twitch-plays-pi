@@ -6,7 +6,7 @@ getflag() {
     # param $2: Flag to check number for
     # returns success if flag found or $1 is 0, otherwise fails
 
-    [ $(( $1 & $2 )) -eq $2 ] || [ $1 -eq 0 ]
+    [ $(( $1 & $2 )) -ne 0 ] || [ $1 -eq 0 ]
 }
 
 # script flags
@@ -24,7 +24,7 @@ while getopts "ht:bnsd" opt; do
     case $opt in
         h)
             # whitespace type is important here
-            # leading *tabs* are ignored in heredoc with <<-, but not leading *spaces*
+            # leading tabs are ignored but not leading spaces
             cat <<-EOF
 			Usage: ./run.sh [-h] [-t TERMINAL] [-bns] [-d]
 			Options:
