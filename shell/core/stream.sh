@@ -10,6 +10,7 @@ dir="$( dirname $0 )"
 source "$dir/../config.sh"
 
 audiofile="$audiodir/dq.mp3"
+streamloops=true
 
 if [ -e $audiofile ]; then
     # uses $audiofile as background audio if it exists
@@ -25,12 +26,18 @@ while getopts "ds" opt; do
             ;;
         s)
             soundargs="-thread_queue_size 64 -f pulse -ar 44100 -i default"
+            streamloops=false
             ;;
     esac
 done
 
-ffmpeg \
-    $soundargs \
-    -threads 4 -f x11grab -r 30 -s 256x240 -i :1.0+0,91 \
-    -c:v libx264 -preset medium -pix_fmt yuv420p \
-    -f avi "$stream" 2>&1 | tee -a "$logdir/stream.log"
+while :; do
+    ffmpeg \
+        $soundargs \
+        -threads 4 -f x11grab -r 30 -s 256x240 -i :1.0+0,91 \
+        -c:v libx264 -preset medium -pix_fmt yuv420p \
+        -shortest -f avi "$stream" 2>&1 | tee -a "$logdir/stream.log"
+
+    # if stream isn't supposed to loop, don't restart stream
+    $streamloops || break
+done

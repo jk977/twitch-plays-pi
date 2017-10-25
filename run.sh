@@ -44,9 +44,6 @@ while getopts "ht:bnsd" opt; do
         t)
             myterm=$OPTARG
             ;;
-        d)
-            dryrun=true
-            ;;
         b)
             scripts=$((scripts | bot))
             ;;
@@ -55,6 +52,9 @@ while getopts "ht:bnsd" opt; do
             ;;
         s)
             scripts=$((scripts | stream))
+            ;;
+        d)
+            dryrun=true
             ;;
     esac
 done
