@@ -22,6 +22,10 @@ class User(Serializable):
         return self._name == config.owner
 
     @property
+    def bot(self):
+        return self._name == config.nick
+
+    @property
     def name(self):
         return self._name
 

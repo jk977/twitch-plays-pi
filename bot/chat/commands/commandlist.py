@@ -5,6 +5,9 @@ from chat.commands.command import Command
 
 
 class CommandList:
+    '''
+    Static class that converts a command message to a Command object.
+    '''
     _map = {
         'help': info.show_help,
         'map': info.game_map,

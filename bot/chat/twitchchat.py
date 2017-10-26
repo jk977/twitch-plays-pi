@@ -8,7 +8,6 @@ from interfaces.chat import Chat
 
 
 class TwitchChat(Chat):
-    blacklist = ['tmi\.twitch\.tv', 'shira_bot$']
     host = 'irc.twitch.tv'
     port = 6667
     rate = 1.5
@@ -38,7 +37,10 @@ class TwitchChat(Chat):
         message = '{} {}\r\n'.format(auth_type, content)
         self.__sock_send(message)
 
-    def __connect(self):
+    def __connect(self, replace_current_socket=False):
+        if replace_current_socket:
+            self.close()
+
         self._sock = socket.socket()
         self._sock.setblocking(True)
         self._sock.connect((TwitchChat.host, TwitchChat.port))
@@ -67,8 +69,7 @@ class TwitchChat(Chat):
             self.__sock_send(message)
         except socket.error as e:
             if type(e) != socket.timeout:
-                self.close()
-                self.__connect()
+                self.__connect(replace_current_socket=True)
 
             self.__sock_send(message)
 
@@ -81,30 +82,25 @@ class TwitchChat(Chat):
         '''
         start = time.time()
 
+        # loops until time elapsed exceeds timeout, if there is a timeout
         while (timeout is None) or (time.time() - start) < timeout:
-            remaining = timeout - (time.time() - start) if timeout else None
-            self._sock.settimeout(remaining)
+            remaining_time = timeout - (time.time() - start) if timeout else None
+            self._sock.settimeout(remaining_time)
 
             try:
-                message = self._sock.recv(1024).decode('utf-8')
-            except socket.timeout:
-                self._sock.setblocking(True)
-                raise
+                raw_message = self._sock.recv(1024).decode('utf-8')
+                message = TwitchChat._parse_message(raw_message)
             except socket.error:
-                self.close()
-                self.__connect()
+                self.__connect(replace_current_socket=True)
                 continue
+            except ValueError:
+                pass
 
-            author = re.search('^:([\\w.]+)', message)
-            author = author.groups()[0] if author else None
-
-            if message.startswith('PING'):
-                self.__sock_send(message.replace('PING', 'PONG'))
+            if raw_message.startswith('PING'):
+                self.__sock_send(raw_message.replace('PING', 'PONG'))
                 print('Ping received.')
-
-            elif not any(re.search(user, author) for user in TwitchChat.blacklist):
-                self._sock.setblocking(True)
-                return TwitchChat._parse_message(message)
+            elif message and not message.author.bot:
+                return message
 
     def close(self):
         '''

@@ -1,7 +1,9 @@
 import json
+
 from . import *
 from chat.user import User
 from interfaces.serializable import Serializable
+
 
 class Choice(Serializable):
     '''
@@ -42,12 +44,10 @@ class Choice(Serializable):
         '''
         if not isinstance(voter, User):
             raise TypeError('Voter must be a User.')
-        else:
-            if voter in self.voters:
-                return False
+        elif voter in self.voters:
+            return False
 
-            self.voters.add(voter)
-
+        self.voters.add(voter)
         return True
 
     def remove_vote(self, voter):
@@ -57,18 +57,13 @@ class Choice(Serializable):
         '''
         if not isinstance(voter, User):
             raise TypeError('Voter must be a User.')
-        else:
-            if voter not in self.voters:
-                return False
+        elif voter not in self.voters:
+            return False
 
-            self.voters.remove(voter)
-
+        self.voters.remove(voter)
         return True
 
     def clear(self):
-        '''
-        Clears list of voters.
-        '''
         self.voters.clear()
 
     def serialize(self):

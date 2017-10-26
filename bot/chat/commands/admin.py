@@ -1,9 +1,9 @@
 import sys
 
 def admin_cmd(func):
-    """
+    '''
     Decorator that prevents function execution if message author isn't admin.
-    """
+    '''
     def wrapper(chat, message):
         if message.author.admin:
             return func(chat, message)
@@ -12,6 +12,9 @@ def admin_cmd(func):
 
 @admin_cmd
 def test_cmd(chat, message):
+    '''
+    Command to verify that the decorator works. Used in unit tests.
+    '''
     return message
 
 @admin_cmd
