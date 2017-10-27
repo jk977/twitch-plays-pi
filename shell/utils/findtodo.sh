@@ -6,7 +6,7 @@ source "$dir/../config.sh"
 
 find "$basedir" -type f \( -name "*.py" -or -name "*.lua" -or -name "*.sh" \) -print0 | \
     xargs -0 grep -P '(#|(--))\s+TODO' | \
-    sed 's_/home/pi/Desktop/twitch-plays/__' | \
+    sed "s_${basedir}__" | \
     sed -r 's/(#|(--))\s+TODO:?//' | \
     tr -s [:space:] | \
     sort -u
