@@ -28,16 +28,30 @@ class TwitchChat(Chat):
         self.__connect()
 
     def __sock_send(self, message, encoding='utf-8'):
+        '''
+        Sends message over socket in bytes format.
+        :param message: Message to send.
+        :param encoding: Encoding of string.
+        '''
         self._sock.send(bytes(message, encoding))
 
-    def __authenticate(self, auth_type, content):
+    def __authenticate(self, auth_type, authentication):
+        '''
+        Sends authentication message to server.
+        :param auth_type: One of three types: NICK, PASS, or JOIN
+        :param authentication: Content corresponding to auth_type.
+        '''
         if auth_type not in ('NICK', 'PASS', 'JOIN'):
             raise ValueError('Invalid auth type.')
 
-        message = '{} {}\r\n'.format(auth_type, content)
+        message = '{} {}\r\n'.format(auth_type, authentication)
         self.__sock_send(message)
 
     def __connect(self, replace_current_socket=False):
+        '''
+        Connects client to server.
+        :param replace_current_socket: Whether or not to dispose of the current socket.
+        '''
         if replace_current_socket:
             self.close()
 
@@ -54,7 +68,12 @@ class TwitchChat(Chat):
         Parses raw message from server and returns a Message object.
         :param raw_message: UTF-8 encoded message from server.
         '''
-        author, content = re.search('^:(\\w+)!\\w+@[\\w.]+ [A-Z]+ #\\w+ :(.+)\\r\\n', raw_message).groups()
+        result = re.search('^:(\\w+)!\\w+@[\\w.]+ [A-Z]+ #\\w+ :(.+)\\r\\n', raw_message)
+
+        if not result:
+            return
+
+        author, content = result.groups()
         author = User(author)
         return Message(author, content)
 
@@ -90,6 +109,8 @@ class TwitchChat(Chat):
             try:
                 raw_message = self._sock.recv(1024).decode('utf-8')
                 message = TwitchChat._parse_message(raw_message)
+            except socket.timeout:
+                return
             except socket.error:
                 self.__connect(replace_current_socket=True)
                 continue
