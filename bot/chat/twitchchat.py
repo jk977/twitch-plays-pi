@@ -1,5 +1,6 @@
 import re
 import socket
+import threading
 import time
 
 from chat.message import Message
@@ -25,6 +26,10 @@ class TwitchChat(Chat):
         self._nick = username
         self._pass = 'oauth:' + oauth
         self._chan = channel
+        
+        self._sock = None
+        self._sock_lock = threading.Lock()
+
         self.__connect()
 
     def __sock_send(self, message, encoding='utf-8'):
@@ -33,7 +38,8 @@ class TwitchChat(Chat):
         :param message: Message to send.
         :param encoding: Encoding of string.
         '''
-        self._sock.send(bytes(message, encoding))
+        with self._sock_lock:
+            self._sock.send(bytes(message, encoding))
 
     def __authenticate(self, auth_type, authentication):
         '''
@@ -47,12 +53,12 @@ class TwitchChat(Chat):
         message = '{} {}\r\n'.format(auth_type, authentication)
         self.__sock_send(message)
 
-    def __connect(self, replace_current_socket=False):
+    def __connect(self):
         '''
         Connects client to server.
         :param replace_current_socket: Whether or not to dispose of the current socket.
         '''
-        if replace_current_socket:
+        if self._sock:
             self.close()
 
         self._sock = socket.socket()
@@ -62,6 +68,19 @@ class TwitchChat(Chat):
         self.__authenticate('PASS', self._pass)
         self.__authenticate('NICK', self._nick)
         self.__authenticate('JOIN', self._chan)
+
+    def __get_raw_message(self, timeout):
+        '''
+        Gets a UTF-8 decoded message from the server, responding to pings as needed
+        '''
+        while timeout:
+            raw_message = self._sock.recv(1024).decode('utf-8')
+
+            if raw_message.startswith('PING'):
+                self.__sock_send(raw_message.replace('PING', 'PONG'))
+                print('Ping received.')
+            else:
+                return raw_message
 
     def _parse_message(raw_message):
         '''
@@ -77,51 +96,41 @@ class TwitchChat(Chat):
         author = User(author)
         return Message(author, content)
 
-    def send_message(self, content):
+    def send_message(self, content, max_attempts=2):
         '''
         Sends message to server and sleeps.
         :param content: The message to send.
+        :param max_attempts: The maximum number of failed attempts to allow when sending message.
         '''
         message = 'PRIVMSG {} :{}\r\n'.format(self._chan, content)
 
-        try:
-            self.__sock_send(message)
-        except socket.error as e:
-            if type(e) != socket.timeout:
-                self.__connect(replace_current_socket=True)
+        for _ in range(max_attempts):
+            try:
+                self.__sock_send(message)
+                time.sleep(TwitchChat.rate)
+                break
+            except socket.error:
+                self.__connect() # re-establish connection and try again
 
-            self.__sock_send(message)
-
-        time.sleep(TwitchChat.rate)
-
-    def get_message(self, timeout=None):
+    def get_message(self, timeout=-1):
         '''
         Returns next message from server.
-        :param timeout: How long to wait before timing out, in seconds (None indicates never).
         '''
         start = time.time()
+        no_timeout = timeout < 0
 
-        # loops until time elapsed exceeds timeout, if there is a timeout
-        while (timeout is None) or (time.time() - start) < timeout:
-            remaining_time = timeout - (time.time() - start) if timeout else None
-            self._sock.settimeout(remaining_time)
-
+        while no_timeout or (time.time() - start) < timeout:
             try:
-                raw_message = self._sock.recv(1024).decode('utf-8')
+                raw_message = self.__get_raw_message(timeout)
                 message = TwitchChat._parse_message(raw_message)
-            except socket.timeout:
-                return
+                
+                if message:
+                    return message
+
             except socket.error:
-                self.__connect(replace_current_socket=True)
-                continue
+                self.__connect()
             except ValueError:
                 pass
-
-            if raw_message.startswith('PING'):
-                self.__sock_send(raw_message.replace('PING', 'PONG'))
-                print('Ping received.')
-            elif message and not message.author.bot:
-                return message
 
     def close(self):
         '''

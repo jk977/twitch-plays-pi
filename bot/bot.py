@@ -1,5 +1,6 @@
 import config
 import os
+import signal
 
 from chat.commands.commandlist import CommandList
 from chat.twitchchat import TwitchChat
@@ -7,6 +8,8 @@ from chat.voting.inputmanager import InputManager
 
 from nes.emulator import NES
 
+# initializing client to be used at module level
+chat = TwitchChat(config.nick, config.password, config.host)
 
 def log_votes(manager):
     '''
@@ -24,8 +27,14 @@ def log_votes(manager):
         file.writelines(votes)
 
 
+def notify_restart(signal, frame):
+    '''
+    Sends notification message to twitch when receiving SIGALRM
+    '''
+    chat.send_message('Stream is restarting!')
+
 if __name__ == '__main__':
-    chat = TwitchChat(config.nick, config.password, config.host)
+    signal.signal(signal.SIGALRM, notify_restart)
     manager = InputManager(threshold=1, on_decision=NES.send_input, on_vote=log_votes)
 
     while True:

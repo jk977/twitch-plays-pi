@@ -12,11 +12,8 @@ class TestChat(unittest.TestCase):
         self.chat.send_message('Testing')
 
     def test_get(self):
-        try:
-            message = self.chat.get_message(timeout=5)
-            self.assertTrue(message, 'Chat get failed')
-        except:
-            self.assertTrue(False, 'Chat get failed (did you send anything?)')
+        message = self.chat.get_message(timeout=2)
+        self.assertTrue(message, 'Chat get failed')
 
     def tearDown(self):
         self.chat.close()
