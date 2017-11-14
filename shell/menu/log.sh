@@ -12,7 +12,7 @@ change_log_path() {
         "$default"
 
     if [ "$?" -eq 0 ]; then
-        set_file logdir $(get_result)
+        set_directory logdir "$(get_result)"
         check_file_error
     fi
 }
