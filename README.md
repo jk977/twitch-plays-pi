@@ -10,25 +10,7 @@ A 3-piece set of scripts originally intended to host a Twitch Plays style bot on
 
 ## Usage
 
-The following files may need to be changed or added before using the bot:
-
-* Project root/
-	* run.sh: Replace default terminal with appropriate command if necessary
-	* streamkey.cfg: Store Twitch stream key in file (found in channel's Dashboard)
-* bot/
-	* info/
-		* nick.cfg: Add bot username
-		* oauth.cfg: Add oauth token for IRC connection
-		* host.cfg: Add host channel
-		* owner.cfg: Add name of bot owner (your username)
-* shell/
-	* config.sh
-		* Update paths if necessary
-	* core/
-		* stream.sh
-			* Update ffmpeg settings as needed
-        * nes.sh
-            * Update rom path as needed
+Before starting the program, run config.sh and completely fill out the information for each category.
         
 To start, execute run.sh (use the script's -h option for details, or run without parameters for default behavior). For performance reasons, the resulting emulator window is not fullscreen, and should be positioned in the spot captured by ffmpeg (default is in the top left corner of the screen).
 
