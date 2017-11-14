@@ -4,8 +4,8 @@
 . shell/settings.sh
 
 getflag() {
-    # param $1: Masked number to check for flag
-    # param $2: Flag to check number for
+    # $1: Masked number to check for flag
+    # $2: Flag to check number for
     # returns success if flag found or $1 is 0, otherwise fails
 
     [ $(( $1 & $2 )) -ne 0 ] || [ $1 -eq 0 ]
@@ -16,7 +16,7 @@ bot=1
 nes=2
 stream=4
 
-scriptdir=shell/core/
+scriptdir=$( find . -type d -name core )
 
 scripts=0               # mask of scripts to run; if 0, all will run
 dryrun=false            # whether or not to actually execute the target scripts

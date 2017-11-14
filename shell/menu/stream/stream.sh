@@ -88,7 +88,7 @@ stream_menu() {
             5 "Stream Endpoint"
         status=$?
 
-        case $(get_result) in
+        case "$(get_result)" in
             1)
                 audio_menu
                 ;;

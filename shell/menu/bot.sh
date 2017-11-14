@@ -9,13 +9,13 @@ get_file() {
 
 read_file() {
     # $1: Name of file to read (path and extension not needed)
-    cat $( get_file "$1" ) 2>/dev/null
+    cat "$( get_file "$1" )" 2>/dev/null
 }
 
 write_file() {
     # $1: Name of file to write (path and extension not needed)
     # $2: Content to write
-    echo "$2" > $( get_file "$1" )
+    echo "$2" > "$( get_file "$1" )"
 }
 
 write_result() {
@@ -28,7 +28,7 @@ write_result() {
 }
 
 change_nick() {
-    current=$( read_file nick )
+    current="$(read_file nick)"
 
     show_window \
         --title "Bot Username" \
@@ -40,7 +40,7 @@ change_nick() {
 }
 
 change_pass() {
-    current=$( read_file pass )
+    current="$(read_file pass)"
 
     show_window \
         --title "Bot Password" \
@@ -52,11 +52,11 @@ change_pass() {
 }
 
 change_host() {
-    current=$( read_file host )
+    current="$(read_file host)"
 
     show_window \
         --title "Bot Host" \
-        --inputbox "Enter host username:" \
+        --inputbox "Enter host username. The bot will listen for inputs on the host's chat:" \
         $(height) $(width) \
         "$current"
 
@@ -64,7 +64,7 @@ change_host() {
 }
 
 change_owner() {
-    current=$( read_file owner )
+    current="$(read_file owner)"
 
     show_window \
         --title "Bot Owner" \
@@ -76,8 +76,8 @@ change_owner() {
 }
 
 bot_menu() {
-    status=0
     prompt="Select an option to configure.\nThese are used in the bot's interactions with the host site's API."
+    status=0
 
     while [ "$status" -eq 0 ]; do
         show_window \
@@ -90,7 +90,7 @@ bot_menu() {
             4 "Owner"
         status=$?
 
-        case $(get_result) in
+        case "$(get_result)" in
             1)
                 change_nick
                 ;;

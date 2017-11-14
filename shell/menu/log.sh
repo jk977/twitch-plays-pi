@@ -3,11 +3,11 @@
 . shell/menu/common.sh
 
 change_log_path() {
-    default=$(get_default_dir "$logdir")
+    default="$(get_default_dir "$logdir")"
 
     show_window \
         --title "Log Path" \
-        --inputbox "Enter path to log output to:" \
+        --inputbox "Enter path to save log files in:" \
         $(height) $(width) \
         "$default"
 
@@ -26,7 +26,7 @@ change_log_level() {
     log0=OFF
     log1=OFF
 
-    case $loglevel in
+    case "$loglevel" in
         0)
             log0=ON
             ;;
@@ -38,18 +38,18 @@ change_log_level() {
     esac
 
     show_window \
-        --title "Log Level" --notags \
+        --title "Log Level" \
         --radiolist "Set logging level. Current log directory:\n$logdir" \
         $(height) $(width) 2 \
         1 "Don't log output" $log0 \
         2 "Log output" $log1
 
-    case $(get_result) in
+    case "$(get_result)" in
         1)
-            set_data loglevel 0
+            set_data loglevel 1
             ;;
         2)
-            set_data loglevel 1
+            set_data loglevel 2
             ;;
     esac
 }
@@ -61,12 +61,12 @@ log_menu() {
         show_window \
             --title "Logging" --notags \
             --menu "Configure which option?" \
-            $(height) $(width) 4 \
+            $(height) $(width) 2 \
             0 "Change Log Path" \
             1 "Set Log Level"
         status=$?
 
-        case $(get_result) in
+        case "$(get_result)" in
             0)
                 change_log_path
                 ;;

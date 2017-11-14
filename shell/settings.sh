@@ -17,6 +17,10 @@ test_empty() {
     [ -z "$1" ]
 }
 
+test_readable_file() {
+    ! [ -d "$1" ] && [ -r "$1" ]
+}
+
 load_data() {
     # $1: Name of variable to load (searches for .dat file of same name)
 
@@ -37,7 +41,8 @@ load_and_warn() {
 }
 
 load_defaults() {
-    if test_empty "$loglevel" && test_empty "$logdir"; then
+    if test_empty "$loglevel" || test_empty "$logdir"; then
+        # only allow logging if directory is specified
         set_data loglevel 0
     fi
 
@@ -74,10 +79,6 @@ set_data() {
 
     echo "$2" > "$datadir/$1.dat"
     update_data "$1" >/dev/null
-}
-
-test_readable_file() {
-    ! [ -d "$1" ] && [ -r "$1" ]
 }
 
 set_file() {

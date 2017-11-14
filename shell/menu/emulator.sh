@@ -12,14 +12,14 @@ change_rom_dir() {
         "$default"
 
     if [ "$?" -eq 0 ]; then
-        set_file emurom $(get_result)
+        set_file emurom "$(get_result)"
         check_file_error
     fi
 }
 
 emulator_menu() {
-    status=0
     prompt="Configure which option?"
+    status=0
 
     while [ "$status" -eq 0 ]; do
         show_window \
@@ -29,7 +29,7 @@ emulator_menu() {
             1 "ROM Path"
         status=$?
 
-        case $(get_result) in
+        case "$(get_result)" in
             1)
                 change_rom_dir
                 ;;

@@ -35,7 +35,7 @@ check_file_error() {
 }
 
 get_result() {
-    result=$(cat $tmpfile)
+    result="$(cat $tmpfile)"
     rm $tmpfile 2>/dev/null
     echo "$result"
 }

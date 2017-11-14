@@ -4,14 +4,16 @@
 
 # project files
 game/
-info/
-logs/
 roms/
-.output
 *.bk
+*.txt
+
+# project data files
+data/
+logs/
+.output
 *.dat
 *.json
-*.txt
 
 # stream video files
 *.avi

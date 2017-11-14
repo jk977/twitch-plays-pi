@@ -24,8 +24,10 @@ change_audio_dir() {
 }
 
 audio_menu() {
+    prompt="Choose audio source. If File is selected, you will be prompted to enter a path to an audio file:"
     oldsrc="$audiosrc" # in case of failure
     filetag="File"
+
     filestat="OFF"
     gamestat="OFF"
     nonestat="OFF"
@@ -47,19 +49,19 @@ audio_menu() {
     esac
 
     show_window \
-        --title "Stream Audio" --notags \
-        --radiolist "Choose audio source:" \
+        --title "Stream Audio" \
+        --radiolist "$prompt" \
         $(height) $(width) 3 \
         1 "$filetag" $filestat \
         2 "Game Audio" $gamestat \
         3 "None" $nonestat
 
-    case $( get_result ) in
+    case "$(get_result)" in
         1)
             change_audio_dir
 
             if [ "$?" -ne 0 ]; then
-                audiosrc="$oldsrc"
+                audiosrc="$oldsrc" # restores old value if invalid input
             fi
             ;;
         2)

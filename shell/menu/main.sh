@@ -32,7 +32,7 @@ main_menu() {
         5 "Clear Cached Information"
     status=$?
 
-    case $(get_result) in
+    case "$(get_result)" in
         1)
             bot_menu
             ;;
