@@ -7,8 +7,10 @@ game/
 info/
 logs/
 roms/
+.output
 *.bk
 *.cfg
+*.dat
 *.txt
 
 # stream video files

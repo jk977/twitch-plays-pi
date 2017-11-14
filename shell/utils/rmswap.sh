@@ -1,6 +1,6 @@
 #!/bin/bash
 # Removes all vim swap files in twitch-plays folder and subfolders.
-# To be used after multiple crashes (usually caused by stream.sh changes).
+# Useful in case of crashes or unexpected powering off while using vim.
 
 dir="$( dirname $0 )"
 source "$dir/../config.sh"

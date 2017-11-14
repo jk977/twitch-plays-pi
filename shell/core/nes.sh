@@ -3,24 +3,19 @@
 # Options:
 #   -s      Enables emulator sound.
 
-soundargs="--sound 0"
-
-while getopts "s" opt; do
-    case $opt in
-        s)
-            soundargs="--sound 1 --soundrate 44100 --soundq 1 --soundbufsize 200"
-            ;;
-    esac
-done
-
 dir="$( dirname $0 )"
-source "$dir/../config.sh"
-game="$romdir/fire.nes"
+. "$dir/../settings.sh"
 
-fceux "$game" \
+if [ "$audiosrc" = $gameaudio ] >/dev/null; then
+    soundargs="--sound 1 --soundrate 44100 --soundq 1 --soundbufsize 200"
+else
+    soundargs="--sound 0"
+fi
+
+fceux "$emugame" \
     $soundargs \
     --opengl 0 \
-    --loadlua "$emudir/main.lua" \
+    --loadlua "$emudir/$emuname" \
     --xscale 1 \
     --yscale 1 \
     2>&1 | tee -a "$logdir/nes.log"
