@@ -5,7 +5,7 @@ A 3-piece set of scripts originally intended to host a Twitch Plays style bot on
 ## Requirements
 
 * Python 3
-* [whiptail](https://linux.die.net/man/1/whiptail]) (used by config.sh)
+* [whiptail](https://linux.die.net/man/1/whiptail) (used by config.sh)
 * FCEUX 2.1.2 or higher (for built-in Lua)
 * ffmpeg with libx264 and libmp3lame enabled
 
