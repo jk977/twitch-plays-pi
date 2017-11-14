@@ -9,8 +9,8 @@ logs/
 roms/
 .output
 *.bk
-*.cfg
 *.dat
+*.json
 *.txt
 
 # stream video files

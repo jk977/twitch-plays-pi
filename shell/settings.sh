@@ -4,14 +4,14 @@
 [ -n "$settings_included" ] && return
 
 settings_included=true
-datadir=$( find -type d -name data )
+datadir=$( find -type d -name data | grep -v bot)
 
 load_data() {
     # $1: Name of variable to load (searches for .dat file of same name)
 
     [ -z "$1" ] && exit 1
     contents=$( cat "$datadir/$1.dat" 2>/dev/null )
-    eval "export $1=$contents"
+    eval "$1=$contents"
     [ -n "$contents" ] # return success if $contents isn't empty
 }
 

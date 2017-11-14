@@ -1,7 +1,4 @@
-#!/bin/bash
-# Usage: nes.sh [-s]
-# Options:
-#   -s      Enables emulator sound.
+#!/bin/sh
 
 dir="$( dirname $0 )"
 . "$dir/../settings.sh"

@@ -1,6 +1,8 @@
 #!/bin/bash
 # Runs the 3 twitch-plays scripts concurrently. Configurable options are listed in the help command.
 
+. shell/settings.sh
+
 getflag() {
     # param $1: Masked number to check for flag
     # param $2: Flag to check number for

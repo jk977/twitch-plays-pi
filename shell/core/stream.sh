@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 # Starts streaming to Twitch.
 
 dir="$( dirname $0 )"

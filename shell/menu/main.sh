@@ -4,15 +4,32 @@
 . shell/menu/log.sh
 . shell/menu/stream/stream.sh
 
+clear_cache() {
+    whiptail \
+        --title "Clear Cache?" --defaultno \
+        --yesno "This will remove all of the program's stored information. Continue?" \
+        $(height) $(width)
+    status=$?
+
+    if [ "$status" -eq 0 ]; then
+        rm "$basedir/bot/data/"*
+        rm "$shldir/data/"*
+        whiptail --msgbox "Clear successful!" $(height) $(width)
+    fi
+
+    main_menu
+}
+
 main_menu() {
     show_window \
         --title "Main Menu" --notags \
         --menu "What do you want to change?" \
-        $(height) $(width) 4 \
+        $(height) $(width) 5 \
         1 "Bot" \
         2 "Emulator" \
         3 "Stream" \
-        4 "Logging"
+        4 "Logging" \
+        5 "Clear Cached Information"
     status=$?
 
     case $(get_result) in
@@ -27,6 +44,9 @@ main_menu() {
             ;;
         4)
             log_menu
+            ;;
+        5)
+            clear_cache
             ;;
     esac
 
