@@ -2,14 +2,25 @@
 # Contains project settings, such as resource locations and script settings.
 
 [ -n "$settings_included" ] && return
-
 settings_included=true
-datadir=$( find -type d -name data | grep -v bot)
+
+# constant values
+gameaudio=2
+noaudio=3
+
+datadir=$( find . -type d -name data | grep -v bot )
+botname="bot.py"
+streamname="stream.sh"
+emuname="emu.lua"
+
+test_empty() {
+    [ -z "$1" ]
+}
 
 load_data() {
     # $1: Name of variable to load (searches for .dat file of same name)
 
-    [ -z "$1" ] && exit 1
+    test_empty "$1" && exit 1
     contents=$( cat "$datadir/$1.dat" 2>/dev/null )
     eval "$1=$contents"
     [ -n "$contents" ] # return success if $contents isn't empty
@@ -25,6 +36,16 @@ load_and_warn() {
     fi
 }
 
+load_defaults() {
+    if test_empty "$loglevel" && test_empty "$logdir"; then
+        set_data loglevel 0
+    fi
+
+    test_empty "$audiosrc" && set_data audiosrc $noaudio
+    test_empty "$streamloops" && set_data streamloops "false"
+    test_empty "$streamsig" && set_data streamsig "true"
+}
+
 update_data() {
     if [ "$#" -ne 0 ]; then
         for var in $@; do
@@ -32,18 +53,16 @@ update_data() {
         done
     else
         load_and_warn basedir
+        load_and_warn emurom
 
         load_and_warn logdir
-        load_and_warn loglevel
+        load_data loglevel
 
-        load_and_warn audiosrc
-
+        load_data audiosrc
+        load_data streamloops
+        load_data streamsig
         load_and_warn streamuri
         load_and_warn streamdest
-        load_and_warn streamloops
-        load_and_warn streamsig
-
-        load_and_warn emurom
     fi
 }
 
@@ -83,14 +102,7 @@ set_directory() {
 }
 
 update_data
-
-# constant values
-botname="bot.py"
-streamname="stream.sh"
-emuname="emu.lua"
-
-gameaudio=2
-noaudio=3
+load_defaults
 
 # constant paths relative to project root
 set_directory shldir "$basedir/shell/"

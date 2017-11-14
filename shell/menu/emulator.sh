@@ -1,6 +1,6 @@
 #!/bin/sh
-. shell/menu/common.sh
 . shell/settings.sh
+. shell/menu/common.sh
 
 change_rom_dir() {
     default=$(get_default_dir "$emurom")

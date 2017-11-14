@@ -1,6 +1,6 @@
 #!/bin/sh
-. shell/menu/common.sh
 . shell/settings.sh
+. shell/menu/common.sh
 
 change_log_path() {
     default=$(get_default_dir "$logdir")

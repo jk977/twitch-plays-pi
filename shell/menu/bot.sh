@@ -1,14 +1,15 @@
+. shell/settings.sh
 . shell/menu/common.sh
 
-config_path=bot/info/
+config_path="$basedir/bot/data/"
 
 get_file() {
-    echo "$config_path/$1.cfg" 
+    echo "$config_path/$1.dat"
 }
 
 read_file() {
     # $1: Name of file to read (path and extension not needed)
-    cat $( get_file "$1" )
+    cat $( get_file "$1" ) 2>/dev/null
 }
 
 write_file() {
