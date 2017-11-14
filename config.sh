@@ -1,21 +1,26 @@
 #!/bin/sh
 
+olddir="$(pwd)"
+cd "$( dirname $0 )" # in case script is ran from a different directory
+
 mkdirs_if_absent() {
     for d in $@; do
         ! [ -d "$d" ] && mkdir "$d"
     done
 }
 
-mkdirs_if_absent shell/data bot/data
-
 if [ -z "$(which whiptail)" ]; then
-    echo "Error: Whiptail must be installed to run config.sh"
+    echo "Error: Whiptail must be installed to run config.sh" >&2
     exit 1
 fi
+
+mkdirs_if_absent shell/data bot/data
 
 . shell/settings.sh
 . shell/menu/main.sh
 
-basedir="$( realpath $(dirname $0) )"
+basedir="$(pwd)"
 set_data basedir "$basedir"
 main_menu
+
+cd "$olddir" # restore old working directory

@@ -1,7 +1,6 @@
 #!/bin/sh
 
-dir="$( dirname $0 )"
-. "$dir/../settings.sh"
+. "$( dirname $0 )/../settings.sh"
 
 if [ "$loglevel" -gt 0 ]; then
     logdest="$logdir/nes.log"

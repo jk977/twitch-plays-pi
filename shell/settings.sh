@@ -1,6 +1,7 @@
 #!/bin/sh
 # Contains project settings, such as resource locations and script settings.
 
+# include guard
 [ -n "$settings_included" ] && return
 settings_included=true
 
@@ -8,7 +9,26 @@ settings_included=true
 gameaudio=2
 noaudio=3
 
-datadir=$( find . -type d -name data | grep -v bot )
+if [ -n "$basedir" ]; then
+    # get absolute path to data folder if $basedir is known
+    datadir="$basedir/shell/data/"
+else
+    # note that this script doesn't function properly if called from
+    # any directory higher than project-root/ or shell/, but
+    # it should work as long as you run the configuration script
+    # before trying anything else
+
+    # would be easier to implement a sound solution with /bin/bash
+
+    result=$( find . -type d -name data | grep -v bot )
+
+    if [ -n "$result" ]; then
+        datadir="$result"
+    else
+        datadir="./shell/data/" # trust working directory is project root
+    fi
+fi
+
 botname="bot.py"
 streamname="stream.sh"
 emuname="emu.lua"
@@ -19,6 +39,10 @@ test_empty() {
 
 test_readable_file() {
     ! [ -d "$1" ] && [ -r "$1" ]
+}
+
+test_writable_dir() {
+    [ -d "$1" ] && [ -w "$1" ]
 }
 
 load_data() {
@@ -34,7 +58,7 @@ load_and_warn() {
     load_data $@
 
     if [ "$?" -ne 0 ]; then
-        echo "Warning: Variable \"$1\" is empty." >&2
+        echo "Warning: Variable \"$1\" is empty (searched directory $datadir)." >&2
     else
         echo "Variable \"$1\" is set."
     fi
@@ -99,7 +123,7 @@ set_directory() {
     # $1: Name of data
     # $2: Directory to assign data to
 
-    [ -d "$2" ] && [ -w "$2" ] && set_data $@
+    test_writable_dir "$2" && set_data $@
 }
 
 update_data

@@ -11,7 +11,14 @@ A 3-piece set of scripts originally intended to host a Twitch Plays style bot on
 
 ## Usage
 
-To configure the program, run config.sh and completely fill out the information for each category.
+To configure the program, run the following commands:
+
+```
+cd /path/to/project/root/
+./config.sh
+```
+
+Once the configuration script is running, completely fill out all information for each category.
         
 To start, execute run.sh (use the script's -h option for details, or run without parameters for default behavior). For performance reasons, the resulting emulator window is not fullscreen, and should be positioned in the spot captured by ffmpeg (default is in the top left corner of the screen).
 
