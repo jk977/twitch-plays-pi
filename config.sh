@@ -8,6 +8,11 @@ mkdirs_if_absent() {
 
 mkdirs_if_absent shell/data bot/data
 
+if [ -z "$(which whiptail)" ]; then
+	echo "Error: Whiptail must be installed to run config.sh"
+    exit 1
+fi
+
 . shell/settings.sh
 . shell/menu/main.sh
 

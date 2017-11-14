@@ -5,12 +5,13 @@ A 3-piece set of scripts originally intended to host a Twitch Plays style bot on
 ## Requirements
 
 * Python 3
+* [whiptail](https://linux.die.net/man/1/whiptail]) (used by config.sh)
 * FCEUX 2.1.2 or higher (for built-in Lua)
 * ffmpeg with libx264 and libmp3lame enabled
 
 ## Usage
 
-Before starting the program, run config.sh and completely fill out the information for each category.
+To configure the program, run config.sh and completely fill out the information for each category.
         
 To start, execute run.sh (use the script's -h option for details, or run without parameters for default behavior). For performance reasons, the resulting emulator window is not fullscreen, and should be positioned in the spot captured by ffmpeg (default is in the top left corner of the screen).
 
