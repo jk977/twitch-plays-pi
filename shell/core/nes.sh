@@ -6,6 +6,12 @@
 dir="$( dirname $0 )"
 . "$dir/../settings.sh"
 
+if [ "$loglevel" -gt 0 ]; then
+    logdest="$logdir/nes.log"
+else
+    logdest=/dev/null
+fi
+
 if [ "$audiosrc" = $gameaudio ] >/dev/null; then
     soundargs="--sound 1 --soundrate 44100 --soundq 1 --soundbufsize 200"
 else
@@ -18,4 +24,4 @@ fceux "$emugame" \
     --loadlua "$emudir/$emuname" \
     --xscale 1 \
     --yscale 1 \
-    2>&1 | tee -a "$logdir/nes.log"
+    2>&1 | tee -a "$logdest"
