@@ -7,9 +7,10 @@ change_stream_uri() {
     prompt="Enter stream URI.\nAssumes local path if no protocol specified."
 
     show_window \
+        $submenu_buttons \
         --title "Stream URI" \
         --inputbox "$prompt" \
-        $(height) $(width) \
+        $(dimensions) \
         "$streamuri"
 
     if [ "$?" -eq 0 ]; then
@@ -21,9 +22,10 @@ change_stream_dest() {
     prompt="Enter stream endpoint (e.g., filename, RTMP key).\n\nIf streaming to Twitch, enter the RTMP key found in your account's dashboard. It should begin with \"live\".\nIf streaming to a file, make sure the extension matches the output format in shell/core/stream.sh"
 
     show_window \
+        $submenu_buttons \
         --title "Stream Destination" \
         --inputbox "$prompt" \
-        $(height) $(width) \
+        $(dimensions) \
         "$streamdest"
 
     if [ "$?" -eq 0 ]; then
@@ -41,9 +43,10 @@ change_stream_loop() {
     prompt="Enable stream looping? This will make the stream restart instead of terminating once the end of the stream audio file is reached. If the stream uses emulator audio, setting this option does nothing."
 
     whiptail \
+        $submenu_buttons \
         --title "Stream Loop" $default \
         --yesno "$prompt" \
-        $(height) $(width)
+        $(dimensions)
 
     if [ "$?" -eq 0 ]; then
         set_data streamloops "true"
@@ -62,9 +65,10 @@ change_stream_signal() {
     prompt="Enable end-of-stream signal? This will send a SIGALRM to the Twitch bot's process every time the stream restarts."
 
     whiptail \
+        $submenu_buttons \
         --title "Stream Signal" $default \
         --yesno "$prompt" \
-        $(height) $(width)
+        $(dimensions)
 
     if [ "$?" -eq 0 ]; then
         set_data streamsig "true"
@@ -78,9 +82,10 @@ stream_menu() {
 
     while [ "$status" -eq 0 ]; do
         show_window \
+            $submenu_buttons \
             --title "Stream" --notags \
             --menu "Configure which option?" \
-            $(height) $(width) 5 \
+            $(dimensions) 5 \
             1 "Audio" \
             2 "Looping" \
             3 "End-of-Stream Signal" \
@@ -109,4 +114,3 @@ stream_menu() {
 
     main_menu
 }
-

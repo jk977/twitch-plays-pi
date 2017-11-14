@@ -12,9 +12,10 @@ change_audio_dir() {
     prompt="Enter path to stream's audio file:"
 
     show_window \
+        $submenu_buttons \
         --title "Audio Directory" \
         --inputbox "$prompt" \
-        $(height) $(width) \
+        $(dimensions) \
         "$default"
 
     if [ "$?" -eq 0 ]; then
@@ -49,9 +50,10 @@ audio_menu() {
     esac
 
     show_window \
+        $submenu_buttons \
         --title "Stream Audio" \
         --radiolist "$prompt" \
-        $(height) $(width) 3 \
+        $(dimensions) 3 \
         1 "$filetag" $filestat \
         2 "Game Audio" $gamestat \
         3 "None" $nonestat

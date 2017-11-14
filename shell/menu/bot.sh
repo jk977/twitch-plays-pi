@@ -31,9 +31,10 @@ change_nick() {
     current="$(read_file nick)"
 
     show_window \
+        $submenu_buttons \
         --title "Bot Username" \
         --inputbox "Enter username:" \
-        $(height) $(width) \
+        $(dimensions) \
         "$current"
 
     write_result nick
@@ -43,9 +44,10 @@ change_pass() {
     current="$(read_file pass)"
 
     show_window \
+        $submenu_buttons \
         --title "Bot Password" \
         --inputbox "Enter password.\nPrefix the token with \"oauth:\" if using an OAuth token:" \
-        $(height) $(width) \
+        $(dimensions) \
         "$current"
 
     write_result pass
@@ -55,9 +57,10 @@ change_host() {
     current="$(read_file host)"
 
     show_window \
+        $submenu_buttons \
         --title "Bot Host" \
         --inputbox "Enter host username. The bot will listen for inputs on the host's chat:" \
-        $(height) $(width) \
+        $(dimensions) \
         "$current"
 
     write_result host
@@ -67,9 +70,10 @@ change_owner() {
     current="$(read_file owner)"
 
     show_window \
+        $submenu_buttons \
         --title "Bot Owner" \
         --inputbox "Enter owner username:" \
-        $(height) $(width) \
+        $(dimensions) \
         "$current"
 
     write_result owner
@@ -81,9 +85,10 @@ bot_menu() {
 
     while [ "$status" -eq 0 ]; do
         show_window \
+            $submenu_buttons \
             --title "Bot" --notags \
             --menu "$prompt" \
-            $(height) $(width) 4 \
+            $(dimensions) 4 \
             1 "Username" \
             2 "Password" \
             3 "Host" \

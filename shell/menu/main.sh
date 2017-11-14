@@ -6,9 +6,10 @@
 
 clear_cache() {
     whiptail \
+        $submenu_buttons \
         --title "Clear Cache?" --defaultno \
         --yesno "This will remove all of the program's stored information. Continue?" \
-        $(height) $(width)
+        $(dimensions)
     status=$?
 
     if [ "$status" -eq 0 ]; then
@@ -22,9 +23,10 @@ clear_cache() {
 
 main_menu() {
     show_window \
+        $main_menu_buttons \
         --title "Main Menu" --notags \
         --menu "What do you want to change?" \
-        $(height) $(width) 5 \
+        $(dimensions) 5 \
         1 "Bot" \
         2 "Emulator" \
         3 "Stream" \
