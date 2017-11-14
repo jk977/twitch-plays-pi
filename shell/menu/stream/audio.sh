@@ -3,7 +3,7 @@
 . shell/menu/common.sh
 
 change_audio_dir() {
-    if test_readable_file "$audiosrc" || [ -z "$audiosrc" ]; then
+    if test_readable_file "$audiosrc"; then
         default="$audiosrc"
     else
         default="$basedir"
@@ -18,18 +18,9 @@ change_audio_dir() {
         "$default"
 
     if [ "$?" -eq 0 ]; then
-        set_optional_file audiosrc "$(get_result)"
+        set_file audiosrc "$(get_result)"
         check_file_error
     fi
-}
-
-shorten_path() {
-    # Replaces /home/user with ~ in path
-    # $1: Absolute path to a file
-
-    pushd "$( dirname "$1" )" >/dev/null
-    echo "$( dirs +0 )"
-    popd >/dev/null
 }
 
 audio_menu() {
@@ -40,7 +31,7 @@ audio_menu() {
     nonestat="OFF"
 
     if test_readable_file "$audiosrc"; then
-        filetag="$( shorten_path "$audiosrc" )"
+        filetag="$filetag ($audiosrc)"
     fi
 
     case "$audiosrc" in

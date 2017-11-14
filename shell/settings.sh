@@ -72,11 +72,6 @@ set_file() {
      test_readable_file "$2" && set_data "$1" "$2"
 }
 
-set_optional_file() {
-    # same as set_file, except $2 can be empty
-    [ -z "$2" ] || test_readable_file "$2" && set_data "$1" "$2"
-}
-
 set_directory() {
     # checks to see if $2 is a writable directory, and assigns to
     # variable named by $1 if true
