@@ -4,8 +4,8 @@
 common_included=true
 tmpfile=".output"
 
-menu_buttons="--yes-button yes --no-button no --ok-button Ok --cancel-button Quit"
-submenu_buttons="--yes-button yes --no-button no --ok-button Ok --cancel-button Back"
+menu_buttons="--yes-button Yes --no-button No --ok-button Ok --cancel-button Quit"
+submenu_buttons="--yes-button Yes --no-button No --ok-button Ok --cancel-button Back"
 
 width() {
     tput cols
