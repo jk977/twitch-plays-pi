@@ -4,7 +4,7 @@
 common_included=true
 tmpfile=".output"
 
-main_menu_buttons="--yes-button yes --no-button no --ok-button Ok --cancel-button Quit"
+menu_buttons="--yes-button yes --no-button no --ok-button Ok --cancel-button Quit"
 submenu_buttons="--yes-button yes --no-button no --ok-button Ok --cancel-button Back"
 
 width() {
@@ -30,6 +30,14 @@ get_default_dir() {
 
 show_window() {
     whiptail "$@" 2>$tmpfile
+}
+
+show_submenu() {
+    show_window $submenu_buttons "$@"
+}
+
+show_menu() {
+    show_window $menu_buttons "$@"
 }
 
 show_error() {

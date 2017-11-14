@@ -11,8 +11,7 @@ change_audio_dir() {
 
     prompt="Enter path to stream's audio file:"
 
-    show_window \
-        $submenu_buttons \
+    show_submenu \
         --title "Audio Directory" \
         --inputbox "$prompt" \
         $(dimensions) \
@@ -49,8 +48,7 @@ audio_menu() {
             ;;
     esac
 
-    show_window \
-        $submenu_buttons \
+    show_submenu \
         --title "Stream Audio" \
         --radiolist "$prompt" \
         $(dimensions) 3 \

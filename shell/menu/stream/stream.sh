@@ -6,8 +6,7 @@
 change_stream_uri() {
     prompt="Enter stream URI.\nAssumes local path if no protocol specified."
 
-    show_window \
-        $submenu_buttons \
+    show_submenu \
         --title "Stream URI" \
         --inputbox "$prompt" \
         $(dimensions) \
@@ -21,8 +20,7 @@ change_stream_uri() {
 change_stream_dest() {
     prompt="Enter stream endpoint (e.g., filename, RTMP key).\n\nIf streaming to Twitch, enter the RTMP key found in your account's dashboard. It should begin with \"live\".\nIf streaming to a file, make sure the extension matches the output format in shell/core/stream.sh"
 
-    show_window \
-        $submenu_buttons \
+    show_submenu \
         --title "Stream Destination" \
         --inputbox "$prompt" \
         $(dimensions) \
@@ -42,8 +40,7 @@ change_stream_loop() {
 
     prompt="Enable stream looping? This will make the stream restart instead of terminating once the end of the stream audio file is reached. If the stream uses emulator audio, setting this option does nothing."
 
-    whiptail \
-        $submenu_buttons \
+    show_submenu \
         --title "Stream Loop" $default \
         --yesno "$prompt" \
         $(dimensions)
@@ -64,8 +61,7 @@ change_stream_signal() {
 
     prompt="Enable end-of-stream signal? This will send a SIGALRM to the Twitch bot's process every time the stream restarts."
 
-    whiptail \
-        $submenu_buttons \
+    show_submenu \
         --title "Stream Signal" $default \
         --yesno "$prompt" \
         $(dimensions)
@@ -81,8 +77,7 @@ stream_menu() {
     status=0
 
     while [ "$status" -eq 0 ]; do
-        show_window \
-            $submenu_buttons \
+        show_submenu \
             --title "Stream" --notags \
             --menu "Configure which option?" \
             $(dimensions) 5 \

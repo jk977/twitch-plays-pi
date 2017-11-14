@@ -5,8 +5,7 @@
 . shell/menu/stream/stream.sh
 
 clear_cache() {
-    whiptail \
-        $submenu_buttons \
+    show_submenu \
         --title "Clear Cache?" --defaultno \
         --yesno "This will remove all of the program's stored information. Continue?" \
         $(dimensions)
@@ -22,8 +21,7 @@ clear_cache() {
 }
 
 main_menu() {
-    show_window \
-        $main_menu_buttons \
+    show_menu \
         --title "Main Menu" --notags \
         --menu "What do you want to change?" \
         $(dimensions) 5 \

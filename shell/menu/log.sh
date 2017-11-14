@@ -5,8 +5,7 @@
 change_log_path() {
     default="$(get_default_dir "$logdir")"
 
-    show_window \
-        $submenu_buttons \
+    show_submenu \
         --title "Log Path" \
         --inputbox "Enter path to save log files in:" \
         $(dimensions) \
@@ -38,8 +37,7 @@ change_log_level() {
             ;;
     esac
 
-    show_window \
-        $submenu_buttons \
+    show_submenu \
         --title "Log Level" \
         --radiolist "Set logging level. Current log directory:\n$logdir" \
         $(dimensions) 2 \
@@ -60,8 +58,7 @@ log_menu() {
     status=0
 
     while [ "$status" -eq 0 ]; do
-        show_window \
-            $submenu_buttons \
+        show_submenu \
             --title "Logging" --notags \
             --menu "Configure which option?" \
             $(dimensions) 2 \

@@ -5,8 +5,7 @@
 change_rom_dir() {
     default=$(get_default_dir "$emurom")
 
-    show_window \
-        $submenu_buttons \
+    show_submenu \
         --title "ROM Path" \
         --inputbox "Enter path to the game (must be compatible with the emulator):" \
         $(dimensions) \
@@ -23,8 +22,7 @@ emulator_menu() {
     status=0
 
     while [ "$status" -eq 0 ]; do
-        show_window \
-            $submenu_buttons \
+        show_submenu \
             --title "Emulator" --notags \
             --menu "$prompt" \
             $(dimensions) 2 \
