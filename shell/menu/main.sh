@@ -1,4 +1,5 @@
 . shell/menu/common.sh
+. shell/menu/bot.sh
 . shell/menu/emulator.sh
 . shell/menu/log.sh
 . shell/menu/stream/stream.sh
@@ -7,20 +8,24 @@ main_menu() {
     show_window \
         --title "Main Menu" --notags \
         --menu "What do you want to change?" \
-        $(height) $(width) 3 \
-        1 "Emulator" \
-        2 "Stream" \
-        3 "Logging"
+        $(height) $(width) 4 \
+        1 "Bot" \
+        2 "Emulator" \
+        3 "Stream" \
+        4 "Logging"
     status=$?
 
     case $(get_result) in
         1)
-            emulator_menu
+            bot_menu
             ;;
         2)
-            stream_menu
+            emulator_menu
             ;;
         3)
+            stream_menu
+            ;;
+        4)
             log_menu
             ;;
     esac

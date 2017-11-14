@@ -13,18 +13,18 @@ class TwitchChat(Chat):
     port = 6667
     rate = 1.5
 
-    def __init__(self, username, oauth, channel):
+    def __init__(self, username, passwd, channel):
         '''
         Creates IRC client for Twitch chat at specified channel.
         :param username: Username to log in with.
-        :param oauth: OAuth token to authenticate with.
+        :param passwd: Password to authenticate with.
         :param channel: Channel to connect to.
         '''
         if not channel.startswith('#'):
             channel = '#' + channel
             
         self._nick = username
-        self._pass = 'oauth:' + oauth
+        self._pass = passwd
         self._chan = channel
         
         self._sock = None
