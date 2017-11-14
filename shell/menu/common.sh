@@ -30,7 +30,7 @@ show_error() {
 
 check_file_error() {
     if [ "$?" -ne 0 ]; then
-        show_error "Invalid file entered. No changes made."
+        show_error "Invalid file or directory entered. No changes made."
     fi
 }
 

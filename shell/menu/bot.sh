@@ -44,7 +44,7 @@ change_pass() {
 
     show_window \
         --title "Bot Password" \
-        --inputbox "Enter password:" \
+        --inputbox "Enter password.\nPrefix the token with \"oauth:\" if using an OAuth token:" \
         $(height) $(width) \
         "$current"
 
