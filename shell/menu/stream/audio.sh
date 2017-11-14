@@ -47,7 +47,7 @@ audio_menu() {
     esac
 
     show_window \
-        --title "Audio" --notags \
+        --title "Stream Audio" --notags \
         --radiolist "Choose audio source:" \
         $(height) $(width) 3 \
         1 "$filetag" $filestat \

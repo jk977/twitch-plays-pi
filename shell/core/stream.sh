@@ -24,8 +24,12 @@ while :; do
         -shortest -f avi "$stream" 2>&1 | tee -a "$logdir/stream.log"
 
     if $streamsig; then
-        kill -s ALRM $( pidof -x $botname )
-    else
+        # send SIGALRM to bot process
+        bot_pid=$( pidof -x $botname 2>/dev/null )
+        [ -n "$bot_pid" ] && kill -s ALRM "$bot_pid"
+    fi
+
+    if ! $streamloops; then
         exit 0
     fi
 done
