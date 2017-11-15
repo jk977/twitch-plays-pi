@@ -66,37 +66,38 @@ while getopts "hqbnsd" opt; do
     esac
 done
 
-if ! $dryrun; then
-    # run each script indicated by flags in $scripts.
-    # PIDs are saved in .{name}id if manual killing necessary
-
-    signals="INT TERM"
-
-    if getflag $scripts $bot; then
-        echo "Starting bot script"
-        start_script "$scriptdir/bot.sh" &
-        echo $! > .botid
-    fi
-
-    if getflag $scripts $nes; then
-        echo "Starting NES script"
-        start_script "$scriptdir/nes.sh" &
-        echo $! > .nesid
-    fi
-
-    if getflag $scripts $stream; then
-        echo "Starting stream script"
-        start_script "$scriptdir/stream.sh" &
-        echo $! > .streamid
-    fi
-
-    trap "exit" $signals
-    trap "kill 0" EXIT
-    wait
-else
+if $dryrun; then
     echo "Output destination: $out_dest"
     echo "Enabled scripts:"
     getflag $scripts $bot && printf "\t* Bot\n"
     getflag $scripts $nes && printf "\t* NES\n"
     getflag $scripts $stream && printf "\t* Stream\n"
+    exit 0
 fi
+
+# run each script indicated by flags in $scripts.
+# PIDs are saved in .{name}id if manual killing necessary
+
+signals="INT TERM"
+
+if getflag $scripts $bot; then
+    echo "Starting bot script"
+    start_script "$scriptdir/bot.sh" &
+    echo $! > .botid
+fi
+
+if getflag $scripts $nes; then
+    echo "Starting NES script"
+    start_script "$scriptdir/nes.sh" &
+    echo $! > .nesid
+fi
+
+if getflag $scripts $stream; then
+    echo "Starting stream script"
+    start_script "$scriptdir/stream.sh" &
+    echo $! > .streamid
+fi
+
+trap "exit" $signals
+trap "kill 0" EXIT
+wait
