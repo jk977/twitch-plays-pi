@@ -74,6 +74,8 @@ update_data() {
         load_and_warn streamuri
         load_and_warn streamdest
     fi
+
+    echo # for formatting
 }
 
 set_data() {

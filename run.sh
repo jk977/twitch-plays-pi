@@ -84,19 +84,20 @@ if ! $dryrun; then
     if getflag $scripts $nes; then
         echo "Starting NES script"
         start_script "$scriptdir/nes.sh" &
-        echo "$!" > .nesid
+        echo $! > .nesid
     fi
 
     if getflag $scripts $stream; then
         echo "Starting stream script"
         start_script "$scriptdir/stream.sh" &
-        echo "$!" > .streamid
+        echo $! > .streamid
     fi
 
     trap "exit" $signals
     trap "kill 0" EXIT
     wait
 else
+    echo "Output destination: $out_dest"
     echo "Enabled scripts:"
     getflag $scripts $bot && printf "\t* Bot\n"
     getflag $scripts $nes && printf "\t* NES\n"
