@@ -39,7 +39,7 @@ while getopts "ht:qbnsd" opt; do
 			    -b      Start the bot script.
 			    -n      Start the NES script.
 			    -s      Start the streaming script.
-                -q      Suppress script outputs (quiet).
+			    -q      Suppress script outputs (quiet).
 			    -d      Debug (don't execute core scripts, dump status).
 
 			If any of [-bns] are used, only the specified scripts will run.
