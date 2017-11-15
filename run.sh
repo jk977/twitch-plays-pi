@@ -2,6 +2,7 @@
 # Runs the 3 twitch-plays scripts concurrently. Configurable options are listed in the help command.
 
 . shell/settings.sh
+cd "$basedir"
 
 getflag() {
     # $1: Masked number to check for flag

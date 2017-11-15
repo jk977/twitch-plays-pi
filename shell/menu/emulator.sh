@@ -1,6 +1,7 @@
 #!/bin/sh
 . shell/settings.sh
-. shell/menu/common.sh
+. "$shldir/utils/tests.sh"
+. "$shldir/menu/common.sh"
 
 change_rom_dir() {
     default=$(get_default_dir "$emurom")
@@ -11,7 +12,7 @@ change_rom_dir() {
         $(dimensions) \
         "$default"
 
-    if [ "$?" -eq 0 ]; then
+    if test_zero "$?"; then
         set_file emurom "$(get_result)"
         check_file_error
     fi
@@ -21,7 +22,7 @@ emulator_menu() {
     prompt="Configure which option?"
     status=0
 
-    while [ "$status" -eq 0 ]; do
+    while test_zero "$status"; do
         show_submenu \
             --title "Emulator" --notags \
             --menu "$prompt" \

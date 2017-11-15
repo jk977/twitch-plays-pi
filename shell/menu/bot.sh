@@ -1,5 +1,6 @@
 . shell/settings.sh
-. shell/menu/common.sh
+. "$shldir/utils/tests.sh"
+. "$shldir/menu/common.sh"
 
 config_path="$basedir/bot/data/"
 
@@ -22,7 +23,7 @@ write_result() {
     # Writes result of input window to specified bot file if window was successful.
     # $1: Bot file name
 
-    if [ "$?" -eq 0 ]; then
+    if test_zero "$?"; then
         write_file "$1" "$( get_result )"
     fi
 }
@@ -79,7 +80,7 @@ bot_menu() {
     prompt="Select an option to configure.\nThese are used in the bot's interactions with the host site's API."
     status=0
 
-    while [ "$status" -eq 0 ]; do
+    while test_zero "$status"; do
         show_submenu \
             --title "Bot" --notags \
             --menu "$prompt" \

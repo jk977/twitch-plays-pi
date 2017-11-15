@@ -1,6 +1,7 @@
 #!/bin/sh
 . shell/settings.sh
-. shell/menu/common.sh
+. "$shldir/utils/tests.sh"
+. "$shldir/menu/common.sh"
 
 change_audio_dir() {
     if test_readable_file "$audiosrc"; then
@@ -17,7 +18,7 @@ change_audio_dir() {
         $(dimensions) \
         "$default"
 
-    if [ "$?" -eq 0 ]; then
+    if test_zero "$?"; then
         set_file audiosrc "$(get_result)"
         check_file_error
     fi
@@ -60,7 +61,7 @@ audio_menu() {
         1)
             change_audio_dir
 
-            if [ "$?" -ne 0 ]; then
+            if ! test_zero "$?"; then
                 audiosrc="$oldsrc" # restores old value if invalid input
             fi
             ;;

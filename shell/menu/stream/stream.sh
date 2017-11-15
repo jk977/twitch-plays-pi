@@ -1,7 +1,8 @@
 #!/bin/sh
 . shell/settings.sh
-. shell/menu/common.sh
-. shell/menu/stream/audio.sh
+. "$shldir/utils/tests.sh"
+. "$shldir/menu/common.sh"
+. "$shldir/menu/stream/audio.sh"
 
 change_stream_uri() {
     prompt="Enter stream URI.\nAssumes local path if no protocol specified."
@@ -12,7 +13,7 @@ change_stream_uri() {
         $(dimensions) \
         "$streamuri"
 
-    if [ "$?" -eq 0 ]; then
+    if test_zero "$?"; then
         set_data streamuri "$(get_result)"
     fi
 }

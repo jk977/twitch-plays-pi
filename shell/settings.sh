@@ -9,21 +9,7 @@ settings_included=true
 gameaudio=2
 noaudio=3
 
-if [ -n "$basedir" ]; then
-    # get absolute path to data folder if $basedir is known
-    datadir="$basedir/shell/data/"
-else
-    # note that this script doesn't function properly if called from
-    # any directory higher than project-root/ or shell/, but
-    # it should work as long as you run the configuration script
-    # before trying anything else
-
-    # would be easier to implement a sound solution with /bin/bash
-
-    datadir=$( find . -type d -name data | grep -v bot )
-    [ -z "$datadir" ] && datadir="./shell/data/"
-fi
-
+datadir="shell/data/"
 . "$datadir/../utils/tests.sh"
 
 botname="bot.py"

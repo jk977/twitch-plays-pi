@@ -1,6 +1,7 @@
 #!/bin/sh
 . shell/settings.sh
-. shell/menu/common.sh
+. "$shldir/utils/tests.sh"
+. "$shldir/menu/common.sh"
 
 change_log_path() {
     default="$(get_default_dir "$logdir")"
@@ -11,14 +12,14 @@ change_log_path() {
         $(dimensions) \
         "$default"
 
-    if [ "$?" -eq 0 ]; then
+    if test_zero "$?"; then
         set_directory logdir "$(get_result)"
         check_file_error
     fi
 }
 
 change_log_level() {
-    if ! [ -e "$logdir" ]; then
+    if ! test_writable_dir "$logdir"; then
         show_error "Log directory not found. Logging is disabled." 
         return 1
     fi
@@ -57,7 +58,7 @@ change_log_level() {
 log_menu() {
     status=0
 
-    while [ "$status" -eq 0 ]; do
+    while test_zero "$status"; do
         show_submenu \
             --title "Logging" --notags \
             --menu "Configure which option?" \

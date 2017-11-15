@@ -1,8 +1,11 @@
-. shell/menu/common.sh
-. shell/menu/bot.sh
-. shell/menu/emulator.sh
-. shell/menu/log.sh
-. shell/menu/stream/stream.sh
+. shell/settings.sh
+. "$shldir/utils/tests.sh"
+
+. "$shldir/menu/bot.sh"
+. "$shldir/menu/emulator.sh"
+. "$shldir/menu/log.sh"
+. "$shldir/menu/stream/stream.sh"
+. "$shldir/menu/common.sh"
 
 clear_cache() {
     show_submenu \
@@ -11,7 +14,7 @@ clear_cache() {
         $(dimensions)
     status=$?
 
-    if [ "$status" -eq 0 ]; then
+    if test_zero "$status"; then
         rm "$basedir/bot/data/"*
         rm "$shldir/data/"*
         whiptail --msgbox "Clear successful!" $(height) $(width)

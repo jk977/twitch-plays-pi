@@ -1,6 +1,7 @@
 #!/bin/sh
 
 cd "$( dirname $0 )" # in case script is ran from a different directory
+. shell/utils/tests.sh
 
 mkdirs_if_absent() {
     for d in $@; do
@@ -8,7 +9,7 @@ mkdirs_if_absent() {
     done
 }
 
-if [ -z "$(which whiptail)" ]; then
+if test_empty "$(which whiptail)"; then
     echo "Error: Whiptail must be installed to run config.sh" >&2
     exit 1
 fi
