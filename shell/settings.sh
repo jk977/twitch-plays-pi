@@ -20,7 +20,7 @@ get_log_dest() {
     # $1: Name of log file
 
     if test_empty "$1" || test_empty "$logdir" || test_zero "$loglevel"; then
-        echo /dev/null/
+        echo /dev/null
     else
         echo "$logdir/$1"
     fi
