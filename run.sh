@@ -12,7 +12,7 @@ stream=4
 scriptdir="shell/core/"
 scripts=0               # mask of scripts to run; if 0, all will run
 dryrun=false            # whether or not to actually execute the target scripts
-out_dest=/dev/stdout    # destination of script output
+out_dest=/dev/null      # destination of script output
 
 get_flag() {
     # $1: Flag to check mask for
@@ -26,7 +26,7 @@ start_script() {
     "$1" >$out_dest 2>&1
 }
 
-while getopts "hqbnsd" opt; do
+while getopts "hvbnsd" opt; do
     case $opt in
         h)
             # whitespace type is important here
@@ -38,7 +38,7 @@ while getopts "hqbnsd" opt; do
 			    -b      Start the bot script.
 			    -n      Start the NES script.
 			    -s      Start the streaming script.
-			    -q      Suppress script outputs (quiet).
+                -v      Don't suppress script outputs (verbose).
 			    -d      Debug (don't execute core scripts, dump status).
 
 			If any of [-bns] are used, only the specified scripts will run.
@@ -47,8 +47,8 @@ while getopts "hqbnsd" opt; do
 
             exit 0
             ;;
-        q)
-            out_dest=/dev/null
+        v)
+            out_dest=/dev/stdout
             ;;
         b)
             scripts=$((scripts | bot))
@@ -78,23 +78,27 @@ fi
 # PIDs are saved in .{name}id if manual killing necessary
 
 if get_flag $bot; then
-    echo "Starting bot script"
+    echo "Starting bot script..."
     start_script "$scriptdir/bot.sh" &
     echo $! > .botid
 fi
 
 if get_flag $nes; then
-    echo "Starting NES script"
+    echo "Starting NES script..."
     start_script "$scriptdir/nes.sh" &
     echo $! > .nesid
 fi
 
 if get_flag $stream; then
-    echo "Starting stream script"
+    echo "Starting stream script..."
     start_script "$scriptdir/stream.sh" &
     echo $! > .streamid
 fi
 
+# in case a signal is sent before user presses enter
 trap "exit" INT TERM
 trap "kill 0" EXIT
-wait
+
+echo "Press enter to stop processes"
+read u_input
+kill 0
