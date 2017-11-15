@@ -20,29 +20,24 @@ else
 
     # would be easier to implement a sound solution with /bin/bash
 
-    result=$( find . -type d -name data | grep -v bot )
-
-    if [ -n "$result" ]; then
-        datadir="$result"
-    else
-        datadir="./shell/data/" # trust working directory is project root
-    fi
+    datadir=$( find . -type d -name data | grep -v bot )
+    [ -z "$datadir" ] && datadir="./shell/data/"
 fi
+
+. "$datadir/../utils/tests.sh"
 
 botname="bot.py"
 streamname="stream.sh"
 emuname="emu.lua"
 
-test_empty() {
-    [ -z "$1" ]
-}
+get_log_dest() {
+    # $1: Name of log file
 
-test_readable_file() {
-    ! [ -d "$1" ] && [ -r "$1" ]
-}
-
-test_writable_dir() {
-    [ -d "$1" ] && [ -w "$1" ]
+    if test_empty "$1" || test_empty "$logdir" || test_zero "$loglevel"; then
+        echo /dev/null/
+    else
+        echo "$logdir/$1"
+    fi
 }
 
 load_data() {
@@ -51,13 +46,13 @@ load_data() {
     test_empty "$1" && exit 1
     contents=$( cat "$datadir/$1.dat" 2>/dev/null )
     eval "$1=$contents"
-    [ -n "$contents" ] # return success if $contents isn't empty
+    ! test_empty "$contents" # return success if $contents isn't empty
 }
 
 load_and_warn() {
     load_data $@
 
-    if [ "$?" -ne 0 ]; then
+    if ! test_zero "$?"; then
         echo "Warning: Variable \"$1\" is empty (searched directory $datadir)." >&2
     else
         echo "Variable \"$1\" is set."
@@ -76,7 +71,7 @@ load_defaults() {
 }
 
 update_data() {
-    if [ "$#" -ne 0 ]; then
+    if ! test_zero "$#"; then
         for var in $@; do
             load_and_warn $var
         done

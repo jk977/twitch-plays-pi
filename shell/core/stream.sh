@@ -2,20 +2,15 @@
 # Starts streaming to Twitch.
 
 . "$( dirname $0 )/../settings.sh"
+. "$shldir/utils/tests.sh"
 
 send_alarm() {
     # sends alarm to bot process if option is enabled
     bot_pid=$( pidof -x $botname 2>/dev/null )
-    [ -n "$bot_pid" ] && kill -s ALRM "$bot_pid"
+    ! test_empty "$bot_pid" && kill -s ALRM "$bot_pid"
 }
 
-if [ "$loglevel" -gt 0 ]; then
-    logdest="$logdir/stream.log"
-else
-    logdest=/dev/null
-fi
-
-if [ -r "$audiosrc" ]; then
+if test_readable_file "$audiosrc"; then
     # use audio from file
     audioargs="-i $streamaudio -c:a copy -ar 44100 -ac 2"
 elif [ "$audiosrc" -eq $gameaudio ]; then
@@ -25,6 +20,7 @@ else
     audioargs=
 fi
 
+logdest=$(get_log_dest stream.log)
 stream="${streamuri}${streamkey}"
 
 while :; do

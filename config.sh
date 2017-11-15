@@ -1,6 +1,5 @@
 #!/bin/sh
 
-olddir="$(pwd)"
 cd "$( dirname $0 )" # in case script is ran from a different directory
 
 mkdirs_if_absent() {
@@ -22,5 +21,3 @@ mkdirs_if_absent shell/data bot/data
 basedir="$(pwd)"
 set_data basedir "$basedir"
 main_menu
-
-cd "$olddir" # restore old working directory

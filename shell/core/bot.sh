@@ -2,18 +2,14 @@
 # Starts twitch bot to read chat inputs.
 
 . "$( dirname $0 )/../settings.sh"
-
-if [ "$loglevel" -gt 0 ] 2>/dev/null; then
-    logdest="$logdir/bot.log"
-else
-    logdest=/dev/null
-fi
+. "$shldir/utils/tests.sh"
 
 cd "$botdir" # for PYTHONPATH reasons
+logdest=$(get_log_dest bot.log)
 status=0
 
-# lets bot be restarted by calling sys.exit(0)
-while [ $status -eq 0 ]; do
+# lets bot be restarted by calling sys.exit(0) in python script
+while test_zero "$status"; do
     echo "Starting chat bot"
     python3 -u "$botname" 2>&1 | tee -a "$logdest"
     status=$?
