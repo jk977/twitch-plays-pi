@@ -12,6 +12,9 @@ roms/
 data/
 logs/
 .output
+.botid
+.nesid
+.streamid
 *.dat
 *.json
 

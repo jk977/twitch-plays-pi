@@ -12,6 +12,11 @@ getflag() {
     [ $(( $1 & $2 )) -ne 0 ] || [ $1 -eq 0 ]
 }
 
+start_script() {
+    # $1: script path
+    "$1" >$out_dest 2>&1
+}
+
 # script flags
 bot=1
 nes=2
@@ -20,20 +25,21 @@ stream=4
 scriptdir=$( find . -type d -name core )
 scripts=0               # mask of scripts to run; if 0, all will run
 dryrun=false            # whether or not to actually execute the target scripts
+out_dest=/dev/stdout    # destination of script output
 
-while getopts "ht:bnsd" opt; do
+while getopts "ht:qbnsd" opt; do
     case $opt in
         h)
             # whitespace type is important here
             # leading tabs are ignored but not leading spaces
             cat <<-EOF
-			Usage: ./run.sh [-h] [-t TERMINAL] [-bns] [-d]
+			Usage: ./run.sh [-h] [-bns] [-q] [-d]
 			Options:
 			    -h      Show this help message and exit.
-			    -t      Specify a terminal to use for scripts.
 			    -b      Start the bot script.
 			    -n      Start the NES script.
 			    -s      Start the streaming script.
+                -q      Suppress script outputs (quiet).
 			    -d      Debug (don't execute core scripts, dump status).
 
 			If any of [-bns] are used, only the specified scripts will run.
@@ -44,6 +50,9 @@ while getopts "ht:bnsd" opt; do
             ;;
         t)
             myterm=$OPTARG
+            ;;
+        q)
+            out_dest=/dev/null
             ;;
         b)
             scripts=$((scripts | bot))
@@ -62,28 +71,31 @@ done
 
 if ! $dryrun; then
     # run each script indicated by flags in $scripts.
+    # PIDs are saved in .{name}id if manual killing necessary
+
+    signals="INT TERM"
 
     if getflag $scripts $bot; then
         echo "Starting bot script"
-        "$scriptdir/bot.sh" &
-        botid=$!
+        start_script "$scriptdir/bot.sh" &
+        echo $! > .botid
     fi
 
     if getflag $scripts $nes; then
         echo "Starting NES script"
-        "$scriptdir/nes.sh" &
-        nesid=$!
+        start_script "$scriptdir/nes.sh" &
+        echo "$!" > .nesid
     fi
 
     if getflag $scripts $stream; then
         echo "Starting stream script"
-        "$scriptdir/stream.sh" &
-        streamid=$!
+        start_script "$scriptdir/stream.sh" &
+        echo "$!" > .streamid
     fi
 
-    if [ -n "$botid" ] || [ -n "$nesid" ] || [ -n "$streamid" ]; then
-        wait
-    fi
+    trap "exit" $signals
+    trap "kill 0" EXIT
+    wait
 else
     echo "Enabled scripts:"
     getflag $scripts $bot && printf "\t* Bot\n"

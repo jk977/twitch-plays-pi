@@ -2,6 +2,9 @@
 
 . "$( dirname $0 )/../settings.sh"
 
+trap "exit" INT TERM
+trap "echo Exiting nes.sh; kill 0" EXIT
+
 logdest=$(get_log_dest nes.log)
 
 if [ "$audiosrc" = $gameaudio ] >/dev/null; then

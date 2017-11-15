@@ -4,6 +4,9 @@
 . "$( dirname $0 )/../settings.sh"
 . "$shldir/utils/tests.sh"
 
+trap "exit" INT TERM
+trap "echo Exiting stream.sh; kill 0" EXIT
+
 send_alarm() {
     # sends alarm to bot process if option is enabled
     bot_pid=$( pidof -x $botname 2>/dev/null )

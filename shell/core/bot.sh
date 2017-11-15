@@ -4,6 +4,9 @@
 . "$( dirname $0 )/../settings.sh"
 . "$shldir/utils/tests.sh"
 
+trap "exit" INT TERM
+trap "echo Exiting bot.sh; kill 0" EXIT
+
 cd "$botdir" # for PYTHONPATH reasons
 logdest=$(get_log_dest bot.log)
 status=0
