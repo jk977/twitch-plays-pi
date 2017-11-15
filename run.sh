@@ -18,10 +18,8 @@ nes=2
 stream=4
 
 scriptdir=$( find . -type d -name core )
-
 scripts=0               # mask of scripts to run; if 0, all will run
 dryrun=false            # whether or not to actually execute the target scripts
-myterm=gnome-terminal   # terminal to use for executing scripts
 
 while getopts "ht:bnsd" opt; do
     case $opt in
@@ -67,20 +65,19 @@ if ! $dryrun; then
 
     if getflag $scripts $bot; then
         echo "Starting bot script"
-        $myterm -e "$scriptdir/bot.sh"
+        "$scriptdir/bot.sh" &
     fi
 
     if getflag $scripts $nes; then
         echo "Starting NES script"
-        $myterm -e "$scriptdir/nes.sh"
+        "$scriptdir/nes.sh" &
     fi
 
     if getflag $scripts $stream; then
         echo "Starting stream script"
-        $myterm -e "$scriptdir/stream.sh"
+        "$scriptdir/stream.sh" &
     fi
 else
-    echo "Terminal: $myterm"
     echo "Enabled scripts:"
     getflag $scripts $bot && printf "\t* Bot\n"
     getflag $scripts $nes && printf "\t* NES\n"
