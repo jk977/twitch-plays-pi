@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 # Runs the 3 twitch-plays scripts concurrently. Configurable options are listed in the help command.
 
 cd "$( dirname "$0" )"
@@ -99,6 +99,6 @@ fi
 trap "exit" INT TERM
 trap "kill 0" EXIT
 
-echo "Press enter to stop processes"
+printf "Press enter to stop processes\n\n"
 read u_input
 kill 0
