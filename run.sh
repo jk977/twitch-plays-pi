@@ -1,25 +1,24 @@
 #!/bin/bash
 # Runs the 3 twitch-plays scripts concurrently. Configurable options are listed in the help command.
 
-. shell/settings.sh
-cd "$basedir"
+cd "$( dirname "$0" )"
+. shell/utils/tests.sh
 
 # script flags
 bot=1
 nes=2
 stream=4
 
-scriptdir=$( find . -type d -name core )
+scriptdir="shell/core/"
 scripts=0               # mask of scripts to run; if 0, all will run
 dryrun=false            # whether or not to actually execute the target scripts
 out_dest=/dev/stdout    # destination of script output
 
-getflag() {
-    # $1: Masked number to check for flag
-    # $2: Flag to check number for
-    # returns success if flag found or $1 is 0, otherwise fails
+get_flag() {
+    # $1: Flag to check mask for
+    # returns success if flag found or $scripts is 0, otherwise fails
 
-    [ $(( $1 & $2 )) -ne 0 ] || [ $1 -eq 0 ]
+    ! test_zero $(( $scripts & $1 )) || test_zero $scripts
 }
 
 start_script() {
@@ -69,35 +68,33 @@ done
 if $dryrun; then
     echo "Output destination: $out_dest"
     echo "Enabled scripts:"
-    getflag $scripts $bot && printf "\t* Bot\n"
-    getflag $scripts $nes && printf "\t* NES\n"
-    getflag $scripts $stream && printf "\t* Stream\n"
+    get_flag $bot && printf "\t* Bot\n"
+    get_flag $nes && printf "\t* NES\n"
+    get_flag $stream && printf "\t* Stream\n"
     exit 0
 fi
 
 # run each script indicated by flags in $scripts.
 # PIDs are saved in .{name}id if manual killing necessary
 
-signals="INT TERM"
-
-if getflag $scripts $bot; then
+if get_flag $bot; then
     echo "Starting bot script"
     start_script "$scriptdir/bot.sh" &
     echo $! > .botid
 fi
 
-if getflag $scripts $nes; then
+if get_flag $nes; then
     echo "Starting NES script"
     start_script "$scriptdir/nes.sh" &
     echo $! > .nesid
 fi
 
-if getflag $scripts $stream; then
+if get_flag $stream; then
     echo "Starting stream script"
     start_script "$scriptdir/stream.sh" &
     echo $! > .streamid
 fi
 
-trap "exit" $signals
+trap "exit" INT TERM
 trap "kill 0" EXIT
 wait
