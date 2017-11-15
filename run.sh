@@ -4,6 +4,16 @@
 . shell/settings.sh
 cd "$basedir"
 
+# script flags
+bot=1
+nes=2
+stream=4
+
+scriptdir=$( find . -type d -name core )
+scripts=0               # mask of scripts to run; if 0, all will run
+dryrun=false            # whether or not to actually execute the target scripts
+out_dest=/dev/stdout    # destination of script output
+
 getflag() {
     # $1: Masked number to check for flag
     # $2: Flag to check number for
@@ -17,17 +27,7 @@ start_script() {
     "$1" >$out_dest 2>&1
 }
 
-# script flags
-bot=1
-nes=2
-stream=4
-
-scriptdir=$( find . -type d -name core )
-scripts=0               # mask of scripts to run; if 0, all will run
-dryrun=false            # whether or not to actually execute the target scripts
-out_dest=/dev/stdout    # destination of script output
-
-while getopts "ht:qbnsd" opt; do
+while getopts "hqbnsd" opt; do
     case $opt in
         h)
             # whitespace type is important here
@@ -47,9 +47,6 @@ while getopts "ht:qbnsd" opt; do
 			EOF
 
             exit 0
-            ;;
-        t)
-            myterm=$OPTARG
             ;;
         q)
             out_dest=/dev/null
