@@ -38,7 +38,7 @@ while getopts "hvbnsd" opt; do
 			    -b      Start the bot script.
 			    -n      Start the NES script.
 			    -s      Start the streaming script.
-                -v      Don't suppress script outputs (verbose).
+			    -v      Don't suppress script outputs (verbose).
 			    -d      Debug (don't execute core scripts, dump status).
 
 			If any of [-bns] are used, only the specified scripts will run.
