@@ -66,16 +66,23 @@ if ! $dryrun; then
     if getflag $scripts $bot; then
         echo "Starting bot script"
         "$scriptdir/bot.sh" &
+        botid=$!
     fi
 
     if getflag $scripts $nes; then
         echo "Starting NES script"
         "$scriptdir/nes.sh" &
+        nesid=$!
     fi
 
     if getflag $scripts $stream; then
         echo "Starting stream script"
         "$scriptdir/stream.sh" &
+        streamid=$!
+    fi
+
+    if [ -n "$botid" ] || [ -n "$nesid" ] || [ -n "$streamid" ]; then
+        wait
     fi
 else
     echo "Enabled scripts:"
