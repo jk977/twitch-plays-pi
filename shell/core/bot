@@ -5,7 +5,7 @@
 . "$shldir/utils/tests.sh"
 
 trap "exit" INT TERM
-trap "echo Exiting bot.sh; kill 0" EXIT
+trap "echo Exiting bot script; kill 0" EXIT
 
 cd "$botdir" # for PYTHONPATH reasons
 logdest=$(get_log_dest bot.log)

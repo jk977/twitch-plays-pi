@@ -23,6 +23,10 @@ logs/
 *.flv
 *.mp4
 
+# misc utility scripts
+findtodo
+rmswap
+
 # python compiled files
 __pycache__/
 *.py[cod]

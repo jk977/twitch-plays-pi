@@ -3,7 +3,7 @@
 . "$( dirname $0 )/../settings.sh"
 
 trap "exit" INT TERM
-trap "echo Exiting nes.sh; kill 0" EXIT
+trap "echo Exiting nes script; kill 0" EXIT
 
 logdest=$(get_log_dest nes.log)
 
