@@ -2,10 +2,8 @@
 . "$shldir/utils/tests.sh"
 . "$shldir/menu/common.sh"
 
-config_path="$basedir/bot/data/"
-
 get_file() {
-    echo "$config_path/$1.dat"
+    echo "$botdata/$1.dat"
 }
 
 read_file() {

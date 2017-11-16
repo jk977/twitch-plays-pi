@@ -15,9 +15,8 @@ clear_cache() {
     status=$?
 
     if test_zero "$status"; then
-        rm "$basedir/bot/data/"*
-        rm "$shldir/data/"*
-        whiptail --msgbox "Clear successful!" $(height) $(width)
+        rm -r "$datadir"
+        whiptail --msgbox "Clear successful!" $(dimensions)
     fi
 
     main_menu

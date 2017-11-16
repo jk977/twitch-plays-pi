@@ -9,7 +9,7 @@ class Settings:
 
     def save(path=None):
         if not path:
-            path = os.path.join(config.info_dir, Settings.destination)
+            path = os.path.join(config.data_dir, Settings.destination)
 
         fields = {'users': [u.serialize() for u in config.users.values()]}
         ser = json.dumps(fields)
@@ -19,7 +19,7 @@ class Settings:
 
     def load(path=None):
         if not path:
-            path = os.path.join(config.info_dir, Settings.destination)
+            path = os.path.join(config.data_dir, Settings.destination)
 
         with open(path, 'r') as file:
             ser = file.read().strip()

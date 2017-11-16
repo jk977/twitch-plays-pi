@@ -5,12 +5,15 @@
 [ -n "$settings_included" ] && return
 settings_included=true
 
+. shell/utils/tests.sh
+
 # constant values
 gameaudio=2
 noaudio=3
 
-datadir="shell/data/"
-. "$datadir/../utils/tests.sh"
+datadir=~/.twitch-plays-pi/
+botdata=$datadir/bot/
+shelldata=$datadir/shell/
 
 botname="bot.py"
 streamname="stream.sh"
@@ -30,7 +33,7 @@ load_data() {
     # $1: Name of variable to load (searches for .dat file of same name)
 
     test_empty "$1" && exit 1
-    contents=$( cat "$datadir/$1.dat" 2>/dev/null )
+    contents=$( cat "$shelldata/$1.dat" 2>/dev/null )
     eval "$1=$contents"
     ! test_empty "$contents" # return success if $contents isn't empty
 }
@@ -39,7 +42,7 @@ load_and_warn() {
     load_data $@
 
     if ! test_zero "$?"; then
-        echo "Warning: Variable \"$1\" is empty (searched directory $datadir)." >&2
+        echo "Warning: Variable \"$1\" is empty (searched directory $shelldata)." >&2
     else
         echo "Variable \"$1\" is set."
     fi
@@ -84,7 +87,7 @@ set_data() {
     # $1: Name of data
     # $2: Value of data
 
-    echo "$2" > "$datadir/$1.dat"
+    echo "$2" > "$shelldata/$1.dat"
     update_data "$1" >/dev/null
 }
 

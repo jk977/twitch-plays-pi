@@ -8,14 +8,14 @@ from settings import Settings
 
 
 def backup_settings():
-    path = os.path.join(config.info_dir, Settings.destination)
+    path = os.path.join(config.data_dir, Settings.destination)
     with open(path, 'r') as file:
         backup = file.read().strip()
     return backup
 
 
 def load_backup(backup):
-    path = os.path.join(config.info_dir, Settings.destination)
+    path = os.path.join(config.data_dir, Settings.destination)
     with open(path, 'w') as file:
         file.write(backup)
 
@@ -31,7 +31,7 @@ def preserve_settings(func):
 
 class TestSettings(unittest.TestCase):
     def setUp(self):
-        self.path = os.path.join(config.info_dir, Settings.destination)
+        self.path = os.path.join(config.data_dir, Settings.destination)
 
     @preserve_settings
     def test_save(self):
