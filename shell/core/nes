@@ -7,7 +7,7 @@ trap "echo Exiting nes script; kill 0" EXIT
 
 logdest=$(get_log_dest nes.log)
 
-if [ "$audiosrc" = $gameaudio ] >/dev/null; then
+if [ "$audiosrc" = $gameaudio ] 2>/dev/null; then
     soundargs="--sound 1 --soundrate 44100 --soundq 1 --soundbufsize 200"
 else
     soundargs="--sound 0"
