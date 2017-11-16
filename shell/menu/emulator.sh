@@ -7,8 +7,8 @@ change_rom_dir() {
     default=$(get_default_dir "$emurom")
 
     show_submenu \
-        --title "ROM Path" \
-        --inputbox "Enter path to the game (must be compatible with the emulator):" \
+        --title "ROM Location" \
+        --inputbox "Enter location of the ROM (must be compatible with the emulator):" \
         $(dimensions) \
         "$default"
 
@@ -27,7 +27,7 @@ emulator_menu() {
             --title "Emulator" --notags \
             --menu "$prompt" \
             $(dimensions) 2 \
-            1 "ROM Path"
+            1 "ROM Location"
         status=$?
 
         case "$(get_result)" in
