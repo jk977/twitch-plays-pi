@@ -32,13 +32,14 @@ get_log_dest() {
 load_data() {
     # $1: Name of variable to load (searches for .dat file of same name)
 
-    test_empty "$1" && exit 1
+    test_empty "$1" && return 1
     contents=$( cat "$shelldata/$1.dat" 2>/dev/null )
     eval "$1=$contents"
     ! test_empty "$contents" # return success if $contents isn't empty
 }
 
 load_and_warn() {
+    # writes warning to stderr if variable load fails
     load_data $@
 
     if ! test_zero "$?"; then
