@@ -1,6 +1,6 @@
 #!/bin/sh
 . shell/settings.sh
-. "$shldir/utils/tests.sh"
+. "$shldir/tests.sh"
 . "$shldir/menu/common.sh"
 . "$shldir/menu/stream/audio.sh"
 . "$shldir/menu/stream/destination.sh"

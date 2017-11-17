@@ -1,6 +1,6 @@
 #!/bin/sh
 . shell/settings.sh
-. "$shldir/utils/tests.sh"
+. "$shldir/tests.sh"
 . "$shldir/menu/common.sh"
 
 change_rom_dir() {

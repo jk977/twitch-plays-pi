@@ -1,5 +1,5 @@
 . shell/settings.sh
-. "$shldir/utils/tests.sh"
+. "$shldir/tests.sh"
 . "$shldir/menu/common.sh"
 
 get_file() {

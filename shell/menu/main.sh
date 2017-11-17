@@ -1,5 +1,5 @@
 . shell/settings.sh
-. "$shldir/utils/tests.sh"
+. "$shldir/tests.sh"
 
 . "$shldir/menu/bot.sh"
 . "$shldir/menu/emulator.sh"

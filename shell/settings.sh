@@ -5,7 +5,7 @@
 [ -n "$settings_included" ] && return
 settings_included=true
 
-. shell/utils/tests.sh
+. shell/tests.sh
 
 # constant values
 gameaudio=2
