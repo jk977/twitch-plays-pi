@@ -2,6 +2,7 @@
 # Runs the 3 twitch-plays scripts concurrently. Configurable options are listed in the help command.
 
 cd "$( dirname "$0" )"
+
 . shell/utils/tests.sh
 
 # script flags
@@ -77,24 +78,24 @@ if $dryrun; then
 fi
 
 # run each script indicated by flags in $scripts.
-# PIDs are saved in .{name}id if manual killing necessary
+# PIDs are saved in $datadir/.{name}id if manual killing necessary
 
 if get_flag $bot; then
     echo "Starting bot script..."
     start_script "$scriptdir/bot" &
-    echo $! > "$datadir/.botid"
+    echo $! >"$datadir/.botid"
 fi
 
 if get_flag $nes; then
     echo "Starting NES script..."
     start_script "$scriptdir/nes" &
-    echo $! > "$datadir/.nesid"
+    echo $! >"$datadir/.nesid"
 fi
 
 if get_flag $stream; then
     echo "Starting stream script..."
     start_script "$scriptdir/stream" &
-    echo $! > "$datadir/.streamid"
+    echo $! >"$datadir/.streamid"
 fi
 
 # in case a signal is sent before user presses enter
