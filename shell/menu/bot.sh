@@ -14,7 +14,7 @@ read_file() {
 write_file() {
     # $1: Name of file to write (path and extension not needed)
     # $2: Content to write
-    echo "$2" > "$( get_file "$1" )"
+    echo "$2" >"$( get_file "$1" )"
 }
 
 write_result() {

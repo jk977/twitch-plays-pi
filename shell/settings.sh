@@ -26,6 +26,7 @@ logging_enabled() {
 get_log_dest() {
     # prepends log directory to filename if logging is enabled
     # and configured, otherwise echos /dev/null
+
     # $1: Name of log file
 
     if logging_enabled && [ -n "$1" ]; then
@@ -37,6 +38,7 @@ get_log_dest() {
 
 load_data() {
     # retrieves variable value from data directory and assigns to variable
+
     # $1: Name of variable to load (searches for .dat file of same name)
 
     [ -z "$1" ] && return 1
@@ -95,7 +97,7 @@ set_data() {
     # $1: Name of data
     # $2: Value of data
 
-    echo "$2" > "$shelldata/$1.dat"
+    echo "$2" >"$shelldata/$1.dat"
     update_data "$1" >/dev/null
 }
 
