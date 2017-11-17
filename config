@@ -16,12 +16,11 @@ basedata="$datadir/shell/basedir.dat"
 mkdirs_if_absent "$datadir/bot" "$datadir/shell"
 [ ! -e "$basedata" ] && echo "$(pwd)" >"$basedata"
 
+# portable version of "if ! which whiptail >/dev/null"
 if which whiptail >/dev/null; then :; else
     echo "Error: Whiptail must be installed to run config.sh" >&2
     exit 1
 fi
 
-. shell/settings.sh
 . shell/menu/main.sh
-
 main_menu
