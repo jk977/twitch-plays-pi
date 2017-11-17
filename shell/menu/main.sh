@@ -12,11 +12,10 @@ clear_cache() {
         --title "Clear Cache?" --defaultno \
         --yesno "This will remove all of the program's stored information. Continue?" \
         $(dimensions)
-    status=$?
 
-    if test_zero "$status"; then
-        rm -r "$datadir"
-        whiptail --msgbox "Clear successful!" $(dimensions)
+    if [ $? -eq 0 ]; then
+        test_writable_dir "$logdir" && rm "$logdir/"*
+        rm -r "$datadir" && whiptail --msgbox "Clear successful!" $(dimensions)
     fi
 
     main_menu
@@ -52,7 +51,7 @@ main_menu() {
             ;;
     esac
 
-    if [ "$status" -ne 0 ]; then
+    if [ $status -ne 0 ]; then
         exit 0
     fi
 }

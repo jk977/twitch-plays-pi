@@ -12,7 +12,7 @@ change_rom_dir() {
         $(dimensions) \
         "$default"
 
-    if test_zero "$?"; then
+    if [ $? -eq 0 ]; then
         set_file emurom "$(get_result)"
         check_file_error
     fi
@@ -22,7 +22,7 @@ emulator_menu() {
     prompt="Configure which option?"
     status=0
 
-    while test_zero "$status"; do
+    while [ $status -eq 0 ]; do
         show_submenu \
             --title "Emulator" --notags \
             --menu "$prompt" \

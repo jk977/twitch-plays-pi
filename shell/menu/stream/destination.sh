@@ -12,7 +12,7 @@ change_stream_uri() {
         $(dimensions) \
         "$streamuri"
 
-    if test_zero "$?"; then
+    if [ $? -eq 0 ]; then
         set_data streamuri "$(get_result)"
     fi
 }
@@ -26,7 +26,7 @@ change_stream_endpt() {
         $(dimensions) \
         "$streamdest"
 
-    if [ "$?" -eq 0 ]; then
+    if [ $? -eq 0 ]; then
         set_data streamdest "$(get_result)"
     fi
 }
@@ -34,7 +34,7 @@ change_stream_endpt() {
 destination_menu() {
     status=0
 
-    while test_zero "$status"; do
+    while [ $status -eq 0 ]; do
         show_submenu \
             --title "Stream Destination" --notags\
             --menu "Configure which option?" \

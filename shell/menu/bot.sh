@@ -21,7 +21,7 @@ write_result() {
     # Writes result of input window to specified bot file if window was successful.
     # $1: Bot file name
 
-    if test_zero "$?"; then
+    if [ $? -eq 0 ]; then
         write_file "$1" "$( get_result )"
     fi
 }
@@ -78,7 +78,7 @@ bot_menu() {
     prompt="Select an option to configure.\nThese are used in the bot's interactions with the host site's API."
     status=0
 
-    while test_zero "$status"; do
+    while [ $status -eq 0 ]; do
         show_submenu \
             --title "Bot" --notags \
             --menu "$prompt" \

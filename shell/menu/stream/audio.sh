@@ -18,7 +18,7 @@ change_audio_dir() {
         $(dimensions) \
         "$default"
 
-    if test_zero "$?"; then
+    if [ $? -eq 0 ]; then
         set_file audiosrc "$(get_result)"
         check_file_error
     fi
@@ -61,7 +61,7 @@ audio_menu() {
         1)
             change_audio_dir
 
-            if ! test_zero "$?"; then
+            if [ $? -ne 0 ]; then
                 audiosrc="$oldsrc" # restores old value if invalid input
             fi
             ;;

@@ -12,37 +12,44 @@ gameaudio=2
 noaudio=3
 
 datadir=~/.twitch-plays-pi/
-botdata=$datadir/bot/
-shelldata=$datadir/shell/
+botdata="$datadir/bot/"
+shelldata="$datadir/shell/"
 
 botname="bot.py"
 streamname="stream.sh"
 emuname="emu.lua"
 
+logging_enabled() {
+    test_writable_dir "$logdir" && [ "$loglevel" -ne 0 ] 2>/dev/null
+}
+
 get_log_dest() {
+    # prepends log directory to filename if logging is enabled
+    # and configured, otherwise echos /dev/null
     # $1: Name of log file
 
-    if test_empty "$1" || test_empty "$logdir" || test_zero "$loglevel"; then
-        echo /dev/null
-    else
+    if logging_enabled && [ -n "$1" ]; then
         echo "$logdir/$1"
+    else
+        echo /dev/null
     fi
 }
 
 load_data() {
+    # retrieves variable value from data directory and assigns to variable
     # $1: Name of variable to load (searches for .dat file of same name)
 
-    test_empty "$1" && return 1
+    [ -z "$1" ] && return 1
     contents=$( cat "$shelldata/$1.dat" 2>/dev/null )
     eval "$1=$contents"
-    ! test_empty "$contents" # return success if $contents isn't empty
+    [ -n "$contents" ] # return success if $contents isn't empty
 }
 
 load_and_warn() {
     # writes warning to stderr if variable load fails
     load_data $@
 
-    if ! test_zero "$?"; then
+    if [ $? -ne 0 ]; then
         echo "Warning: Variable \"$1\" is empty (searched directory $shelldata)." >&2
     else
         echo "Variable \"$1\" is set."
@@ -50,18 +57,18 @@ load_and_warn() {
 }
 
 load_defaults() {
-    if test_empty "$loglevel" || test_empty "$logdir"; then
-        # only allow logging if directory is specified
+    if test_writable_dir "$logdir" && [ -n "$loglevel" ]; then :; else
+        # disable logging if not configured
         set_data loglevel 0
     fi
 
-    test_empty "$audiosrc" && set_data audiosrc $noaudio
-    test_empty "$streamloops" && set_data streamloops "false"
-    test_empty "$streamsig" && set_data streamsig "true"
+    [ -z "$audiosrc" ] && set_data audiosrc $noaudio
+    [ -z "$streamloops" ] && set_data streamloops "false"
+    [ -z "$streamsig" ] && set_data streamsig "true"
 }
 
 update_data() {
-    if ! test_zero "$#"; then
+    if [ $# -ne 0 ]; then
         for var in $@; do
             load_and_warn $var
         done
@@ -110,7 +117,7 @@ set_directory() {
     # $1: Name of data
     # $2: Directory to assign data to
 
-    test_writable_dir "$2" && set_data $@
+    test_writable_dir "$2" && set_data "$1" "$2"
 }
 
 update_data

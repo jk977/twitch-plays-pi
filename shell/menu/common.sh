@@ -45,7 +45,7 @@ show_error() {
 }
 
 check_file_error() {
-    if [ "$?" -ne 0 ]; then
+    if [ $? -ne 0 ]; then
         show_error "Invalid file or directory entered. No changes made."
     fi
 }

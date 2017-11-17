@@ -1,19 +1,22 @@
 #!/bin/sh
 
+cd "$( dirname "$0" )" # in case script is ran from a different directory
+
+mkdirs_if_absent() {
+    for path in $@; do
+        mkdir -p "$path"
+    done
+}
+
 # for storing project data
-for d in bot shell; do
-    mkdir -p ~/.twitch-plays-pi/$d
-done
+datadir=~/.twitch-plays-pi/
+basedata="$datadir/shell/basedir.dat"
 
-basedata=~/.twitch-plays-pi/shell/basedir.dat
-! [ -e "$basedata" ] && echo "$(pwd)" > "$basedata" # bootstrap basedir data file
-unset basedata
+# initializing project data if needed
+mkdirs_if_absent "$datadir/bot" "$datadir/shell"
+[ ! -e "$basedata" ] && echo "$(pwd)" >"$basedata"
 
-cd "$( dirname $0 )" # in case script is ran from a different directory
-
-. shell/utils/tests.sh
-
-if test_empty "$(which whiptail)"; then
+if which whiptail >/dev/null; then :; else
     echo "Error: Whiptail must be installed to run config.sh" >&2
     exit 1
 fi

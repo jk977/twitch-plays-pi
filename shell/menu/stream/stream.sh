@@ -19,7 +19,7 @@ change_stream_loop() {
         --yesno "$prompt" \
         $(dimensions)
 
-    if test_zero "$?"; then
+    if [ $? -eq 0 ]; then
         set_data streamloops "true"
     else
         set_data streamloops "false"
@@ -40,7 +40,7 @@ change_stream_signal() {
         --yesno "$prompt" \
         $(dimensions)
 
-    if test_zero "$?"; then
+    if [ $? -eq 0 ]; then
         set_data streamsig "true"
     else
         set_data streamsig "false"
@@ -50,7 +50,7 @@ change_stream_signal() {
 stream_menu() {
     status=0
 
-    while test_zero "$status"; do
+    while [ $status -eq 0 ]; do
         show_submenu \
             --title "Stream" --notags \
             --menu "Configure which option?" \

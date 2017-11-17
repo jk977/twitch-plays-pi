@@ -20,7 +20,7 @@ get_flag() {
     # $1: Flag to check mask for
     # returns success if flag found or $scripts is 0, otherwise fails
 
-    ! test_zero $(( $scripts & $1 )) || test_zero $scripts
+    [ "$(( $scripts & $1 ))" -eq "$scripts" ]
 }
 
 start_script() {
