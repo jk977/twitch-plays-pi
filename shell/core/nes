@@ -1,6 +1,6 @@
 #!/bin/sh
 
-. "$( dirname $0 )/../settings.sh"
+. "$( dirname "$0" )/../settings.sh"
 
 trap "exit" INT TERM
 trap "echo Exiting nes script; kill 0" EXIT

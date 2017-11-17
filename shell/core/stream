@@ -1,7 +1,7 @@
 #!/bin/sh
 # Starts streaming to Twitch.
 
-. "$( dirname $0 )/../settings.sh"
+. "$( dirname "$0" )/../settings.sh"
 . "$shldir/tests.sh"
 
 trap "exit" INT TERM

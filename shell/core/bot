@@ -1,7 +1,7 @@
 #!/bin/sh
 # Starts twitch bot to read chat inputs.
 
-. "$( dirname $0 )/../settings.sh"
+. "$( dirname "$0" )/../settings.sh"
 . "$shldir/tests.sh"
 
 trap "exit" INT TERM
