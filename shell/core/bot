@@ -24,6 +24,6 @@ status=0
 # lets bot be restarted by calling sys.exit(0) in python script
 while [ $status -eq 0 ]; do
     echo "Starting chat bot"
-    python3 -u "$botname" 2>&1 >"$(get_log_dest bot.log)"
+    python3 -u "$botname" 2>&1 | tee -a "$(get_log_dest bot.log)"
     status=$?
 done

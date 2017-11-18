@@ -26,7 +26,7 @@ function emutils.press_button(player, button, count)
         emutils.advance_frames(1);
 
         -- if there are still button presses to do, advance until no lag
-        while emu.lagged() and i < count do
+        while emu.lagged() and (i < count) do
             emutils.advance_frames(1);
         end
     end

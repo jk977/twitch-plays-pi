@@ -5,13 +5,19 @@
 . "$shldir/tests.sh"
 
 stream="${streamuri}${streamkey}"
-capture_x=0
-capture_y=45
+display=0.0 # which display to stream
+framerate=30
+
+capture_x=0 # capture offset from left of screen
+capture_y=45 # capture offset from top of screen
+
+dimensions_x=256
+dimensions_y=240
 
 get_audio_args() {
     if test_readable_file "$audiosrc"; then
         # use audio from file
-        echo "-i $streamaudio -c:a copy -ar 44100 -ac 2"
+        echo "-i $audiosrc -c:a copy -ar 44100 -ac 2"
     elif [ "$audiosrc" -eq $gameaudio ]; then
         # use audio from game
         echo "-thread_queue_size 64 -f pulse -ar 44100 -i default"
@@ -35,7 +41,7 @@ trap "die" EXIT
 while :; do
     ffmpeg \
         $(get_audio_args) \
-        -threads 4 -f x11grab -r 30 -s 256x240 -i :1.0+$capture_x,$capture_y \
+        -threads 4 -f x11grab -r $framerate -s ${dimensions_x}x${dimensions_y} -i :${display}+${capture_x},${capture_y} \
         -c:v libx264 -preset medium -pix_fmt yuv420p \
         -shortest -f avi "$stream" 2>&1 |\
             tee -a "$(get_log_dest stream.log)"
