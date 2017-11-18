@@ -13,7 +13,7 @@ datadir=~/.twitch-plays-pi/
 basedata="$datadir/shell/basedir.dat"
 
 # initializing project data if needed
-mkdirs_if_absent "$datadir/bot" "$datadir/shell"
+mkdirs_if_absent "$datadir/bot" "$datadir/shell" "$datadir/proc"
 [ ! -e "$basedata" ] && echo "$(pwd)" >"$basedata"
 
 # portable version of "if ! which whiptail >/dev/null"

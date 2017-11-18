@@ -19,5 +19,6 @@ def test_cmd(chat, message):
 
 @admin_cmd
 def restart(chat, message):
+    chat.send_message('Bot is restarting. Inputs won\'t work until the bot is online.')
     chat.close()
     sys.exit(0)

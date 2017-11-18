@@ -10,9 +10,15 @@ bot=1
 nes=2
 stream=4
 
+# PIDs
+botid=
+nesid=
+streamid=
+
+# relevant paths
+datadir=~/.twitch-plays-pi/proc/
 scriptdir="shell/core/"
-datadir=~/.twitch-plays-pi/
-out_dest=/dev/null      # destination of script output
+outdest=/dev/null       # destination of script output
 
 scripts=0               # mask of scripts to run; if 0, all will run
 dryrun=false            # whether or not to actually execute the target scripts
@@ -25,8 +31,20 @@ get_flag() {
 }
 
 start_script() {
-    # $1: script path
-    "$1" >$out_dest 2>&1
+    # calls script in $scriptdir with name $1, saving
+    # the PID in case something goes wrong
+
+    # $1: script name
+
+    echo "Starting $1 script..."
+    "$scriptdir/$1" >$outdest 2>&1 &
+    echo $! >"$datadir/$1.id"
+    eval "${1}id=$!"
+    wait
+}
+
+die() {
+    kill 0
 }
 
 while getopts "hvbnsd" opt; do
@@ -51,7 +69,7 @@ while getopts "hvbnsd" opt; do
             exit 0
             ;;
         v)
-            out_dest=/dev/stdout
+            outdest=/dev/stdout
             ;;
         b)
             scripts=$((scripts | bot))
@@ -69,7 +87,7 @@ while getopts "hvbnsd" opt; do
 done
 
 if $dryrun; then
-    echo "Output destination: $out_dest"
+    echo "Output destination: $outdest"
     echo "Enabled scripts:"
     get_flag $bot && printf "\t* Bot\n"
     get_flag $nes && printf "\t* NES\n"
@@ -77,31 +95,15 @@ if $dryrun; then
     exit 0
 fi
 
-# run each script indicated by flags in $scripts.
-# PIDs are saved in $datadir/.{name}id if manual killing necessary
-
-if get_flag $bot; then
-    echo "Starting bot script..."
-    start_script "$scriptdir/bot" &
-    echo $! >"$datadir/.botid"
-fi
-
-if get_flag $nes; then
-    echo "Starting NES script..."
-    start_script "$scriptdir/nes" &
-    echo $! >"$datadir/.nesid"
-fi
-
-if get_flag $stream; then
-    echo "Starting stream script..."
-    start_script "$scriptdir/stream" &
-    echo $! >"$datadir/.streamid"
-fi
-
-# in case a signal is sent before user presses enter
 trap "exit" INT TERM
-trap "kill 0" EXIT
+trap "die" EXIT
 
-printf "Press enter to stop processes\n\n"
-read u_input
-kill 0
+# run each script indicated by flags in $scripts.
+# PIDs are saved in $datadir/{name}.id if manual killing necessary
+
+get_flag $bot && start_script bot &
+get_flag $nes && start_script nes &
+get_flag $stream && start_script stream &
+
+printf "Press ^C to stop processes\n\n"
+wait

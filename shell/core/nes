@@ -2,21 +2,28 @@
 
 . "$( dirname "$0" )/../settings.sh"
 
+get_sound_args() {
+    if [ "$audiosrc" = $gameaudio ] 2>/dev/null; then
+        echo "--sound 1 --soundrate 44100 --soundq 1 --soundbufsize 200"
+    else
+        echo "--sound 0"
+    fi
+}
+
+die() {
+    echo "Exiting nes script"
+    kill -KILL 0 # fceux doesn't quit with SIGTERM
+}
+
 trap "exit" INT TERM
-trap "echo Exiting nes script; kill 0" EXIT
-
-logdest=$(get_log_dest nes.log)
-
-if [ "$audiosrc" = $gameaudio ] 2>/dev/null; then
-    soundargs="--sound 1 --soundrate 44100 --soundq 1 --soundbufsize 200"
-else
-    soundargs="--sound 0"
-fi
+trap "die" EXIT
 
 fceux "$emurom" \
-    $soundargs \
+    $(get_sound_args) \
     --opengl 0 \
     --loadlua "$emudir/$emuname" \
     --xscale 1 \
     --yscale 1 \
-    2>&1 | tee -a "$logdest"
+    2>&1 |\
+        tee -a "$(get_log_dest nes.log)" &
+wait

@@ -4,16 +4,26 @@
 . "$( dirname "$0" )/../settings.sh"
 . "$shldir/tests.sh"
 
-trap "exit" INT TERM
-trap "echo Exiting bot script; kill 0" EXIT
-
 cd "$botdir" # for PYTHONPATH reasons
-logdest="$(get_log_dest bot.log)"
+
+die() {
+    if [ -z "$status" ]; then
+        msg="unknown status"
+    else
+        msg="status $status"
+    fi
+
+    echo "Exiting bot script with $msg."
+    kill -INT 0
+}
+
+trap "exit" INT TERM
+trap "die" EXIT
 status=0
 
 # lets bot be restarted by calling sys.exit(0) in python script
 while [ $status -eq 0 ]; do
     echo "Starting chat bot"
-    python3 -u "$botname" 2>&1 | tee -a "$logdest"
+    python3 -u "$botname" 2>&1 >"$(get_log_dest bot.log)"
     status=$?
 done
