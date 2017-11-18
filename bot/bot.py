@@ -26,15 +26,18 @@ def on_stream_restart(signum, frame):
 
 
 def shutdown(signum, frame):
+    try:
+        os.remove(config.pid_file)
+    except:
+        pass
+
     chat.send_message('Bot shutting down.')
     chat.close()
     sys.exit(128 + signum)
-    
-    
-def write_pid():
-    pid_file = os.path.join(config.data_dir, 'proc', 'bot.py.id')
 
-    with open(pid_file, 'w') as file:
+
+def write_pid():
+    with open(config.pid_file, 'w') as file:
         file.write(str(os.getpid()))
 
 

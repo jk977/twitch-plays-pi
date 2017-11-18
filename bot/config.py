@@ -17,6 +17,7 @@ root = find_project_root()
 home = os.path.expanduser('~')
 data_dir = os.path.join(home, '.twitch-plays-pi')
 bot_dir = os.path.join(data_dir, 'bot')
+pid_file = os.path.join(data_dir, 'proc', 'bot.py.id')
 
 if not os.access(root, os.W_OK):
     raise PermissionError('Project root is not writable.')
