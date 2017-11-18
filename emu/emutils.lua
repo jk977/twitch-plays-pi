@@ -21,10 +21,6 @@ function emutils.press_button(player, button, count)
             emutils.advance_frames(1);
         end
 
-        if button == 'left' or button == 'right' or button == 'A' then
-            emutils.advance_frames(40);
-        end
-
         -- makes sure button isn't held through to the next press 
         joypad.set(player, {[button]=false});
         emutils.advance_frames(1);
