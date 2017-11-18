@@ -18,8 +18,8 @@ cd /path/to/project/root/
 ./config
 ```
 
-Once the configuration script is running, completely fill out all information for each category.
-        
+Once the configuration script is running, completely fill out all information for each category. You may also need to adjust the ffmpeg capture area offset manually, as there are no options for it in the menu (yet). To do this, edit $capture\_x and $capture\_y in shell/core/stream to contain the x- and y-offsets, respectively.
+
 To start, execute 
 
 ```
