@@ -4,8 +4,8 @@
 . "$shldir/menu/common.sh"
 
 change_audio_dir() {
-    if test_readable_file "$audiosrc"; then
-        default="$audiosrc"
+    if test_readable_file "$s_audio"; then
+        default="$s_audio"
     else
         default="$basedir"
     fi
@@ -19,25 +19,25 @@ change_audio_dir() {
         "$default"
 
     if [ $? -eq 0 ]; then
-        set_file audiosrc "$(get_result)"
+        set_file s_audio "$(get_result)"
         check_file_error
     fi
 }
 
 audio_menu() {
     prompt="Choose audio source. If File is selected, you will be prompted to enter a path to an audio file:"
-    oldsrc="$audiosrc" # in case of failure
+    oldsrc="$s_audio" # in case of failure
     filetag="File"
 
     filestat="OFF"
     gamestat="OFF"
     nonestat="OFF"
 
-    if test_readable_file "$audiosrc"; then
-        filetag="$filetag ($audiosrc)"
+    if test_readable_file "$s_audio"; then
+        filetag="$filetag ($s_audio)"
     fi
 
-    case "$audiosrc" in
+    case "$s_audio" in
         2)
             gamestat="ON"
             ;;
@@ -62,14 +62,14 @@ audio_menu() {
             change_audio_dir
 
             if [ $? -ne 0 ]; then
-                audiosrc="$oldsrc" # restores old value if invalid input
+                s_audio="$oldsrc" # restores old value if invalid input
             fi
             ;;
         2)
-            set_data audiosrc $gameaudio
+            set_data s_audio $gameaudio
             ;;
         3)
-            set_data audiosrc $noaudio
+            set_data s_audio $noaudio
             ;;
     esac
 

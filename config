@@ -2,6 +2,8 @@
 
 cd "$( dirname "$0" )" # in case script is ran from a different directory
 
+. shell/tests.sh
+
 mkdirs_if_absent() {
     for path in $@; do
         mkdir -p "$path"
@@ -16,8 +18,8 @@ basedata="$datadir/shell/basedir.dat"
 mkdirs_if_absent "$datadir/bot" "$datadir/shell" "$datadir/proc"
 [ ! -e "$basedata" ] && echo "$(pwd)" >"$basedata"
 
-# portable version of "if ! which whiptail >/dev/null"
-if which whiptail >/dev/null; then :; else
+# portable version of "if ! test_installed whiptail"
+if test_installed whiptail; then :; else
     echo "Error: Whiptail must be installed to run config.sh" >&2
     exit 1
 fi

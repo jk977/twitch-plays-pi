@@ -28,13 +28,11 @@ change_log_level() {
     log1=OFF
 
     case "$loglevel" in
-        0)
-            log0=ON
-            ;;
         1)
             log1=ON
             ;;
         *)
+            log0=ON
             ;;
     esac
 

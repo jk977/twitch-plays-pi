@@ -6,7 +6,9 @@
 . "$shldir/menu/stream/destination.sh"
 
 change_stream_loop() {
-    if $streamloops; then
+    update_data s_loops
+
+    if $s_loops; then
         default=
     else
         default="--defaultno"
@@ -20,14 +22,16 @@ change_stream_loop() {
         $(dimensions)
 
     if [ $? -eq 0 ]; then
-        set_data streamloops "true"
+        set_data s_loops "true"
     else
-        set_data streamloops "false"
+        set_data s_loops "false"
     fi
 }
 
 change_stream_signal() {
-    if $streamsig; then
+    update_data s_sig
+
+    if $s_sig; then
         default=
     else
         default="--defaultno"
@@ -41,9 +45,9 @@ change_stream_signal() {
         $(dimensions)
 
     if [ $? -eq 0 ]; then
-        set_data streamsig "true"
+        set_data s_sig "true"
     else
-        set_data streamsig "false"
+        set_data s_sig "false"
     fi
 }
 

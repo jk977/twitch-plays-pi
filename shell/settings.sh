@@ -41,7 +41,10 @@ load_data() {
 
     # $1: Name of variable to load (searches for .dat file of same name)
 
-    [ -z "$1" ] && return 1
+    if [ -z "$1" ]; then
+        return 1
+    fi
+
     contents=$( cat "$shelldata/$1.dat" 2>/dev/null )
     eval "$1=$contents"
     [ -n "$contents" ] # return success if $contents isn't empty
@@ -51,7 +54,7 @@ load_and_warn() {
     # writes warning to stderr if variable load fails
     load_data $@
 
-    if [ $? -ne 0 ]; then
+    if [ $? -ne 0 ] && [ -z "$1" ]; then
         echo "Warning: Variable \"$1\" is empty (searched directory $shelldata)." >&2
     else
         echo "Variable \"$1\" is set."
@@ -64,9 +67,48 @@ load_defaults() {
         set_data loglevel 0
     fi
 
-    [ -z "$audiosrc" ] && set_data audiosrc $noaudio
-    [ -z "$streamloops" ] && set_data streamloops "false"
-    [ -z "$streamsig" ] && set_data streamsig "true"
+    [ -z "$s_audio" ] && set_data s_audio $noaudio
+    [ -z "$s_framerate" ] && set_data s_framerate 30
+
+    [ -z "$s_loops" ] && set_data s_loops "false"
+    [ -z "$s_sig" ] && set_data s_sig "true"
+
+    [ -z "$s_display" ] && set_data s_display 0
+    [ -z "$s_screen" ] && set_data s_screen 0
+
+    [ -z "$s_capture_x" ] && set_data s_capture_x 0
+    [ -z "$s_capture_y" ] && set_data s_capture_y 0
+
+    [ -z "$s_dimensions_x" ] && set_data s_dimensions_x 240
+    [ -z "$s_dimensions_y" ] && set_data s_dimensions_y 256
+}
+
+load_bot_vars() {
+    : # placeholder function
+}
+
+load_nes_vars() {
+    load_and_warn emurom
+}
+
+load_stream_vars() {
+    load_and_warn s_uri
+    load_and_warn s_dest
+
+    load_data s_audio
+    load_data s_framerate
+
+    load_data s_loops
+    load_data s_sig
+
+    load_data s_display
+    load_data s_screen
+
+    load_data s_capture_x
+    load_data s_capture_y
+
+    load_data s_dimensions_x
+    load_data s_dimensions_y
 }
 
 update_data() {
@@ -75,17 +117,9 @@ update_data() {
             load_and_warn $var
         done
     else
-        load_and_warn basedir
-        load_and_warn emurom
-
-        load_and_warn logdir
-        load_data loglevel
-
-        load_data audiosrc
-        load_data streamloops
-        load_data streamsig
-        load_and_warn streamuri
-        load_and_warn streamdest
+        load_bot_vars
+        load_nes_vars
+        load_stream_vars
     fi
 
     echo # for formatting
@@ -122,10 +156,19 @@ set_directory() {
     test_writable_dir "$2" && set_data "$1" "$2"
 }
 
+load_and_warn basedir
+load_and_warn logdir
+load_data loglevel
+
 update_data
 load_defaults
 
 # constant paths relative to project root
-set_directory shldir "$basedir/shell/"
-set_directory botdir "$basedir/bot/"
-set_directory emudir "$basedir/emu/"
+if [ -n "$basedir" ]; then
+    set_directory shldir "$basedir/shell/"
+    set_directory botdir "$basedir/bot/"
+    set_directory emudir "$basedir/emu/"
+else
+    echo "Error: basedir is empty" >&2
+    exit 1
+fi

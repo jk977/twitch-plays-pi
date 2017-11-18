@@ -2,6 +2,8 @@
 
 . "$( dirname "$0" )/../settings.sh"
 
+load_nes_vars
+
 get_sound_args() {
     if [ "$audiosrc" = $gameaudio ] 2>/dev/null; then
         echo "--sound 1 --soundrate 44100 --soundq 1 --soundbufsize 200"

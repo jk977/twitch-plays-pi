@@ -3,6 +3,16 @@
 . "$shldir/tests.sh"
 . "$shldir/menu/common.sh"
 
+format_uri() {
+    awk '(substr($1, length($1), 1) != "/") {
+            print $1"/";
+            exit;
+        }
+        { print $1; }' |\
+    tr -s / |\
+    sed 's_:/_://_'
+}
+
 change_stream_uri() {
     prompt="Enter stream URI.\nAssumes local path if no protocol specified."
 
@@ -10,24 +20,25 @@ change_stream_uri() {
         --title "Stream URI" \
         --inputbox "$prompt" \
         $(dimensions) \
-        "$streamuri"
+        "$s_uri"
 
     if [ $? -eq 0 ]; then
-        set_data streamuri "$(get_result)"
+        result=$( get_result | format_uri )
+        set_data s_uri "$result"
     fi
 }
 
 change_stream_endpt() {
-    prompt="Enter stream endpoint (e.g., filename, RTMP key).\n\nIf streaming to Twitch, enter the RTMP key found in your account's dashboard. It should begin with \"live\".\nIf streaming to a file, make sure the extension matches the output format in shell/core/stream.sh"
+    prompt="Enter stream endpoint (e.g., filename, RTMP key).\n\nIf streaming to Twitch, enter the RTMP key found in your account's dashboard. It should begin with \"live\".\nIf streaming to a file, make sure the extension matches the output format in shell/core/stream"
 
     show_submenu \
         --title "Stream Endpoint" \
         --inputbox "$prompt" \
         $(dimensions) \
-        "$streamdest"
+        "$s_dest"
 
     if [ $? -eq 0 ]; then
-        set_data streamdest "$(get_result)"
+        set_data s_dest "$(get_result)"
     fi
 }
 

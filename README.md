@@ -7,8 +7,8 @@ A 3-piece set of scripts originally intended to host a Twitch Plays style bot on
 * Python 3
 * [whiptail](https://linux.die.net/man/1/whiptail) (used by config.sh)
 * FCEUX 2.1.2 or higher (for built-in Lua)
-* ffmpeg with libx264, libmp3lame, and librtmp enabled
-    * Enable encoders/muxers as needed, depending on what type of input/output you use
+* ffmpeg with libx264,librtmp, and libmp3lame (optional if using another audio library) enabled
+    * Enable encoders/muxers and other libraries as needed, depending on what type of input/output you use
 
 ## Usage
 

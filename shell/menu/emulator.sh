@@ -4,6 +4,7 @@
 . "$shldir/menu/common.sh"
 
 change_rom_dir() {
+    update_data emurom
     default=$(get_default_dir "$emurom")
 
     show_submenu \

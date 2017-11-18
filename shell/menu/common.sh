@@ -21,6 +21,8 @@ dimensions() {
 }
 
 get_default_dir() {
+    # prints $1 to stdout if non-empty, otherwise prints the project root
+
     if [ -n "$1" ]; then
         echo "$1"
     else
