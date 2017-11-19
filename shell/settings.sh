@@ -111,6 +111,11 @@ load_stream_vars() {
     load_data s_dimensions_y
 }
 
+load_log_vars() {
+    load_and_warn logdir
+    load_data loglevel
+}
+
 update_data() {
     if [ $# -ne 0 ]; then
         for var in $@; do
@@ -120,6 +125,7 @@ update_data() {
         load_bot_vars
         load_nes_vars
         load_stream_vars
+        load_log_vars
     fi
 
     echo # for formatting
@@ -156,9 +162,7 @@ set_directory() {
     test_writable_dir "$2" && set_data "$1" "$2"
 }
 
-load_and_warn basedir
-load_and_warn logdir
-load_data loglevel
+load_data basedir
 
 update_data
 load_defaults
