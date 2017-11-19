@@ -18,10 +18,12 @@ change_audio_dir() {
         $(dimensions) \
         "$default"
 
-    if [ $? -eq 0 ]; then
-        set_file s_audio "$(get_result)"
-        check_file_error
+    if [ $? -ne 0 ]; then
+        audio_menu
     fi
+
+    set_file s_audio "$(get_result)"
+    check_file_error
 }
 
 audio_menu() {
@@ -57,6 +59,10 @@ audio_menu() {
         2 "Game Audio" $gamestat \
         3 "None" $nonestat
 
+    if [ $? -ne 0 ]; then
+        stream_menu
+    fi
+
     case "$(get_result)" in
         1)
             change_audio_dir
@@ -72,6 +78,4 @@ audio_menu() {
             set_data s_audio $noaudio
             ;;
     esac
-
-    stream_menu
 }

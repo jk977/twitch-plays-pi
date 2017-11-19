@@ -12,10 +12,12 @@ change_log_path() {
         $(dimensions) \
         "$default"
 
-    if [ $? -eq 0 ]; then
-        set_directory logdir "$(get_result)"
-        check_file_error
+    if [ $? -ne 0 ]; then
+        log_menu
     fi
+
+    set_directory logdir "$(get_result)"
+    check_file_error
 }
 
 change_log_level() {
@@ -43,6 +45,10 @@ change_log_level() {
         1 "Don't log output" $log0 \
         2 "Log output" $log1
 
+    if [ $? -ne 0 ]; then
+        log_menu
+    fi
+
     case "$(get_result)" in
         1)
             set_data loglevel 1
@@ -54,26 +60,23 @@ change_log_level() {
 }
 
 log_menu() {
-    status=0
+    show_submenu \
+        --title "Logging" --notags \
+        --menu "Configure which option?" \
+        $(dimensions) 2 \
+        0 "Change Log Path" \
+        1 "Set Log Level"
 
-    while [ $status -eq 0 ]; do
-        show_submenu \
-            --title "Logging" --notags \
-            --menu "Configure which option?" \
-            $(dimensions) 2 \
-            0 "Change Log Path" \
-            1 "Set Log Level"
-        status=$?
+    if [ $? -ne 0 ]; then
+        main_menu
+    fi
 
-        case "$(get_result)" in
-            0)
-                change_log_path
-                ;;
-            1)
-                change_log_level
-                ;;
-        esac
-    done
-
-    main_menu
+    case "$(get_result)" in
+        0)
+            change_log_path
+            ;;
+        1)
+            change_log_level
+            ;;
+    esac
 }

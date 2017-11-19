@@ -13,30 +13,30 @@ change_rom_dir() {
         $(dimensions) \
         "$default"
 
-    if [ $? -eq 0 ]; then
-        set_file emurom "$(get_result)"
-        check_file_error
+    if [ $? -ne 0 ]; then
+        emulator_menu
     fi
+
+    set_file emurom "$(get_result)"
+    check_file_error
 }
 
 emulator_menu() {
     prompt="Configure which option?"
-    status=0
 
-    while [ $status -eq 0 ]; do
-        show_submenu \
-            --title "Emulator" --notags \
-            --menu "$prompt" \
-            $(dimensions) 2 \
-            1 "ROM Location"
-        status=$?
+    show_submenu \
+        --title "Emulator" --notags \
+        --menu "$prompt" \
+        $(dimensions) 2 \
+        1 "ROM Location"
 
-        case "$(get_result)" in
-            1)
-                change_rom_dir
-                ;;
-        esac
-    done
+    if [ $? -ne 0 ]; then
+        main_menu
+    fi
 
-    main_menu
+    case "$(get_result)" in
+        1)
+            change_rom_dir
+            ;;
+    esac
 }

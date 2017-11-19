@@ -35,6 +35,10 @@ change_nick() {
         $(dimensions) \
         "$current"
 
+    if [ $? -ne 0 ]; then
+        bot_menu
+    fi
+
     write_result nick
 }
 
@@ -46,6 +50,10 @@ change_pass() {
         --inputbox "Enter password.\nPrefix the token with \"oauth:\" if using an OAuth token:" \
         $(dimensions) \
         "$current"
+
+    if [ $? -ne 0 ]; then
+        bot_menu
+    fi
 
     write_result pass
 }
@@ -59,6 +67,10 @@ change_host() {
         $(dimensions) \
         "$current"
 
+    if [ $? -ne 0 ]; then
+        bot_menu
+    fi
+
     write_result host
 }
 
@@ -71,39 +83,40 @@ change_owner() {
         $(dimensions) \
         "$current"
 
+    if [ $? -ne 0 ]; then
+        bot_menu
+    fi
+
     write_result owner
 }
 
 bot_menu() {
     prompt="Select an option to configure.\nThese are used in the bot's interactions with the host site's API."
-    status=0
+    show_submenu \
+        --title "Bot" --notags \
+        --menu "$prompt" \
+        $(dimensions) 4 \
+        1 "Username" \
+        2 "Password" \
+        3 "Host" \
+        4 "Owner"
 
-    while [ $status -eq 0 ]; do
-        show_submenu \
-            --title "Bot" --notags \
-            --menu "$prompt" \
-            $(dimensions) 4 \
-            1 "Username" \
-            2 "Password" \
-            3 "Host" \
-            4 "Owner"
-        status=$?
+    if [ $? -ne 0 ]; then
+        main_menu
+    fi
 
-        case "$(get_result)" in
-            1)
-                change_nick
-                ;;
-            2)
-                change_pass
-                ;;
-            3)
-                change_host
-                ;;
-            4)
-                change_owner
-                ;;
-        esac
-    done
-
-    main_menu
+    case "$(get_result)" in
+        1)
+            change_nick
+            ;;
+        2)
+            change_pass
+            ;;
+        3)
+            change_host
+            ;;
+        4)
+            change_owner
+            ;;
+    esac
 }

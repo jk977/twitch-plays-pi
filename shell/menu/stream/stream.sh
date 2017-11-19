@@ -3,6 +3,7 @@
 . "$shldir/tests.sh"
 . "$shldir/menu/common.sh"
 . "$shldir/menu/stream/audio.sh"
+. "$shldir/menu/stream/advanced.sh"
 . "$shldir/menu/stream/destination.sh"
 
 change_stream_loop() {
@@ -52,34 +53,31 @@ change_stream_signal() {
 }
 
 stream_menu() {
-    status=0
+    show_submenu \
+        --title "Stream" --notags \
+        --menu "Configure which option?" \
+        $(dimensions) 4 \
+        1 "Audio" \
+        2 "Destination" \
+        3 "Looping" \
+        4 "End-of-Stream Signal"
 
-    while [ $status -eq 0 ]; do
-        show_submenu \
-            --title "Stream" --notags \
-            --menu "Configure which option?" \
-            $(dimensions) 4 \
-            1 "Audio" \
-            2 "Destination" \
-            3 "Looping" \
-            4 "End-of-Stream Signal"
-        status=$?
+    if [ $? -ne 0 ]; then
+        main_menu
+    fi
 
-        case "$(get_result)" in
-            1)
-                audio_menu
-                ;;
-            2)
-                destination_menu
-                ;;
-            3)
-                change_stream_loop
-                ;;
-            4)
-                change_stream_signal
-                ;;
-        esac
-    done
-
-    main_menu
+    case "$(get_result)" in
+        1)
+            audio_menu
+            ;;
+        2)
+            destination_menu
+            ;;
+        3)
+            change_stream_loop
+            ;;
+        4)
+            change_stream_signal
+            ;;
+    esac
 }

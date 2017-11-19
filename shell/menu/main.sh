@@ -31,7 +31,10 @@ main_menu() {
         3 "Stream" \
         4 "Logging" \
         5 "Clear Cached Information"
-    status=$?
+
+    if [ $? -ne 0 ]; then
+        return
+    fi
 
     case "$(get_result)" in
         1)
@@ -50,8 +53,4 @@ main_menu() {
             clear_cache
             ;;
     esac
-
-    if [ $status -ne 0 ]; then
-        exit 0
-    fi
 }
