@@ -6,18 +6,17 @@
 change_log_path() {
     default="$(get_default_dir "$logdir")"
 
-    show_submenu \
-        --title "Log Path" \
-        --inputbox "Enter path to save log files in:" \
-        $(dimensions) \
-        "$default"
+    show_window -sl inputbox \
+        -t "Log Path" \
+        -p "Enter path to save log files in:" \
+        -- "$default"
 
-    if [ $? -ne 0 ]; then
-        log_menu
+    if [ $? -eq 0 ]; then
+        set_directory logdir "$(get_result)"
+        check_file_error
     fi
 
-    set_directory logdir "$(get_result)"
-    check_file_error
+    log_menu
 }
 
 change_log_level() {
@@ -38,45 +37,45 @@ change_log_level() {
             ;;
     esac
 
-    show_submenu \
-        --title "Log Level" \
-        --radiolist "Set logging level. Current log directory:\n$logdir" \
-        $(dimensions) 2 \
+    show_window -sl radiolist \
+        -t "Log Level" \
+        -p "Set logging level. Current log directory:\n$logdir" \
+        -- 2 \
         1 "Don't log output" $log0 \
         2 "Log output" $log1
 
-    if [ $? -ne 0 ]; then
-        log_menu
+    if [ $? -eq 0 ]; then
+        case "$(get_result)" in
+            1)
+                set_data loglevel 1
+                ;;
+            2)
+                set_data loglevel 2
+                ;;
+        esac
     fi
 
-    case "$(get_result)" in
-        1)
-            set_data loglevel 1
-            ;;
-        2)
-            set_data loglevel 2
-            ;;
-    esac
+    log_menu
 }
 
 log_menu() {
-    show_submenu \
-        --title "Logging" --notags \
-        --menu "Configure which option?" \
-        $(dimensions) 2 \
+    show_window -sl menu \
+        -t "Logging" \
+        -p "Configure which option?" \
+        -- 2 \
         0 "Change Log Path" \
         1 "Set Log Level"
 
-    if [ $? -ne 0 ]; then
-        main_menu
+    if [ $? -eq 0 ]; then
+        case "$(get_result)" in
+            0)
+                change_log_path
+                ;;
+            1)
+                change_log_level
+                ;;
+        esac
     fi
 
-    case "$(get_result)" in
-        0)
-            change_log_path
-            ;;
-        1)
-            change_log_level
-            ;;
-    esac
+    main_menu
 }

@@ -8,49 +8,49 @@
 . "$shldir/menu/common.sh"
 
 clear_cache() {
-    show_submenu \
-        --title "Clear Cache?" --defaultno \
-        --yesno "This will remove all of the program's stored information. Continue?" \
-        $(dimensions)
+    show_window -sl yesno \
+        -t "Clear Cache?" \
+        -p "This will remove all of the program's stored information. Continue?" \
+        -- --defaultno
 
     if [ $? -eq 0 ]; then
         test_writable_dir "$logdir" && rm "$logdir/"*
-        rm -r "$datadir" && whiptail --msgbox "Clear successful!" $(dimensions)
+        rm -r "$datadir" && show_window -sl msgbox -p "Clear successful!"
     fi
 
     main_menu
 }
 
 main_menu() {
-    show_menu \
-        --title "Main Menu" --notags \
-        --menu "What do you want to change?" \
-        $(dimensions) 5 \
+    show_window -l menu \
+        -t "Main Menu" \
+        -p "What do you want to change?" \
+        -- 5 \
         1 "Bot" \
         2 "Emulator" \
         3 "Stream" \
         4 "Logging" \
         5 "Clear Cached Information"
 
-    if [ $? -ne 0 ]; then
-        return
+    if [ $? -eq 0 ]; then
+        case "$(get_result)" in
+            1)
+                bot_menu
+                ;;
+            2)
+                emulator_menu
+                ;;
+            3)
+                stream_menu
+                ;;
+            4)
+                log_menu
+                ;;
+            5)
+                clear_cache
+                ;;
+        esac
     fi
 
-    case "$(get_result)" in
-        1)
-            bot_menu
-            ;;
-        2)
-            emulator_menu
-            ;;
-        3)
-            stream_menu
-            ;;
-        4)
-            log_menu
-            ;;
-        5)
-            clear_cache
-            ;;
-    esac
+    exit
 }

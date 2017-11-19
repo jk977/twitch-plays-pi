@@ -14,46 +14,44 @@ format_uri() {
 }
 
 change_stream_uri() {
-    prompt="Enter stream URI.\nAssumes local path if no protocol specified."
+    update_data s_uri
 
-    show_submenu \
-        --title "Stream URI" \
-        --inputbox "$prompt" \
-        $(dimensions) \
-        "$s_uri"
+    show_window -sl inputbox \
+        -t "Stream URI" \
+        -p "Enter stream URI.\nAssumes local path if no protocol specified." \
+        -- "$s_uri"
 
     if [ $? -eq 0 ]; then
-        result=$( get_result | format_uri )
-        set_data s_uri "$result"
+        set_data s_uri "$( get_result | format_uri )"
     fi
+
+    destination_menu
 }
 
 change_stream_endpt() {
-    prompt="Enter stream endpoint (e.g., filename, RTMP key).\n\nIf streaming to Twitch, enter the RTMP key found in your account's dashboard. It should begin with \"live\".\nIf streaming to a file, make sure the extension matches the output format in shell/core/stream"
+    update_data s_dest
 
-    show_submenu \
-        --title "Stream Endpoint" \
-        --inputbox "$prompt" \
-        $(dimensions) \
-        "$s_dest"
+    show_window -sl inputbox \
+        -t "Stream Endpoint" \
+        -p "Enter stream endpoint (e.g., filename, RTMP key).\n\nIf streaming to Twitch, enter the RTMP key found in your account's dashboard. It should begin with \"live\".\nIf streaming to a file, make sure the extension matches the output format in shell/core/stream" \
+        -- "$s_dest"
 
     if [ $? -eq 0 ]; then
         set_data s_dest "$(get_result)"
     fi
+
+    destination_menu
 }
 
 destination_menu() {
-    status=0
+    show_window -sl menu \
+        -t "Stream Destination" \
+        -p "Configure which option?" \
+        -- 2 \
+        1 URI \
+        2 Endpoint
 
-    while [ $status -eq 0 ]; do
-        show_submenu \
-            --title "Stream Destination" --notags\
-            --menu "Configure which option?" \
-            $(dimensions) 2 \
-            1 URI \
-            2 Endpoint
-        status=$?
-
+    if [ $? -eq 0 ]; then
         case "$(get_result)" in
             1)
                 change_stream_uri
@@ -62,7 +60,7 @@ destination_menu() {
                 change_stream_endpt
                 ;;
         esac
-    done
+    fi
 
     stream_menu
 }

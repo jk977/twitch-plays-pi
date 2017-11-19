@@ -30,20 +30,47 @@ get_default_dir() {
     fi
 }
 
-show_window() {
+show_error() {
+    whiptail --msgbox "$@" $(dimensions)
+}
+
+base_window() {
     whiptail "$@" 2>$tmpfile
 }
 
-show_submenu() {
-    show_window $submenu_buttons "$@"
-}
+show_window() {
+    # creates whiptail window with specified parameters.
+    # all trailing (i.e., non-getopts) parameters are
+    # passed to whiptail
 
-show_menu() {
-    show_window $menu_buttons "$@"
-}
+    buttons="$menu_buttons"
 
-show_error() {
-    whiptail --msgbox "$@" $(dimensions)
+    while getopts sl:t:p: opt; do
+        case $opt in
+            s)
+                buttons="$submenu_buttons"
+                ;;
+            l)
+                # window layout, such as yesno or msgbox
+                layout="--$OPTARG"
+                ;;
+            t)
+                title="$OPTARG"
+                ;;
+            p)
+                prompt="$OPTARG"
+                ;;
+        esac
+    done
+
+    shift $((OPTIND - 1))
+
+    base_window \
+        $buttons \
+        --title "$title" --notags \
+        $layout "$prompt" \
+        $(dimensions) \
+        "$@"
 }
 
 check_file_error() {
@@ -53,7 +80,7 @@ check_file_error() {
 }
 
 get_result() {
-    result="$(cat $tmpfile)"
+    result="$( cat $tmpfile 2>/dev/null )"
     rm $tmpfile 2>/dev/null
     echo "$result"
 }

@@ -7,36 +7,33 @@ change_rom_dir() {
     update_data emurom
     default=$(get_default_dir "$emurom")
 
-    show_submenu \
-        --title "ROM Location" \
-        --inputbox "Enter location of the ROM (must be compatible with the emulator):" \
-        $(dimensions) \
-        "$default"
+    show_window -sl inputbox \
+        -t "ROM Location" \
+        -p "Enter location of the ROM (must be compatible with the emulator):" \
+        -- "$default"
 
-    if [ $? -ne 0 ]; then
-        emulator_menu
+    if [ $? -eq 0 ]; then
+        set_file emurom "$(get_result)"
+        check_file_error
     fi
 
-    set_file emurom "$(get_result)"
-    check_file_error
+    emulator_menu
 }
 
 emulator_menu() {
-    prompt="Configure which option?"
-
-    show_submenu \
-        --title "Emulator" --notags \
-        --menu "$prompt" \
-        $(dimensions) 2 \
+    show_window -sl menu \
+        -t "Emulator" \
+        -p "Configure which option?" \
+        -- 1 \
         1 "ROM Location"
 
-    if [ $? -ne 0 ]; then
-        main_menu
+    if [ $? -eq 0 ]; then
+        case "$(get_result)" in
+            1)
+                change_rom_dir
+                ;;
+        esac
     fi
 
-    case "$(get_result)" in
-        1)
-            change_rom_dir
-            ;;
-    esac
+    main_menu
 }

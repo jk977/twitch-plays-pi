@@ -10,24 +10,20 @@ change_audio_dir() {
         default="$basedir"
     fi
 
-    prompt="Enter path to stream's audio file:"
+    show_window -sl inputbox \
+        -t "Audio Directory" \
+        -p "Enter path to stream's audio file:" \
+        -- "$default"
 
-    show_submenu \
-        --title "Audio Directory" \
-        --inputbox "$prompt" \
-        $(dimensions) \
-        "$default"
-
-    if [ $? -ne 0 ]; then
-        audio_menu
+    if [ $? -eq 0 ]; then
+        set_file s_audio "$(get_result)"
+        check_file_error
     fi
 
-    set_file s_audio "$(get_result)"
-    check_file_error
+    audio_menu
 }
 
 audio_menu() {
-    prompt="Choose audio source. If File is selected, you will be prompted to enter a path to an audio file:"
     oldsrc="$s_audio" # in case of failure
     filetag="File"
 
@@ -51,31 +47,31 @@ audio_menu() {
             ;;
     esac
 
-    show_submenu \
-        --title "Stream Audio" \
-        --radiolist "$prompt" \
-        $(dimensions) 3 \
+    show_window -sl radiolist \
+        -t "Stream Audio" \
+        -p "Choose audio source. If File is selected, you will be prompted to enter a path to an audio file:" \
+        -- 3 \
         1 "$filetag" $filestat \
         2 "Game Audio" $gamestat \
         3 "None" $nonestat
 
-    if [ $? -ne 0 ]; then
-        stream_menu
+    if [ $? -eq 0 ]; then
+        case "$(get_result)" in
+            1)
+                change_audio_dir
+
+                if [ $? -ne 0 ]; then
+                    s_audio="$oldsrc" # restores old value if invalid input
+                fi
+                ;;
+            2)
+                set_data s_audio $gameaudio
+                ;;
+            3)
+                set_data s_audio $noaudio
+                ;;
+        esac
     fi
 
-    case "$(get_result)" in
-        1)
-            change_audio_dir
-
-            if [ $? -ne 0 ]; then
-                s_audio="$oldsrc" # restores old value if invalid input
-            fi
-            ;;
-        2)
-            set_data s_audio $gameaudio
-            ;;
-        3)
-            set_data s_audio $noaudio
-            ;;
-    esac
+    stream_menu
 }

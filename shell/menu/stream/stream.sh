@@ -15,18 +15,18 @@ change_stream_loop() {
         default="--defaultno"
     fi
 
-    prompt="Enable stream looping? This will make the stream restart instead of terminating once the end of the stream audio file is reached. If the stream uses emulator audio, setting this option does nothing."
-
-    show_submenu \
-        --title "Stream Loop" $default \
-        --yesno "$prompt" \
-        $(dimensions)
+    show_window -sl yesno \
+        -t "Stream Loop" \
+        -p "Enable stream looping? This will make the stream restart instead of terminating once the end of the stream audio file is reached. If the stream uses emulator audio, setting this option does nothing." \
+        -- $default
 
     if [ $? -eq 0 ]; then
         set_data s_loops "true"
     else
         set_data s_loops "false"
     fi
+
+    stream_menu
 }
 
 change_stream_signal() {
@@ -38,46 +38,46 @@ change_stream_signal() {
         default="--defaultno"
     fi
 
-    prompt="Enable end-of-stream signal? This will send a SIGALRM to the Twitch bot's process every time the stream restarts."
-
-    show_submenu \
-        --title "Stream Signal" $default \
-        --yesno "$prompt" \
-        $(dimensions)
+    show_window -sl yesno \
+        -t "Stream Signal" \
+        -p "Enable end-of-stream signal? This will send a SIGALRM to the Twitch bot's process every time the stream restarts." \
+        -- $default
 
     if [ $? -eq 0 ]; then
         set_data s_sig "true"
     else
         set_data s_sig "false"
     fi
+
+    stream_menu
 }
 
 stream_menu() {
-    show_submenu \
-        --title "Stream" --notags \
-        --menu "Configure which option?" \
-        $(dimensions) 4 \
+    show_window -sl menu \
+        -t "Stream" \
+        -p "Configure which option?" \
+        -- 4 \
         1 "Audio" \
         2 "Destination" \
         3 "Looping" \
         4 "End-of-Stream Signal"
 
-    if [ $? -ne 0 ]; then
-        main_menu
+    if [ $? -eq 0 ]; then
+        case "$(get_result)" in
+            1)
+                audio_menu
+                ;;
+            2)
+                destination_menu
+                ;;
+            3)
+                change_stream_loop
+                ;;
+            4)
+                change_stream_signal
+                ;;
+        esac
     fi
 
-    case "$(get_result)" in
-        1)
-            audio_menu
-            ;;
-        2)
-            destination_menu
-            ;;
-        3)
-            change_stream_loop
-            ;;
-        4)
-            change_stream_signal
-            ;;
-    esac
+    main_menu
 }
