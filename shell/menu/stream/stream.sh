@@ -60,7 +60,7 @@ stream_menu() {
         1 "Audio" \
         2 "Destination" \
         3 "Looping" \
-        4 "End-of-Stream Signal"
+        4 "Advanced"
 
     if [ $? -eq 0 ]; then
         case "$(get_result)" in
@@ -74,7 +74,7 @@ stream_menu() {
                 change_stream_loop
                 ;;
             4)
-                change_stream_signal
+                advanced_menu
                 ;;
         esac
     fi
