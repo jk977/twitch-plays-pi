@@ -34,6 +34,22 @@ show_error() {
     whiptail --msgbox "$@" $(dimensions)
 }
 
+check_file_error() {
+    if [ $? -ne 0 ]; then
+        show_error "Invalid file or directory entered. No changes made."
+        return 1
+    fi
+}
+
+check_number_input() {
+    if test_number "$1"; then
+        return 0
+    else
+        show_error "Invalid number entered. No changes made."
+        return 1
+    fi
+}
+
 base_window() {
     whiptail "$@" 2>$tmpfile
 }
@@ -71,12 +87,6 @@ show_window() {
         $layout "$prompt" \
         $(dimensions) \
         "$@"
-}
-
-check_file_error() {
-    if [ $? -ne 0 ]; then
-        show_error "Invalid file or directory entered. No changes made."
-    fi
 }
 
 get_result() {

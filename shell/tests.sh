@@ -21,5 +21,6 @@ test_number() {
 
     # $1: value to check
 
-    echo $1 | awk '(int($1) == $1) { print $1; }'
+    result=$( echo $1 | awk '(int($1) == $1) { print $1; }' )
+    [ -n "$result" ]
 }
