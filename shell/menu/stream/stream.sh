@@ -53,9 +53,7 @@ change_stream_signal() {
 }
 
 stream_menu() {
-    status=0
-
-    while [ $status -eq 0 ]; do
+    while
         show_window -sl menu \
             -t "Stream" \
             -p "Configure which option?" \
@@ -64,9 +62,8 @@ stream_menu() {
             2 "Destination" \
             3 "Looping" \
             4 "Advanced"
-        status=$?
 
-        if [ $status -eq 0 ]; then
+        [ $? -eq 0 ] &&
             case "$(get_result)" in
                 1)
                     audio_menu
@@ -81,10 +78,7 @@ stream_menu() {
                     advanced_menu
                     ;;
             esac
-
-            status=$?
-        fi
-    done
+    do :; done
 
     return 0
 }

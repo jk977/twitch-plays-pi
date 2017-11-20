@@ -21,26 +21,20 @@ change_rom_dir() {
 }
 
 emulator_menu() {
-    status=0
-
-    while [ $status -eq 0 ]; do
+    while
         show_window -sl menu \
             -t "Emulator" \
             -p "Configure which option?" \
             -- 1 \
             1 "ROM Location"
-        status=$?
 
-        if [ $status -eq 0 ]; then
+        [ $? -eq 0 ] &&
             case "$(get_result)" in
                 1)
                     change_rom_dir
                     ;;
             esac
-
-            status=$?
-        fi
-    done
+    do :; done
 
     return 0
 }

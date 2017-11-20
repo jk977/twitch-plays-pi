@@ -22,7 +22,7 @@ change_log_path() {
 change_log_level() {
     if test_writable_dir "$logdir"; then :; else
         show_error "Log directory not found. Logging is disabled." 
-        return 1
+        return 0
     fi
 
     log0=OFF
@@ -59,18 +59,15 @@ change_log_level() {
 }
 
 log_menu() {
-    status=0
-
-    while [ $status -eq 0 ]; do
+    while
         show_window -sl menu \
             -t "Logging" \
             -p "Configure which option?" \
             -- 2 \
             0 "Change Log Path" \
             1 "Set Log Level"
-        status=$?
 
-        if [ $status -eq 0 ]; then
+        [ $? -eq 0 ] &&
             case "$(get_result)" in
                 0)
                     change_log_path
@@ -79,10 +76,7 @@ log_menu() {
                     change_log_level
                     ;;
             esac
-
-            status=$?
-        fi
-    done
+    do :; done
 
     return 0
 }

@@ -22,9 +22,7 @@ clear_cache() {
 }
 
 main_menu() {
-    status=0
-
-    while [ $status -eq 0 ]; do
+    while
         show_window -l menu \
             -t "Main Menu" \
             -p "What do you want to change?" \
@@ -34,9 +32,8 @@ main_menu() {
             3 "Stream" \
             4 "Logging" \
             5 "Clear Cached Information"
-        status=$?
 
-        if [ $status -eq 0 ]; then
+        [ $? -eq 0 ] &&
             case "$(get_result)" in
                 1)
                     bot_menu
@@ -54,10 +51,7 @@ main_menu() {
                     clear_cache
                     ;;
             esac
-
-            status=$?
-        fi
-    done
+    do :; done
 
     return 0
 }

@@ -87,9 +87,7 @@ change_owner() {
 }
 
 bot_menu() {
-    status=0
-
-    while [ $status -eq 0 ]; do
+    while
         show_window -sl menu \
             -t "Bot" \
             -p "Select an option to configure.\nThese are used in the bot's interactions with the host site's API." \
@@ -98,9 +96,8 @@ bot_menu() {
             2 "Password" \
             3 "Host" \
             4 "Owner"
-        status=$?
 
-        if [ $status -eq 0 ]; then
+        [ $? -eq 0 ] &&
             case "$(get_result)" in
                 1)
                     change_nick
@@ -115,10 +112,7 @@ bot_menu() {
                     change_owner
                     ;;
             esac
-
-            status=$?
-        fi
-    done
+    do :; done
 
     return 0
 }

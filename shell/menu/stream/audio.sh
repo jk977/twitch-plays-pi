@@ -24,9 +24,7 @@ change_audio_dir() {
 }
 
 audio_menu() {
-    status=0
-
-    while [ $status -eq 0 ]; do
+    while
         oldsrc="$s_audio_file" # in case of failure
         filetag="File"
 
@@ -60,9 +58,8 @@ audio_menu() {
             1 "$filetag" $filestat \
             2 "Game Audio" $gamestat \
             3 "None" $nonestat
-        status=$?
 
-        if [ $status -eq 0 ]; then
+        [ $? -eq 0 ] &&
             case "$(get_result)" in
                 1)
                     change_audio_dir
@@ -74,10 +71,7 @@ audio_menu() {
                     set_data s_audio_type $noaudio
                     ;;
             esac
-
-            status=$?
-        fi
-    done
+    do :; done
 
     return 0
 }

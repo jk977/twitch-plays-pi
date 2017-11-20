@@ -44,18 +44,15 @@ change_stream_endpt() {
 }
 
 destination_menu() {
-    status=0
-
-    while [ $status -eq 0 ]; do
+    while
         show_window -sl menu \
             -t "Stream Destination" \
             -p "Configure which option?" \
             -- 2 \
             1 URI \
             2 Endpoint
-        status=$?
 
-        if [ $status -eq 0 ]; then
+        [ $? -eq 0 ] &&
             case "$(get_result)" in
                 1)
                     change_stream_uri
@@ -64,10 +61,7 @@ destination_menu() {
                     change_stream_endpt
                     ;;
             esac
-
-            status=$?
-        fi
-    done
+    do :; done
 
     return 0
 }

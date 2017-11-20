@@ -76,9 +76,7 @@ change_y_offset() {
 }
 
 capture_menu() {
-    status=0
-
-    while [ $status -eq 0 ]; do
+    while
         show_window -sl menu \
             -t "Stream Capture Area" \
             -p "These settings adjust the area of the desktop recorded by ffmpeg. Please select an option:" \
@@ -87,9 +85,8 @@ capture_menu() {
             2 "Height" \
             3 "X-Offset" \
             4 "Y-Offset"
-        status=$?
 
-        if [ $status -eq 0 ]; then
+        [ $? -eq 0 ] &&
             case "$(get_result)" in
                 1)
                     change_width
@@ -104,10 +101,7 @@ capture_menu() {
                     change_y_offset
                     ;;
             esac
-
-            status=$?
-        fi
-    done
+    do :; done
 
     return 0
 }

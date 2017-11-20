@@ -83,9 +83,7 @@ change_signal() {
 }
 
 advanced_menu() {
-    status=0
-
-    while [ $status -eq 0 ]; do
+    while
         show_window -sl menu \
             -t "Advanced Stream Configuration" \
             -p "Configure which option?" \
@@ -95,9 +93,8 @@ advanced_menu() {
             3 "Display Number" \
             4 "Screen Number" \
             5 "End-of-Stream Signal"
-        status=$?
 
-        if [ $status -eq 0 ]; then
+        [ $? -eq 0 ] &&
             case "$(get_result)" in
                 1)
                     change_framerate
@@ -115,10 +112,7 @@ advanced_menu() {
                     change_signal
                     ;;
             esac
-
-            status=$?
-        fi
-    done
+    do :; done
 
     return 0
 }
