@@ -8,6 +8,7 @@ settings_included=true
 . shell/tests.sh
 
 # constant values
+fileaudio=1
 gameaudio=2
 noaudio=3
 
@@ -61,26 +62,33 @@ load_and_warn() {
     fi
 }
 
+default_if_empty() {
+    # $1 name of variable to assign
+    # $2 value to assign variable if variable is empty
+
+    eval '[ -z $'"$1"' ] && set_data '"$1 $2"
+}
+
 load_defaults() {
     if test_writable_dir "$logdir" && [ -n "$loglevel" ]; then :; else
         # disable logging if not configured
         set_data loglevel 0
     fi
 
-    [ -z "$s_audio" ] && set_data s_audio $noaudio
-    [ -z "$s_framerate" ] && set_data s_framerate 30
+    default_if_empty s_audio_type $noaudio
+    default_if_empty s_framerate 30
 
-    [ -z "$s_loops" ] && set_data s_loops "false"
-    [ -z "$s_sig" ] && set_data s_sig "true"
+    default_if_empty s_loops "false"
+    default_if_empty s_sig "true"
 
-    [ -z "$s_display" ] && set_data s_display 0
-    [ -z "$s_screen" ] && set_data s_screen 0
+    default_if_empty s_display 0
+    default_if_empty s_screen 0
 
-    [ -z "$s_capture_x" ] && set_data s_capture_x 0
-    [ -z "$s_capture_y" ] && set_data s_capture_y 0
+    default_if_empty s_capture_x 0
+    default_if_empty s_capture_y 0
 
-    [ -z "$s_dimensions_x" ] && set_data s_dimensions_x 240
-    [ -z "$s_dimensions_y" ] && set_data s_dimensions_y 256
+    default_if_empty s_dimensions_x 240
+    default_if_empty s_dimensions_y 256
 }
 
 load_bot_vars() {
@@ -95,7 +103,8 @@ load_stream_vars() {
     load_and_warn s_uri
     load_and_warn s_dest
 
-    load_data s_audio
+    load_data s_audio_type
+    load_data s_audio_file
     load_data s_framerate
 
     load_data s_loops

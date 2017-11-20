@@ -8,13 +8,18 @@ load_stream_vars
 stream="${s_uri}${s_dest}"
 
 get_audio_args() {
-    if test_readable_file "$s_audio"; then
-        # use audio from file
-        echo "-i $s_audio -c:a mp3 -ac 2"
-    elif [ "$s_audio" -eq $gameaudio ] && test_installed pulseaudio; then
-        # use audio from game via pulse
-        echo "-thread_queue_size 64 -f pulse -ar 44100 -i default"
-    fi
+    case $s_audio_type in
+        $fileaudio)
+            if test_readable_file "$s_audio_file"; then
+                echo "-i $s_audio_file -c:a mp3 -ac 2"
+            else
+                set_data s_audio_type $noaudio >/dev/null
+            fi
+            ;;
+        $gameaudio)
+            echo "-thread_queue_size 64 -f pulse -ar 44100 -i default"
+            ;;
+    esac
 }
 
 send_signal() {

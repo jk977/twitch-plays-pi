@@ -4,20 +4,20 @@
 . "$shldir/menu/common.sh"
 
 change_audio_dir() {
-    if test_readable_file "$s_audio"; then
-        default="$s_audio"
-    else
-        default="$basedir"
-    fi
-
     show_window -sl inputbox \
         -t "Audio Directory" \
         -p "Enter path to stream's audio file:" \
-        -- "$default"
+        -- "$s_audio_file"
 
     if [ $? -eq 0 ]; then
-        set_file s_audio "$(get_result)"
-        check_file_error
+        result=$(get_result)
+
+        if test_readable_file "$result"; then
+            set_file s_audio_file "$result"
+            set_data s_audio_type $fileaudio
+        else
+            show_error "Invalid file entered. No changes made."
+        fi
     fi
 
     return 0
@@ -27,26 +27,29 @@ audio_menu() {
     status=0
 
     while [ $status -eq 0 ]; do
-        oldsrc="$s_audio" # in case of failure
+        oldsrc="$s_audio_file" # in case of failure
         filetag="File"
 
         filestat="OFF"
         gamestat="OFF"
         nonestat="OFF"
 
-        if test_readable_file "$s_audio"; then
-            filetag="$filetag ($s_audio)"
-        fi
+        update_data s_audio_type s_audio_file
 
-        case "$s_audio" in
-            2)
+        case $s_audio_type in
+            $fileaudio)
+                if test_readable_file "$s_audio_file"; then
+                    filetag="$filetag ($s_audio_file)"
+                    filestat="ON"
+                else
+                    nonestat="ON"
+                fi
+                ;;
+            $gameaudio)
                 gamestat="ON"
                 ;;
-            3)
+            $noaudio)
                 nonestat="ON"
-                ;;
-            *)
-                filestat="ON"
                 ;;
         esac
 
@@ -63,16 +66,12 @@ audio_menu() {
             case "$(get_result)" in
                 1)
                     change_audio_dir
-
-                    if [ $? -ne 0 ]; then
-                        s_audio="$oldsrc" # restores old value if invalid input
-                    fi
                     ;;
                 2)
-                    set_data s_audio $gameaudio
+                    set_data s_audio_type $gameaudio
                     ;;
                 3)
-                    set_data s_audio $noaudio
+                    set_data s_audio_type $noaudio
                     ;;
             esac
 
