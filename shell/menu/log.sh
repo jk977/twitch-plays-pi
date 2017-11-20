@@ -16,7 +16,7 @@ change_log_path() {
         check_file_error
     fi
 
-    log_menu
+    return 0
 }
 
 change_log_level() {
@@ -55,27 +55,34 @@ change_log_level() {
         esac
     fi
 
-    log_menu
+    return 0
 }
 
 log_menu() {
-    show_window -sl menu \
-        -t "Logging" \
-        -p "Configure which option?" \
-        -- 2 \
-        0 "Change Log Path" \
-        1 "Set Log Level"
+    status=0
 
-    if [ $? -eq 0 ]; then
-        case "$(get_result)" in
-            0)
-                change_log_path
-                ;;
-            1)
-                change_log_level
-                ;;
-        esac
-    fi
+    while [ $status -eq 0 ]; do
+        show_window -sl menu \
+            -t "Logging" \
+            -p "Configure which option?" \
+            -- 2 \
+            0 "Change Log Path" \
+            1 "Set Log Level"
+        status=$?
 
-    main_menu
+        if [ $status -eq 0 ]; then
+            case "$(get_result)" in
+                0)
+                    change_log_path
+                    ;;
+                1)
+                    change_log_level
+                    ;;
+            esac
+
+            status=$?
+        fi
+    done
+
+    return 0
 }

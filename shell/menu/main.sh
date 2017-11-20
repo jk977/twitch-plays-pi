@@ -18,39 +18,46 @@ clear_cache() {
         rm -r "$datadir" && show_window -sl msgbox -p "Clear successful!"
     fi
 
-    main_menu
+    return 0
 }
 
 main_menu() {
-    show_window -l menu \
-        -t "Main Menu" \
-        -p "What do you want to change?" \
-        -- 5 \
-        1 "Bot" \
-        2 "Emulator" \
-        3 "Stream" \
-        4 "Logging" \
-        5 "Clear Cached Information"
+    status=0
 
-    if [ $? -eq 0 ]; then
-        case "$(get_result)" in
-            1)
-                bot_menu
-                ;;
-            2)
-                emulator_menu
-                ;;
-            3)
-                stream_menu
-                ;;
-            4)
-                log_menu
-                ;;
-            5)
-                clear_cache
-                ;;
-        esac
-    fi
+    while [ $status -eq 0 ]; do
+        show_window -l menu \
+            -t "Main Menu" \
+            -p "What do you want to change?" \
+            -- 5 \
+            1 "Bot" \
+            2 "Emulator" \
+            3 "Stream" \
+            4 "Logging" \
+            5 "Clear Cached Information"
+        status=$?
 
-    exit
+        if [ $status -eq 0 ]; then
+            case "$(get_result)" in
+                1)
+                    bot_menu
+                    ;;
+                2)
+                    emulator_menu
+                    ;;
+                3)
+                    stream_menu
+                    ;;
+                4)
+                    log_menu
+                    ;;
+                5)
+                    clear_cache
+                    ;;
+            esac
+
+            status=$?
+        fi
+    done
+
+    return 0
 }

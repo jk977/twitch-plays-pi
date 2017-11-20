@@ -20,58 +20,65 @@ change_audio_dir() {
         check_file_error
     fi
 
-    audio_menu
+    return 0
 }
 
 audio_menu() {
-    oldsrc="$s_audio" # in case of failure
-    filetag="File"
+    status=0
 
-    filestat="OFF"
-    gamestat="OFF"
-    nonestat="OFF"
+    while [ $status -eq 0 ]; do
+        oldsrc="$s_audio" # in case of failure
+        filetag="File"
 
-    if test_readable_file "$s_audio"; then
-        filetag="$filetag ($s_audio)"
-    fi
+        filestat="OFF"
+        gamestat="OFF"
+        nonestat="OFF"
 
-    case "$s_audio" in
-        2)
-            gamestat="ON"
-            ;;
-        3)
-            nonestat="ON"
-            ;;
-        *)
-            filestat="ON"
-            ;;
-    esac
+        if test_readable_file "$s_audio"; then
+            filetag="$filetag ($s_audio)"
+        fi
 
-    show_window -sl radiolist \
-        -t "Stream Audio" \
-        -p "Choose audio source. If File is selected, you will be prompted to enter a path to an audio file:" \
-        -- 3 \
-        1 "$filetag" $filestat \
-        2 "Game Audio" $gamestat \
-        3 "None" $nonestat
-
-    if [ $? -eq 0 ]; then
-        case "$(get_result)" in
-            1)
-                change_audio_dir
-
-                if [ $? -ne 0 ]; then
-                    s_audio="$oldsrc" # restores old value if invalid input
-                fi
-                ;;
+        case "$s_audio" in
             2)
-                set_data s_audio $gameaudio
+                gamestat="ON"
                 ;;
             3)
-                set_data s_audio $noaudio
+                nonestat="ON"
+                ;;
+            *)
+                filestat="ON"
                 ;;
         esac
-    fi
 
-    stream_menu
+        show_window -sl radiolist \
+            -t "Stream Audio" \
+            -p "Choose audio source. If File is selected, you will be prompted to enter a path to an audio file:" \
+            -- 3 \
+            1 "$filetag" $filestat \
+            2 "Game Audio" $gamestat \
+            3 "None" $nonestat
+        status=$?
+
+        if [ $status -eq 0 ]; then
+            case "$(get_result)" in
+                1)
+                    change_audio_dir
+
+                    if [ $? -ne 0 ]; then
+                        s_audio="$oldsrc" # restores old value if invalid input
+                    fi
+                    ;;
+                2)
+                    set_data s_audio $gameaudio
+                    ;;
+                3)
+                    set_data s_audio $noaudio
+                    ;;
+            esac
+
+            status=$?
+        fi
+    done
+
+    return 0
 }

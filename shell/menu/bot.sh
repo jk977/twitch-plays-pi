@@ -38,7 +38,7 @@ change_nick() {
         write_result nick
     fi
 
-    bot_menu
+    return 0
 }
 
 change_pass() {
@@ -53,7 +53,7 @@ change_pass() {
         write_result pass
     fi
 
-    bot_menu
+    return 0
 }
 
 change_host() {
@@ -68,7 +68,7 @@ change_host() {
         write_result host
     fi
 
-    bot_menu
+    return 0
 }
 
 change_owner() {
@@ -83,35 +83,42 @@ change_owner() {
         write_result owner
     fi
 
-    bot_menu
+    return 0
 }
 
 bot_menu() {
-    show_window -sl menu \
-        -t "Bot" \
-        -p "Select an option to configure.\nThese are used in the bot's interactions with the host site's API." \
-        -- 4 \
-        1 "Username" \
-        2 "Password" \
-        3 "Host" \
-        4 "Owner"
+    status=0
 
-    if [ $? -eq 0 ]; then
-        case "$(get_result)" in
-            1)
-                change_nick
-                ;;
-            2)
-                change_pass
-                ;;
-            3)
-                change_host
-                ;;
-            4)
-                change_owner
-                ;;
-        esac
-    fi
+    while [ $status -eq 0 ]; do
+        show_window -sl menu \
+            -t "Bot" \
+            -p "Select an option to configure.\nThese are used in the bot's interactions with the host site's API." \
+            -- 4 \
+            1 "Username" \
+            2 "Password" \
+            3 "Host" \
+            4 "Owner"
+        status=$?
 
-    main_menu
+        if [ $status -eq 0 ]; then
+            case "$(get_result)" in
+                1)
+                    change_nick
+                    ;;
+                2)
+                    change_pass
+                    ;;
+                3)
+                    change_host
+                    ;;
+                4)
+                    change_owner
+                    ;;
+            esac
+
+            status=$?
+        fi
+    done
+
+    return 0
 }

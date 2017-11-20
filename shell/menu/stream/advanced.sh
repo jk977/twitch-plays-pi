@@ -20,7 +20,7 @@ change_framerate() {
         set_data s_framerate $result
     fi
 
-    advanced_menu
+    return 0
 }
 
 change_display() {
@@ -38,7 +38,7 @@ change_display() {
         set_data s_display $result
     fi
 
-    advanced_menu
+    return 0
 }
 
 change_screen() {
@@ -56,7 +56,7 @@ change_screen() {
         set_data s_screen $result
     fi
 
-    advanced_menu
+    return 0
 }
 
 change_signal() {
@@ -79,37 +79,46 @@ change_signal() {
         set_data s_sig "false"
     fi
 
-    advanced_menu
+    return 0
 }
 
 advanced_menu() {
-    show_window -sl menu \
-        -t "Advanced Stream Configuration" \
-        -p "Configure which option?" \
-        -- 5 \
-        1 "Framerate" \
-        2 "Capture Area" \
-        3 "Display Number" \
-        4 "Screen Number" \
-        5 "End-of-Stream Signal"
+    status=0
 
-    case "$(get_result)" in
-        1)
-            change_framerate
-            ;;
-        2)
-            capture_menu
-            ;;
-        3)
-            change_display
-            ;;
-        4)
-            change_screen
-            ;;
-        5)
-            change_signal
-            ;;
-    esac
+    while [ $status -eq 0 ]; do
+        show_window -sl menu \
+            -t "Advanced Stream Configuration" \
+            -p "Configure which option?" \
+            -- 5 \
+            1 "Framerate" \
+            2 "Capture Area" \
+            3 "Display Number" \
+            4 "Screen Number" \
+            5 "End-of-Stream Signal"
+        status=$?
 
-    stream_menu
+        if [ $status -eq 0 ]; then
+            case "$(get_result)" in
+                1)
+                    change_framerate
+                    ;;
+                2)
+                    capture_menu
+                    ;;
+                3)
+                    change_display
+                    ;;
+                4)
+                    change_screen
+                    ;;
+                5)
+                    change_signal
+                    ;;
+            esac
+
+            status=$?
+        fi
+    done
+
+    return 0
 }

@@ -26,7 +26,7 @@ change_stream_loop() {
         set_data s_loops "false"
     fi
 
-    stream_menu
+    return 0
 }
 
 change_stream_signal() {
@@ -49,35 +49,42 @@ change_stream_signal() {
         set_data s_sig "false"
     fi
 
-    stream_menu
+    return 0
 }
 
 stream_menu() {
-    show_window -sl menu \
-        -t "Stream" \
-        -p "Configure which option?" \
-        -- 4 \
-        1 "Audio" \
-        2 "Destination" \
-        3 "Looping" \
-        4 "Advanced"
+    status=0
 
-    if [ $? -eq 0 ]; then
-        case "$(get_result)" in
-            1)
-                audio_menu
-                ;;
-            2)
-                destination_menu
-                ;;
-            3)
-                change_stream_loop
-                ;;
-            4)
-                advanced_menu
-                ;;
-        esac
-    fi
+    while [ $status -eq 0 ]; do
+        show_window -sl menu \
+            -t "Stream" \
+            -p "Configure which option?" \
+            -- 4 \
+            1 "Audio" \
+            2 "Destination" \
+            3 "Looping" \
+            4 "Advanced"
+        status=$?
 
-    main_menu
+        if [ $status -eq 0 ]; then
+            case "$(get_result)" in
+                1)
+                    audio_menu
+                    ;;
+                2)
+                    destination_menu
+                    ;;
+                3)
+                    change_stream_loop
+                    ;;
+                4)
+                    advanced_menu
+                    ;;
+            esac
+
+            status=$?
+        fi
+    done
+
+    return 0
 }

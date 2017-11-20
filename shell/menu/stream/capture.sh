@@ -18,7 +18,7 @@ change_width() {
         set_data s_dimensions_x $result
     fi
 
-    capture_menu
+    return 0
 }
 
 change_height() {
@@ -36,7 +36,7 @@ change_height() {
         set_data s_dimensions_y $result
     fi
 
-    capture_menu
+    return 0
 }
 
 change_x_offset() {
@@ -54,7 +54,7 @@ change_x_offset() {
         set_data s_capture_x $result
     fi
 
-    capture_menu
+    return 0
 }
 
 change_y_offset() {
@@ -72,35 +72,42 @@ change_y_offset() {
         set_data s_capture_y $result
     fi
 
-    capture_menu
+    return 0
 }
 
 capture_menu() {
-    show_window -sl menu \
-        -t "Stream Capture Area" \
-        -p "These settings adjust the area of the desktop recorded by ffmpeg. Please select an option:" \
-        -- 4 \
-        1 "Width" \
-        2 "Height" \
-        3 "X-Offset" \
-        4 "Y-Offset"
+    status=0
 
-    if [ $? -eq 0 ]; then
-        case "$(get_result)" in
-            1)
-                change_width
-                ;;
-            2)
-                change_height
-                ;;
-            3)
-                change_x_offset
-                ;;
-            4)
-                change_y_offset
-                ;;
-        esac
-    fi
+    while [ $status -eq 0 ]; do
+        show_window -sl menu \
+            -t "Stream Capture Area" \
+            -p "These settings adjust the area of the desktop recorded by ffmpeg. Please select an option:" \
+            -- 4 \
+            1 "Width" \
+            2 "Height" \
+            3 "X-Offset" \
+            4 "Y-Offset"
+        status=$?
 
-    advanced_menu
+        if [ $status -eq 0 ]; then
+            case "$(get_result)" in
+                1)
+                    change_width
+                    ;;
+                2)
+                    change_height
+                    ;;
+                3)
+                    change_x_offset
+                    ;;
+                4)
+                    change_y_offset
+                    ;;
+            esac
+
+            status=$?
+        fi
+    done
+
+    return 0
 }

@@ -25,7 +25,7 @@ change_stream_uri() {
         set_data s_uri "$( get_result | format_uri )"
     fi
 
-    destination_menu
+    return 0
 }
 
 change_stream_endpt() {
@@ -40,27 +40,34 @@ change_stream_endpt() {
         set_data s_dest "$(get_result)"
     fi
 
-    destination_menu
+    return 0
 }
 
 destination_menu() {
-    show_window -sl menu \
-        -t "Stream Destination" \
-        -p "Configure which option?" \
-        -- 2 \
-        1 URI \
-        2 Endpoint
+    status=0
 
-    if [ $? -eq 0 ]; then
-        case "$(get_result)" in
-            1)
-                change_stream_uri
-                ;;
-            2)
-                change_stream_endpt
-                ;;
-        esac
-    fi
+    while [ $status -eq 0 ]; do
+        show_window -sl menu \
+            -t "Stream Destination" \
+            -p "Configure which option?" \
+            -- 2 \
+            1 URI \
+            2 Endpoint
+        status=$?
 
-    stream_menu
+        if [ $status -eq 0 ]; then
+            case "$(get_result)" in
+                1)
+                    change_stream_uri
+                    ;;
+                2)
+                    change_stream_endpt
+                    ;;
+            esac
+
+            status=$?
+        fi
+    done
+
+    return 0
 }
