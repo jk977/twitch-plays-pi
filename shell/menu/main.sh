@@ -33,7 +33,7 @@ main_menu() {
             4 "Logging" \
             5 "Clear Cached Information"
 
-        [ $? -eq 0 ] &&
+        [ $? -eq 0 ] && # if an "if" was used, would return 0 on test failure
             case "$(get_result)" in
                 1)
                     bot_menu

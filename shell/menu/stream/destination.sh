@@ -4,13 +4,7 @@
 . "$shldir/menu/common.sh"
 
 format_uri() {
-    awk '(substr($1, length($1), 1) != "/") {
-            print $1"/";
-            exit;
-        }
-        { print $1; }' |\
-    tr -s / |\
-    sed 's_:/_://_'
+    sed 's_//*_/_; s_/*$_/_; s_:/*_://_' # squeeze, append /, add // after :
 }
 
 change_stream_uri() {
