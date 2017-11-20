@@ -12,9 +12,11 @@ change_rom_dir() {
         -p "Enter location of the ROM (must be compatible with the emulator):" \
         -- "$default"
 
-    if [ $? -eq 0 ]; then
-        set_file emurom "$(get_result)"
-        check_file_error
+    status=$?
+    result=$(get_result)
+
+    if [ $status -eq 0 ] && check_file_error "$result"; then
+        set_file emurom "$result"
     fi
 
     return 0

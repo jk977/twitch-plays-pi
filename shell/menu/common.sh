@@ -35,16 +35,14 @@ show_error() {
 }
 
 check_file_error() {
-    if [ $? -ne 0 ]; then
+    if test_readable_file "$1"; then :; else
         show_error "Invalid file or directory entered. No changes made."
         return 1
     fi
 }
 
 check_number_input() {
-    if test_number "$1"; then
-        return 0
-    else
+    if test_number "$1"; then :; else
         show_error "Invalid number entered. No changes made."
         return 1
     fi
