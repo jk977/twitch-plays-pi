@@ -23,8 +23,8 @@ get_audio_args() {
 }
 
 send_signal() {
-    # sends signal to bot proces
-    bot_pid=$( cat "$datadir/procs/bot.py.id" 2>/dev/null )
+    bot_pid=$( cat "$datadir/proc/bot.py.id" 2>/dev/null )
+    echo "Sending signal to bot with PID $bot_pid"
     [ -n "$bot_pid" ] && kill -s ALRM "$bot_pid"
 }
 
