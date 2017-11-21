@@ -10,7 +10,7 @@ A 3-piece set of scripts originally intended to host a Twitch Plays style bot on
 * ffmpeg with libx264, librtmp, and libmp3lame (optional if using another audio library) enabled
     * Enable encoders/muxers and other libraries as needed, depending on what type of input/output you use
 * PulseAudio (if using emulator audio instead of a music file)
-    * Although this is an option, emulator audio on the Pi results in poor performance.
+    * Although this is an option, emulator audio on the Pi results in poor performance
 
 ## Usage
 
