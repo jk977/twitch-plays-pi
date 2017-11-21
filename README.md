@@ -5,12 +5,12 @@ A 3-piece set of scripts originally intended to host a Twitch Plays style bot on
 ## Dependencies
 
 * Python 3
-* [whiptail](https://linux.die.net/man/1/whiptail) (used by config.sh)
+* whiptail (used by config.sh)
 * FCEUX 2.1.2 or higher (for built-in Lua)
-* ffmpeg with libx264, librtmp, and libmp3lame (optional if using another audio library) enabled
-    * Enable encoders/muxers and other libraries as needed, depending on what type of input/output you use
+* FFmpeg with libx264, librtmp, and libmp3lame (optional if using another audio library) enabled
+    * Files other than mp3's for audio will not work unless the stream script is manually changed and your version of FFmpeg supports the file type
 * PulseAudio (if using emulator audio instead of a music file)
-    * Although this is an option, emulator audio on the Pi results in poor performance
+    * Although this is an option, emulator audio on the Pi results in poor performance and is not recommended
 
 ## Usage
 
