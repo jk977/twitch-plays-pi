@@ -1,12 +1,13 @@
 #!/bin/sh
 . shell/settings.sh
 . "$shldir/tests.sh"
+
 . "$shldir/menu/common.sh"
 . "$shldir/menu/stream/audio.sh"
-. "$shldir/menu/stream/advanced.sh"
+. "$shldir/menu/stream/video.sh"
 . "$shldir/menu/stream/destination.sh"
 
-change_stream_loop() {
+change_loop() {
     update_data s_loops
 
     if $s_loops; then
@@ -29,7 +30,7 @@ change_stream_loop() {
     return 0
 }
 
-change_stream_signal() {
+change_signal() {
     update_data s_sig
 
     if $s_sig; then
@@ -41,7 +42,7 @@ change_stream_signal() {
     show_window -sl yesno \
         -t "Stream Signal" \
         -p "Enable end-of-stream signal? This will send a SIGALRM to the Twitch bot's process every time the stream restarts." \
-        -- $default
+        -- $default 
 
     if [ $? -eq 0 ]; then
         set_data s_sig "true"
@@ -57,25 +58,29 @@ stream_menu() {
         show_window -sl menu \
             -t "Stream" \
             -p "Configure which option?" \
-            -- 4 \
-            1 "Audio" \
-            2 "Destination" \
-            3 "Looping" \
-            4 "Advanced"
+            -- 5 \
+            1 "Video" \
+            2 "Audio" \
+            3 "Destination" \
+            4 "Looping" \
+            5 "End-of-Stream Signal"
 
         [ $? -eq 0 ] &&
             case "$(get_result)" in
                 1)
-                    audio_menu
+                    video_menu
                     ;;
                 2)
-                    destination_menu
+                    audio_menu
                     ;;
                 3)
-                    change_stream_loop
+                    destination_menu
                     ;;
                 4)
-                    advanced_menu
+                    change_loop
+                    ;;
+                5)
+                    change_signal
                     ;;
             esac
     do :; done

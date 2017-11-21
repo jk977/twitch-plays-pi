@@ -59,40 +59,16 @@ change_screen() {
     return 0
 }
 
-change_signal() {
-    update_data s_sig
-
-    if $s_sig; then
-        default=
-    else
-        default="--defaultno"
-    fi
-
-    show_window -sl yesno \
-        -t "Stream Signal" \
-        -p "Enable end-of-stream signal? This will send a SIGALRM to the Twitch bot's process every time the stream restarts." \
-        -- $default 
-
-    if [ $? -eq 0 ]; then
-        set_data s_sig "true"
-    else
-        set_data s_sig "false"
-    fi
-
-    return 0
-}
-
-advanced_menu() {
+video_menu() {
     while
         show_window -sl menu \
-            -t "Advanced Stream Configuration" \
+            -t "Stream Video" \
             -p "Configure which option?" \
-            -- 5 \
+            -- 4 \
             1 "Framerate" \
             2 "Capture Area" \
             3 "Display Number" \
-            4 "Screen Number" \
-            5 "End-of-Stream Signal"
+            4 "Screen Number"
 
         [ $? -eq 0 ] &&
             case "$(get_result)" in
@@ -107,9 +83,6 @@ advanced_menu() {
                     ;;
                 4)
                     change_screen
-                    ;;
-                5)
-                    change_signal
                     ;;
             esac
     do :; done

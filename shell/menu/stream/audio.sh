@@ -23,52 +23,69 @@ change_audio_dir() {
     return 0
 }
 
-audio_menu() {
-    while
-        oldsrc="$s_audio_file" # in case of failure
-        filetag="File"
+change_source() {
+    oldsrc="$s_audio_file" # in case of failure
+    filetag="File"
 
-        filestat="OFF"
-        gamestat="OFF"
-        nonestat="OFF"
+    filestat="OFF"
+    gamestat="OFF"
+    nonestat="OFF"
 
-        update_data s_audio_type s_audio_file
+    update_data s_audio_type s_audio_file
 
-        case $s_audio_type in
-            $fileaudio)
-                if test_readable_file "$s_audio_file"; then
-                    filetag="$filetag ($s_audio_file)"
-                    filestat="ON"
-                else
-                    nonestat="ON"
-                fi
-                ;;
-            $gameaudio)
-                gamestat="ON"
-                ;;
-            $noaudio)
+    case $s_audio_type in
+        $fileaudio)
+            if test_readable_file "$s_audio_file"; then
+                filetag="$filetag ($s_audio_file)"
+                filestat="ON"
+            else
                 nonestat="ON"
+            fi
+            ;;
+        $gameaudio)
+            gamestat="ON"
+            ;;
+        $noaudio)
+            nonestat="ON"
+            ;;
+    esac
+
+    show_window -sl radiolist \
+        -t "Audio Source" \
+        -p "Choose audio source. If File is selected, you will be prompted to enter a path to an audio file:" \
+        -- 3 \
+        1 "$filetag" $filestat \
+        2 "Game Audio" $gamestat \
+        3 "None" $nonestat
+
+    [ $? -eq 0 ] &&
+        case "$(get_result)" in
+            1)
+                change_audio_dir
+                ;;
+            2)
+                set_data s_audio_type $gameaudio
+                ;;
+            3)
+                set_data s_audio_type $noaudio
                 ;;
         esac
 
-        show_window -sl radiolist \
+    return 0
+}
+
+audio_menu() {
+    while
+        show_window -sl menu \
             -t "Stream Audio" \
-            -p "Choose audio source. If File is selected, you will be prompted to enter a path to an audio file:" \
-            -- 3 \
-            1 "$filetag" $filestat \
-            2 "Game Audio" $gamestat \
-            3 "None" $nonestat
+            -p "Configure which option?" \
+            -- 1 \
+            1 "Source"
 
         [ $? -eq 0 ] &&
             case "$(get_result)" in
                 1)
-                    change_audio_dir
-                    ;;
-                2)
-                    set_data s_audio_type $gameaudio
-                    ;;
-                3)
-                    set_data s_audio_type $noaudio
+                    change_source
                     ;;
             esac
     do :; done
