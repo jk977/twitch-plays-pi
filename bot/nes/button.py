@@ -24,7 +24,7 @@ class Button(EmuInput):
         '''
         button_map = {
             ('^', '⬆️'): 'up',
-            ('v', '⬇'): 'down',
+            ('v', 'V', '⬇'): 'down',
             ('<', '⬅️'): 'left',
             ('>', '➡'): 'right'
         }
