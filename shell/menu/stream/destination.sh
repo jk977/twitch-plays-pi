@@ -43,8 +43,8 @@ destination_menu() {
             -t "Stream Destination" \
             -p "Configure which option?" \
             -- 2 \
-            1 URI \
-            2 Endpoint
+            1 "URI" \
+            2 "Endpoint"
 
         [ $? -eq 0 ] &&
             case "$(get_result)" in
