@@ -39,7 +39,9 @@ trap "die" EXIT
 while :; do
     ffmpeg \
         $(get_audio_args) \
-        -threads 4 -f x11grab -r $s_framerate -s ${s_dimensions_x}x${s_dimensions_y} -i :${s_display}.${s_screen}+${s_capture_x},${s_capture_y} \
+        -threads 4 -f x11grab -r $s_framerate \
+        -s ${s_dimensions_x}x${s_dimensions_y} \
+        -i :${s_display}.${s_screen}+${s_capture_x},${s_capture_y} \
         -c:v libx264 -preset medium -pix_fmt yuv420p \
         -shortest -f flv "$stream" 2>&1 |\
             tee -a "$(get_log_dest stream.log)"
