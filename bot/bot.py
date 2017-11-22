@@ -51,7 +51,8 @@ def log_votes(manager):
 
     path = os.path.join(config.data_dir, 'votes.txt')
     choices = manager.options.get_all(key=lambda p: p[1].votes, reverse=True)
-    votes = ('{}: {}\n'.format(c.input, c.votes) for c in choices.values()[:3])
+    top = list(choices.values())[:3]
+    votes = ['{}:{}\n'.format(c.input, c.votes) for c in top]
 
     with open(path, 'w') as file:
         file.writelines(votes)
@@ -59,7 +60,7 @@ def log_votes(manager):
 
 if __name__ == '__main__':
     startup_tasks()
-    manager = InputManager(threshold=1, on_decision=NES.send_input, on_vote=log_votes)
+    manager = InputManager(threshold=2, on_decision=NES.send_input, on_vote=log_votes)
 
     while True:
         message = chat.get_message()
