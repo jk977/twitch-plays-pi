@@ -1,7 +1,7 @@
 import unittest
 
 from chat.commands.commandlist import CommandList
-from chat.commands.command import Command
+from chat.command import Command
 from tests.structs.dummychat import DummyChat
 
 class TestCommands(unittest.TestCase):

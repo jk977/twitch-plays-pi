@@ -49,7 +49,7 @@ def log_votes(manager):
     if manager.threshold == 1:
         return
 
-    path = os.path.join(config.info_dir, 'votes.txt')
+    path = os.path.join(config.data_dir, 'votes.txt')
     choices = manager.options.get_all(key=lambda p: p[1].votes, reverse=True)
     votes = ('{}: {}\n'.format(c.input, c.votes) for c in choices.values()[:3])
 

@@ -1,6 +1,7 @@
 local utils = {};
-local input_dir = '../game/inputs.txt';
-local cheat_dir = '../game/cheats.txt';
+local home = os.getenv('HOME');
+local input_dir = home .. '/inputs.txt';
+local cheat_dir = home .. '/cheats.txt';
 
 
 local function poll_file(filename)

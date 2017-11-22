@@ -21,10 +21,10 @@ class Settings:
         if not path:
             path = os.path.join(config.data_dir, Settings.destination)
 
-        with open(path, 'r') as file:
-            ser = file.read().strip()
-
-        if not ser:
+        try:
+            with open(path, 'r') as file:
+                ser = file.read().strip()
+        except FileNotFoundError:
             return
 
         fields = json.loads(ser)

@@ -1,4 +1,3 @@
-import os
 from interfaces.emulator import Emulator
 from nes.emuchoice import EmuChoice
 
@@ -7,11 +6,7 @@ class NES(Emulator):
         if not isinstance(choice, EmuChoice):
             raise TypeError('Input must be an EmuChoice object.')
 
-        choice = choice.input
-        destination = choice.destination
+        vote = choice.input
 
-        if not os.access(destination, os.W_OK):
-            raise PermissionError('Input destination "{}" is not writable.'.format(destination))
-
-        with open(destination, 'w') as file:
-            file.write(choice.serialize())
+        with open(vote.destination, 'w') as file:
+            file.write(vote.serialize())
