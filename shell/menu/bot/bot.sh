@@ -1,6 +1,8 @@
+#!/bin/sh
 . shell/settings.sh
 . "$shldir/tests.sh"
 . "$shldir/menu/common.sh"
+. "$shldir/menu/bot/commands.sh"
 
 get_file() {
     echo "$botdata/$1.dat"
@@ -91,11 +93,12 @@ bot_menu() {
         show_window -sl menu \
             -t "Bot" \
             -p "Select an option to configure.\nThese are used in the bot's interactions with the host site's API." \
-            -- 4 \
+            -- 5 \
             1 "Username" \
             2 "Password" \
             3 "Host" \
-            4 "Owner"
+            4 "Owner" \
+            5 "Commands"
 
         [ $? -eq 0 ] &&
             case "$(get_result)" in
@@ -110,6 +113,9 @@ bot_menu() {
                     ;;
                 4)
                     change_owner
+                    ;;
+                5)
+                    command_menu
                     ;;
             esac
     do :; done

@@ -1,11 +1,11 @@
 . shell/settings.sh
 . "$shldir/tests.sh"
 
-. "$shldir/menu/bot.sh"
+. "$shldir/menu/common.sh"
 . "$shldir/menu/emulator.sh"
 . "$shldir/menu/log.sh"
+. "$shldir/menu/bot/bot.sh"
 . "$shldir/menu/stream/stream.sh"
-. "$shldir/menu/common.sh"
 
 clear_cache() {
     show_window -sl yesno \
