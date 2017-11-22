@@ -7,7 +7,7 @@ local screen_y2 = 231;
 
 local line_height = 9; -- height of a line of text in fceux gui
 
-local vote_file = '../game/votes.txt';
+local vote_file = os.getenv('HOME') .. '/votes.txt';
 
 
 -- basic map function that applies function (func) to each k-v pair in a table (tab)
@@ -18,7 +18,7 @@ local function map(func, tab)
         new_k, new_v = func(k, v);
         new_table[new_k] = new_v;
     end
-            
+
     return new_table;
 end
 
@@ -92,7 +92,7 @@ function chat_gui.write_lines(x_offset, bg_color, list)
         gui.text(x, y, line, nil, 'clear');
         y = y + line_height;
     end
-                
+
     gui.opacity(1);
 end
 
