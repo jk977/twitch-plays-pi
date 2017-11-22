@@ -1,7 +1,7 @@
 import chat.commands.admin as admin
 import chat.commands.info as info
 
-from chat.commands.command import Command
+from chat.command import Command
 
 
 class CommandList:
@@ -9,6 +9,7 @@ class CommandList:
     Static class that converts a command message to a Command object.
     '''
     _map = {
+        'about': info.show_about,
         'help': info.show_help,
         'map': info.game_map,
         'song': info.song,
