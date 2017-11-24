@@ -60,7 +60,7 @@ def log_votes(manager):
 
 if __name__ == '__main__':
     startup_tasks()
-    manager = InputManager(threshold=2, on_decision=NES.send_input, on_vote=log_votes)
+    manager = InputManager(threshold=1, on_decision=NES.send_input, on_vote=log_votes)
 
     while True:
         message = chat.get_message()
