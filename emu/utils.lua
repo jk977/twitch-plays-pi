@@ -1,6 +1,7 @@
 local utils = {};
-local input_dir = '../game/inputs.txt';
-local cheat_dir = '../game/cheats.txt';
+local data_dir = os.getenv('HOME') .. '/.twitch-plays-pi';
+local input_dir = data_dir .. '/inputs.txt';
+local cheat_dir = data_dir .. '/cheats.txt';
 
 
 local function poll_file(filename)

@@ -4,7 +4,6 @@
 . "$( dirname "$0" )/../settings.sh"
 . "$shldir/tests.sh"
 
-load_bot_vars
 cd "$botdir" # for PYTHONPATH reasons
 
 die() {

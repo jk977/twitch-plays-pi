@@ -11,6 +11,15 @@ def find_project_root():
         return False
 
 
+def read_data(filename):
+    try:
+        with open(os.path.join(bot_dir, filename), 'r') as file:
+            value = file.read().strip()
+        return value
+    except:
+        print('Error reading {}.'.format(filename))
+
+
 users = {}
 root = find_project_root()
 
@@ -22,14 +31,13 @@ pid_file = os.path.join(data_dir, 'proc', 'bot.py.id')
 if not os.access(root, os.W_OK):
     raise PermissionError('Project root is not writable.')
 
-with open(os.path.join(bot_dir, 'nick.dat'), 'r') as file:
-    nick = file.read().strip()
+nick = read_data('nick.dat')
+password = read_data('pass.dat')
+host = read_data('host.dat')
+owner = read_data('owner.dat')
 
-with open(os.path.join(bot_dir, 'pass.dat'), 'r') as file:
-    password = file.read().strip()
-
-with open(os.path.join(bot_dir, 'host.dat'), 'r') as file:
-    host = file.read().strip()
-
-with open(os.path.join(bot_dir, 'owner.dat'), 'r') as file:
-    owner = file.read().strip()
+try:
+    threshold = int(read_data('threshold.dat'))
+    threshold = max(threshold, 1)
+except:
+    threshold = 1

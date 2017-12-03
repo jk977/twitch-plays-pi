@@ -91,10 +91,6 @@ load_defaults() {
     default_if_empty s_dimensions_y 256
 }
 
-load_bot_vars() {
-    : # placeholder function
-}
-
 load_nes_vars() {
     load_and_warn emurom
 }

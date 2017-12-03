@@ -88,16 +88,32 @@ change_owner() {
     return 0
 }
 
+change_threshold() {
+    current="$(read_file threshold)"
+
+    show_window -sl inputbox \
+        -t "Bot Voting Threshold" \
+        -p "Enter vote threshold. This is the number of votes required for an input to be sent to the emulator:" \
+        -- "$current"
+
+    if [ $? -eq 0 ]; then
+        write_result threshold
+    fi
+
+    return 0
+}
+
 bot_menu() {
     while
         show_window -sl menu \
             -t "Bot" \
             -p "Select an option to configure.\nThese are used in the bot's interactions with the host site's API." \
-            -- 5 \
+            -- 6 \
             1 "Username" \
             2 "Password" \
             3 "Host" \
             4 "Owner" \
+            5 "Vote Threshold" \
             5 "Commands"
 
         [ $? -eq 0 ] &&
@@ -115,6 +131,9 @@ bot_menu() {
                     change_owner
                     ;;
                 5)
+                    change_threshold
+                    ;;
+                6)
                     command_menu
                     ;;
             esac

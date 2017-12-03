@@ -63,11 +63,11 @@ class Choices(Serializable):
 
         return False
 
-    def get_all(self, key=None, reverse=False):
+    def get_all(self):
         '''
         Gets all choices. If key isn't None, sorts the choices by key.
         '''
-        return dict(sorted(self._choices.items(), key=key, reverse=reverse)) if key else self._choices
+        return self._choices
 
     def get_choice(self, choice_name):
         '''

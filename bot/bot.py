@@ -9,16 +9,24 @@ from chat.voting.inputmanager import InputManager
 
 from nes.emulator import NES
 
-# initializing client to be used at module level
+# module-level variables
 chat = TwitchChat(config.nick, config.password, config.host)
+vote_file = os.path.join(config.data_dir, 'votes.txt')
+
+def silent_remove(filename):
+    try:
+        os.remove(filename)
+    except:
+        pass
 
 def startup_tasks():
     chat.send_message('Bot online!')
+    silent_remove(vote_file)
+    write_pid()
 
     signal.signal(signal.SIGALRM, on_stream_restart)
     signal.signal(signal.SIGINT, shutdown)
     signal.signal(signal.SIGTERM, shutdown)
-    write_pid()
 
 
 def on_stream_restart(signum, frame):
@@ -26,13 +34,10 @@ def on_stream_restart(signum, frame):
 
 
 def shutdown(signum, frame):
-    try:
-        os.remove(config.pid_file)
-    except:
-        pass
-
     chat.send_message('Bot shutting down.')
+    silent_remove(config.pid_file)
     chat.close()
+
     sys.exit(128 + signum)
 
 
@@ -49,17 +54,17 @@ def log_votes(manager):
     if manager.threshold == 1:
         return
 
-    path = os.path.join(config.root, 'game', 'votes.txt')
-    choices = manager.options.get_all(key=lambda p: p[1].votes, reverse=True)
-    votes = ('{}: {}\n'.format(c.input, c.votes) for c in choices.values()[:3])
+    choices = manager.options.get_all()
+    top = sorted(choices.values(), key=lambda c: c.votes, reverse=True)[:3]
+    votes = ['{}:{}\n'.format(c.input, c.votes) for c in top]
 
-    with open(path, 'w') as file:
+    with open(vote_file, 'w') as file:
         file.writelines(votes)
 
 
 if __name__ == '__main__':
     startup_tasks()
-    manager = InputManager(threshold=1, on_decision=NES.send_input, on_vote=log_votes)
+    manager = InputManager(threshold=config.threshold, on_decision=NES.send_input, on_vote=log_votes)
 
     while True:
         message = chat.get_message()

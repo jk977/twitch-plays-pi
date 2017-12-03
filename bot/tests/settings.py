@@ -9,13 +9,22 @@ from settings import Settings
 
 def backup_settings():
     path = os.path.join(config.data_dir, Settings.destination)
-    with open(path, 'r') as file:
-        backup = file.read().strip()
+    
+    try:
+        with open(path, 'r') as file:
+            backup = file.read().strip()
+    except:
+        return
+
     return backup
 
 
 def load_backup(backup):
+    if backup is None:
+        return
+    
     path = os.path.join(config.data_dir, Settings.destination)
+
     with open(path, 'w') as file:
         file.write(backup)
 

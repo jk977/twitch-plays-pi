@@ -12,7 +12,7 @@ class EmuInput(Validator):
     project_root/game.
     '''
     delimiter = '*'
-    path = os.path.join(config.root, 'game')
+    path = config.data_dir
 
     def __init__(self, content, count=1):
         content = str(content)

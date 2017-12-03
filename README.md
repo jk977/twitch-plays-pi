@@ -21,7 +21,7 @@ cd /path/to/project/root/
 ./config
 ```
 
-Once the configuration script is running, completely fill out all information for each category.
+Once the configuration script is running, completely fill out all information for each category. You may also want to adjust the vote threshold in bot.py if you want a voting threshold other than 1, as there is currently no configuration option for it.
 
 To start, execute 
 
