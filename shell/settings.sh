@@ -127,7 +127,6 @@ update_data() {
             load_and_warn $var
         done
     else
-        load_bot_vars
         load_nes_vars
         load_stream_vars
         load_log_vars
