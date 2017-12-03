@@ -13,7 +13,7 @@ def show_help(chat, message):
         help_link = file.read().strip()
 
     link = help_link if help_link else '(Link not found. Tell the streamer to fix this!)'
-    chat.send_message('General help: {}. For bot information, type "!about".'.format(help_link))
+    chat.send_message('View {} for general help. For bot information, type "!about".'.format(help_link))
 
 
 def song(chat, message):
