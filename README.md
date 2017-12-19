@@ -29,7 +29,7 @@ To start, execute
 ./run
 ```
 
-To stop the script, press the Enter key in the terminal that the script was started in. Use the script's -h option for more details on parameters, or run without parameters for default behavior. For performance reasons, the resulting emulator window is not fullscreen, and should be positioned in the spot captured by ffmpeg (default is in the top left corner of the screen).
+To stop the script, press Ctrl+C in the terminal that the script was started in. Use the script's -h option for more details on parameters, or run without parameters for default behavior. For performance reasons, the resulting emulator window is not fullscreen, and should be positioned in the spot captured by ffmpeg (default is in the top left corner of the screen).
 
 Once running, Twitch users can type a case-insensitive input corresponding to a valid emulator input, optionally followed by the number of times to press the input. The choice is voted for, and once a choice has enough votes, the input is sent to the emulator. The format for inputs is {input}{count}, with no spaces. If count is not specified, the bot assumes a count of 1. The following shortcuts can also be used as inputs:
 
