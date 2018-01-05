@@ -39,7 +39,6 @@ get_log_dest() {
 
 load_data() {
     # retrieves variable value from data directory and assigns to variable
-
     # $1: Name of variable to load (searches for .dat file of same name)
 
     if [ -z "$1" ]; then
@@ -152,7 +151,6 @@ set_file() {
     # $1: Name of data
     # $2: Filepath to assign data to
 
-    # no ifs to allow function to return non-zero on test failure
      test_readable_file "$2" && set_data "$1" "$2"
 }
 

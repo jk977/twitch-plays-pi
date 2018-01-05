@@ -17,7 +17,7 @@ streamid=
 
 # relevant paths
 datadir=~/.twitch-plays-pi/proc/
-scriptdir="shell/core/"
+scriptdir=shell/core/
 outdest=/dev/null       # destination of script output
 
 scripts=0               # mask of scripts to run; if 0, all will run
@@ -47,7 +47,7 @@ die() {
     kill 0
 }
 
-while getopts "hvbnsd" opt; do
+while getopts hvbnsd opt; do
     case $opt in
         h)
             # whitespace type is important here

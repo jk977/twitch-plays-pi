@@ -3,7 +3,7 @@
 [ -n "$common_included" ] && return
 common_included=true
 
-tmpfile=".output"
+tmpfile=.output
 menu_buttons="--yes-button Yes --no-button No --ok-button Select --cancel-button Quit"
 submenu_buttons="--yes-button Yes --no-button No --ok-button Select --cancel-button Back"
 
